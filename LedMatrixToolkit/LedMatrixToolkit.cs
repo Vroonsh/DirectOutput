@@ -17,7 +17,6 @@ namespace LedMatrixToolkit
 {
     public partial class LedMatrixToolkit : Form
     {
-        private string GlobalConfigPath;
         private Pinball Pinball;
         private Settings Settings = new Settings();
 
@@ -26,12 +25,6 @@ namespace LedMatrixToolkit
             InitializeComponent();
 
             Settings = Settings.LoadSettings();
-
-            panelPreview.BackboardNbLines = Settings.BackboardNbLines;
-            panelPreview.LedsStripDensity = (Settings.BackboardDensity == BackboardDensity.LPM_144 ? 144 : Settings.BackboardDensity == BackboardDensity.LPM_60 ? 60 : 30);
-
-            GlobalConfigPath = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "LedMatrixToolkit", "GlobalConfig.xml");
-            SetupPinball();
         }
 
         private void LedMatrixToolkit_FormClosing(object sender, FormClosingEventArgs e)
@@ -39,6 +32,7 @@ namespace LedMatrixToolkit
             if (Pinball != null) {
                 Pinball.Finish();
             }
+
             Settings.SaveSettings();
         }
 
@@ -70,7 +64,7 @@ namespace LedMatrixToolkit
                         int PulseValue = (OrgValue > 0 ? 0 : 1);
 
                         TableElements[TEValue.Name, e.RowIndex].Value = PulseValue;
-                        Thread.Sleep(100);
+                        Thread.Sleep(300);
                         TableElements[TEValue.Name, e.RowIndex].Value = OrgValue;
                     }
                 }
@@ -135,13 +129,26 @@ namespace LedMatrixToolkit
                 Pinball.Finish();
             }
 
-            Pinball = new Pinball();
-            Pinball.Setup(GlobalConfigPath, RomName: Settings.LastRomName);
+            LedMatrixToolkitControllerAutoConfigurator.LastLedControlIniFilename = Settings.LastLedControlIniFilename;
 
-            var controller = Pinball.Cabinet.OutputControllers.Where(c => c is LedMatrixToolkitController).First() as LedMatrixToolkitController;
-            if (controller != null) {
-                controller.OutputControl = panelPreview;
+            Pinball = new Pinball();
+            Pinball.Setup(GlobalConfigFilename: Settings.LastGlobalConfigFilename, RomName: Settings.LastRomName);
+
+            var controllers = Pinball.Cabinet.OutputControllers.Where(c => c is LedMatrixToolkitController).ToArray();
+            if (controllers.Length > 0) {
+                (controllers[0] as LedMatrixToolkitController).OutputControl = panelPreviewLedMatrix;
+            } else {
+                var ledControlFilename = Path.GetFileNameWithoutExtension(Settings.LastLedControlIniFilename);
+                var ledWizNumber = 30;
+                if (ledControlFilename.Contains("directoutputconfig")) {
+                    ledWizNumber = Int32.Parse(ledControlFilename.Replace("directoutputconfig", ""));
+                }
+                var previewController = new LedMatrixToolkitController() { Name = "LedMatrixToolkitController", LedWizNumber = ledWizNumber };
+                previewController.Init(Pinball.Cabinet);
+                Pinball.Cabinet.OutputControllers.Add(previewController);
             }
+
+            panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
 
             Pinball.Init();
             DisplayTableElements();
@@ -152,6 +159,24 @@ namespace LedMatrixToolkit
             var combo = (sender as ComboBox);
             Settings.LastRomName = combo.Text;
             SetupPinball();
+        }
+
+        public bool LoadConfig()
+        {
+            OpenConfigDialog OCD = new OpenConfigDialog(Settings);
+            if (OCD.ShowDialog() == DialogResult.OK) {
+                SetupPinball();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private void LedMatrixToolkit_Load(object sender, EventArgs e)
+        {
+            if (!LoadConfig()) {
+                this.Close();
+            }
         }
     }
 }

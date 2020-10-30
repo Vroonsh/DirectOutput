@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DirectOutput.Cab;
+using DirectOutput.Cab.Toys.Hardware;
+using DirectOutput.Cab.Toys.Layer;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,58 +11,28 @@ using System.Windows.Forms;
 
 namespace LedMatrixToolkit
 {
-    public class LedMatrixPreviewControl : Control
+    public class LedMatrixPreviewControl : Panel
     {
-        private int _BackboardNbLines = 8;
-        public int BackboardNbLines
+        public enum PreviewType
         {
-            get { return _BackboardNbLines; }
-            set {
-                _BackboardNbLines = value;
-                RecomputePartDimensions(false);
-            }
-        }
-
-        private int _LedsStripDensity = 144;
-        public int LedsStripDensity
-        {
-            get { return _LedsStripDensity; }
-            set {
-                _LedsStripDensity = value;
-                RecomputePartDimensions(false);
-            }
-        }
-
-        public enum PreviewPart
-        {
-            BackBoard,
-            LeftSide,
-            RightSide,
-            LeftRing,
-            RightRing,
-            Undercab,
-            Count
+            Matrix,
+            Ring
         }
 
         private class PreviewPartDescriptor
         {
-            public int LedsStripSize;
-            public int NbLedsStrips;
+            public LedStrip LedStrip;
+            public PreviewType Type = PreviewType.Matrix;
             public RectangleF Area;
             public Rectangle Rect = new Rectangle();
             public int Offset;
             public byte[] Values;
-            public bool Cleared = false;
         }
+
+        public int TotalNbValues => _Inited ? PreviewParts.Values.Sum(d => d.LedStrip.NumberOfOutputs) : 0;
 
         //Preview Panel Layout in ratio
-        private PreviewPartDescriptor[] PreviewParts = new PreviewPartDescriptor[(int)PreviewPart.Count];
-        //private Dictionary<PreviewPart, PreviewPartDescriptor> PreviewParts = new Dictionary<PreviewPart, PreviewPartDescriptor>();
-
-        public int TotalNbValues
-        {
-            get; private set;
-        }
+        private Dictionary<string, PreviewPartDescriptor> PreviewParts = new Dictionary<string, PreviewPartDescriptor>();
 
         private SolidBrush previewPanelBrush = new SolidBrush(Color.Red);
 
@@ -67,111 +40,77 @@ namespace LedMatrixToolkit
 
         private Rectangle _LedRectangle = new Rectangle();
 
-        private Random r = new Random();
+        private bool ShowMatrixGrid = false;
 
         public LedMatrixPreviewControl() : base()
         {
-            PreviewParts[(int)PreviewPart.BackBoard] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity, NbLedsStrips = _BackboardNbLines, Area = new RectangleF(0.05f, 0.2f, 0.9f, 0.15f) };
-            PreviewParts[(int)PreviewPart.LeftRing] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity / 2, NbLedsStrips = 1, Area = new RectangleF(0.0f, 0.0f, 0.2f, 0.2f) };
-            PreviewParts[(int)PreviewPart.RightRing] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity / 2, NbLedsStrips = 1, Area = new RectangleF(0.8f, 0.0f, 0.2f, 0.2f) };
-            PreviewParts[(int)PreviewPart.LeftSide] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity, NbLedsStrips = 1, Area = new RectangleF(0.0f, 0.35f, 0.1f, 0.6f) };
-            PreviewParts[(int)PreviewPart.RightSide] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity, NbLedsStrips = 1, Area = new RectangleF(0.9f, 0.35f, 0.1f, 0.6f) };
-            PreviewParts[(int)PreviewPart.Undercab] = new PreviewPartDescriptor() { LedsStripSize = _LedsStripDensity * 3, NbLedsStrips = 1, Area = new RectangleF(0.3f, 0.4f, 0.4f, 0.5f) };
+            this.DoubleBuffered = true;
         }
 
-        public Rectangle SetValues(byte[] values, PreviewPart part)
+        public void SetupPreviewParts(Cabinet cabinet, Settings settings)
         {
-            var pPart = PreviewParts[(int)part];
-            var pValues = values.Skip(pPart.Offset).Take(pPart.Values.Length).ToArray();
+            ShowMatrixGrid = settings.ShowMatrixGrid;
 
-            foreach (var val in pValues) {
-                if (val != 0) {
-                    pValues.CopyTo(pPart.Values, 0);
-                    pPart.Cleared = false;
-                    return pPart.Rect;
+            PreviewParts.Clear();
+
+            var ledStrips = cabinet.Toys.Where(T => T is LedStrip).Select(T => T as LedStrip);
+            
+            foreach(var area in settings.LedPreviewAreas) {
+                var ledstrip = ledStrips.First(L => string.Compare(L.Name.ToLower(), area.Name.ToLower()) == 0);
+                if (ledstrip != null) {
+                    PreviewParts[ledstrip.Name.ToLower()] = new PreviewPartDescriptor() {
+                        LedStrip = ledstrip,
+                        Offset = (ledstrip.FirstLedNumber - 1) * 3,
+                        Values = new byte[ledstrip.NumberOfOutputs],
+
+                        Area = new RectangleF(area.X, area.Y, area.W, area.H),
+                        Type = area.PreviewType
+                    };
                 }
             }
-
-            //All values are 0, if it wasn't cleared, clear it now
-            if (!pPart.Cleared) {
-                pValues.CopyTo(pPart.Values, 0);
-                pPart.Cleared = true;
-                return pPart.Rect;
-            }
-
-            return new Rectangle();
+            RecomputePreviewParts();
+            _Inited = true;
         }
-
-        private Rectangle InvalidRect;
 
         public void SetValues(byte[] values)
         {
-            if (values.Length == TotalNbValues) {
-                InvalidRect = new Rectangle();
+            foreach(var part in PreviewParts.Values) {
+                var pValues = values.Skip(part.Offset).Take(part.Values.Length).ToArray();
 
-                for (PreviewPart part = PreviewPart.BackBoard; part < PreviewPart.Count; part++) {
-                    Rectangle pInvalidRect = SetValues(values, part);
-                    if (!pInvalidRect.IsEmpty) {
-                        if (InvalidRect.IsEmpty) {
-                            InvalidRect = pInvalidRect;
-                        } else {
-                            InvalidRect = Rectangle.Union(InvalidRect, pInvalidRect);
-                        }
-                    }
+                if (pValues.CompareContents(part.Values)) {
+                    continue;
                 }
 
-                if (!InvalidRect.IsEmpty) {
-                    Invalidate(InvalidRect);
-                }
+                pValues.CopyTo(part.Values, 0);
+                Invalidate(part.Rect);
             }
-        }
-
-        private void RecomputePartDimensions(bool onlyResize)
-        {
-            if (!onlyResize) {
-                PreviewParts[(int)PreviewPart.BackBoard].LedsStripSize = _LedsStripDensity / 2;
-                PreviewParts[(int)PreviewPart.BackBoard].NbLedsStrips = _BackboardNbLines;
-                PreviewParts[(int)PreviewPart.LeftRing].LedsStripSize = _LedsStripDensity / 2;
-                PreviewParts[(int)PreviewPart.RightRing].LedsStripSize = _LedsStripDensity / 2;
-                PreviewParts[(int)PreviewPart.LeftSide].LedsStripSize = _LedsStripDensity;
-                PreviewParts[(int)PreviewPart.RightSide].LedsStripSize = _LedsStripDensity;
-                PreviewParts[(int)PreviewPart.Undercab].LedsStripSize = _LedsStripDensity * 3;
-                TotalNbValues = 0;
-                foreach (var dim in PreviewParts) {
-                    dim.Values = new byte[dim.LedsStripSize * dim.NbLedsStrips * 3];
-                    dim.Rect.X = (int)(dim.Area.X * Width);
-                    dim.Rect.Y = (int)(dim.Area.Y * Height);
-                    dim.Rect.Width = (int)(dim.Area.Width * Width);
-                    dim.Rect.Height = (int)(dim.Area.Height * Height);
-                    dim.Offset = TotalNbValues;
-                    TotalNbValues += dim.Values.Length;
-                }
-            }
-
-            //Resizing rectangle with Area
-            foreach (var dim in PreviewParts) {
-                dim.Rect.X = (int)(dim.Area.X * Width);
-                dim.Rect.Y = (int)(dim.Area.Y * Height);
-                dim.Rect.Width = (int)(dim.Area.Width * Width);
-                dim.Rect.Height = (int)(dim.Area.Height * Height);
-            }
-
-            _Inited = true;
-            Invalidate();
         }
 
         private void DisplayPreviewAreas(PaintEventArgs e)
         {
-            previewPanelBrush.Color = Color.Red;
-            foreach (var dim in PreviewParts) {
+            previewPanelBrush.Color = Color.Green;
+            foreach (var dim in PreviewParts.Values) {
                 e.Graphics.DrawRectangle(new Pen(previewPanelBrush), dim.Rect);
+            }
+        }
+
+        protected void RecomputePreviewParts()
+        {
+            //Resizing rectangle with Area
+            foreach (var dim in PreviewParts.Values) {
+                dim.Rect.X = (int)(dim.Area.X * Width);
+                dim.Rect.Y = (int)(dim.Area.Y * Height);
+                dim.Rect.Width = (int)(dim.Area.Width * Width);
+                dim.Rect.Height = (int)(dim.Area.Height * Height);
             }
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            RecomputePartDimensions(true);
+
+            RecomputePreviewParts();
+            this.Refresh();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -179,14 +118,17 @@ namespace LedMatrixToolkit
             base.OnPaint(e);
             if (!_Inited)
                 return;
-
-            //DisplayPreviewAreas(e);
-            DisplayBackboard(e);
-            DisplaySide(e, PreviewPart.LeftSide);
-            DisplaySide(e, PreviewPart.RightSide);
-            DisplayRing(e, PreviewPart.LeftRing);
-            DisplayRing(e, PreviewPart.RightRing);
-            DisplayUndercab(e);
+            e.Graphics.Clear(Color.MidnightBlue);
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            DisplayPreviewAreas(e);
+            foreach (var part in PreviewParts.Values) {
+                if (part.Type == PreviewType.Ring) {
+                    DisplayRing(e, part);
+                } else {
+                    DisplayMatrix(e, part);
+                }
+            }
         }
 
         private void DrawLedStrip(PaintEventArgs e, Point origin, Point increment, byte[] values)
@@ -196,95 +138,98 @@ namespace LedMatrixToolkit
             _LedRectangle.Width = _LedRectangle.Height = Math.Abs(increment.X) > 0 ? Math.Abs(increment.X )- 1 : Math.Abs(increment.Y) -1;
             for (int i = 0; i < values.Length; i += 3) {
                 previewPanelBrush.Color = Color.FromArgb(values[i], values[i+1], values[i+2]);
-                e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+                if (!previewPanelBrush.Color.IsEmpty) {
+                    e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+                }
                 _LedRectangle.X += increment.X;
                 _LedRectangle.Y += increment.Y;
             }
         }
 
-        private void DisplayUndercab(PaintEventArgs e)
+        private Color GetColorValue(PreviewPartDescriptor pDesc, int x, int y)
         {
-            //Start vertically at top left corner
+            int valueIdx = pDesc.LedStrip.OutputMappingTable[x, y];
 
-            var dim = PreviewParts[(int)PreviewPart.Undercab];
+            switch (pDesc.LedStrip.ColorOrder) {
+                case RGBOrderEnum.BGR:
+                    return Color.FromArgb(pDesc.Values[valueIdx + 2], pDesc.Values[valueIdx + 1], pDesc.Values[valueIdx]);
+                case RGBOrderEnum.BRG:
+                    return Color.FromArgb(pDesc.Values[valueIdx + 2], pDesc.Values[valueIdx + 1], pDesc.Values[valueIdx]);
+                case RGBOrderEnum.GBR:
+                    return Color.FromArgb(pDesc.Values[valueIdx + 2], pDesc.Values[valueIdx], pDesc.Values[valueIdx + 1]);
+                case RGBOrderEnum.GRB:
+                    return Color.FromArgb(pDesc.Values[valueIdx + 1], pDesc.Values[valueIdx], pDesc.Values[valueIdx + 2]);
+                case RGBOrderEnum.RBG:
+                    return Color.FromArgb(pDesc.Values[valueIdx], pDesc.Values[valueIdx + 2], pDesc.Values[valueIdx + 1]);
+                case RGBOrderEnum.RGB:
+                    return Color.FromArgb(pDesc.Values[valueIdx], pDesc.Values[valueIdx + 1], pDesc.Values[valueIdx + 2]);
+            }
 
-            var center = new Point(dim.Rect.X + dim.Rect.Width / 2, dim.Rect.Y + dim.Rect.Height / 2);
-            var widthInLeds = dim.LedsStripSize / 6;
-            var heightInLeds = dim.LedsStripSize / 3;
-            var width = (dim.Rect.Width / widthInLeds) * widthInLeds;
-            var height = (dim.Rect.Height / heightInLeds) * heightInLeds;
-
-
-            //Left vertical (first strip)
-            var ledsize = height / heightInLeds;
-            var origin = new Point(dim.Rect.X, center.Y - height / 2);
-            var increment = new Point(0, ledsize);
-            DrawLedStrip(e, origin, increment, dim.Values.Take(heightInLeds*3).ToArray());
-            //right vertical (third strip)
-            origin.X = dim.Rect.Right - ledsize;
-            origin.Y = center.Y + height / 2;
-            increment.Y = -increment.Y;
-            DrawLedStrip(e, origin, increment, dim.Values.Skip((heightInLeds+widthInLeds)*3).Take(heightInLeds*3).ToArray());
-
-            //Bottom Horizontal (second strip)
-            ledsize = width / widthInLeds;
-            origin.X = center.X - width / 2;
-            origin.Y = dim.Rect.Bottom - ledsize;
-            increment.X = ledsize;
-            increment.Y = 0;
-            DrawLedStrip(e, origin, increment, dim.Values.Skip(heightInLeds * 3).Take(widthInLeds * 3).ToArray());
-            //Top Horizontal (fourth strip)
-            ledsize = width / widthInLeds;
-            origin.X = center.X + width / 2;
-            origin.Y = dim.Rect.Y;
-            increment.X = -increment.X;
-            DrawLedStrip(e, origin, increment, dim.Values.Skip((heightInLeds * 2 + widthInLeds) * 3).Take(widthInLeds * 3).ToArray());
+            return Color.Black;
         }
 
-        private void DisplayRing(PaintEventArgs e, PreviewPart ring)
+        private void DisplayMatrix(PaintEventArgs e, PreviewPartDescriptor pDesc)
         {
-            if (ring == PreviewPart.LeftRing || ring == PreviewPart.RightRing) {
-                var dim = PreviewParts[(int)ring];
+            if (pDesc.Type != PreviewType.Matrix) return;
 
-                var center = new Point(dim.Rect.X + dim.Rect.Width / 2, dim.Rect.Y + dim.Rect.Height / 2);
-                var radius = (int)(Math.Min(dim.Rect.Width, dim.Rect.Height) / 2 * 0.9f);
-                _LedRectangle.Width = _LedRectangle.Height = radius / (dim.LedsStripSize / 4);
-                for (int i = 0; i < dim.LedsStripSize; ++i) {
-                    var angle = (float)i / Math.PI * 2;
-                    _LedRectangle.X = center.X + (int)((Math.Cos(angle) * radius) + 0.5f);
-                    _LedRectangle.Y = center.Y + (int)((Math.Sin(angle) * radius) + 0.5f);
-                    previewPanelBrush.Color = Color.FromArgb(dim.Values[i*3], dim.Values[(i*3) + 1], dim.Values[(i*3) + 2]);
-                    e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+            var center = new Point(pDesc.Rect.X + pDesc.Rect.Width / 2, pDesc.Rect.Y + pDesc.Rect.Height / 2);
+            var aspectratio = (float)pDesc.LedStrip.Width / pDesc.LedStrip.Height;
+            var width = (pDesc.Rect.Width / pDesc.LedStrip.Width) * pDesc.LedStrip.Width;
+            var height = (pDesc.Rect.Height / pDesc.LedStrip.Height) * pDesc.LedStrip.Height;
+
+            //Keep leds as square
+            var ledWidth = width / pDesc.LedStrip.Width;
+            var ledHeight = height / pDesc.LedStrip.Height;
+            var ledSize = 0;
+            if (ledWidth <= ledHeight) {
+                ledSize = ledWidth;
+                height = ledSize * pDesc.LedStrip.Height;
+            } else {
+                ledSize = ledHeight;
+                width = ledSize * pDesc.LedStrip.Width;
+            }
+
+            //Matrix Background
+            var origin = new Point(center.X - (int)(width / 2), center.Y - (int)(height / 2));
+            _LedRectangle.X = origin.X;
+            _LedRectangle.Y = origin.Y;
+            _LedRectangle.Width = width;
+            _LedRectangle.Height = height;
+            previewPanelBrush.Color = Color.Black;
+            e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+
+            //Matrix Colors
+            _LedRectangle.Width = _LedRectangle.Height = ShowMatrixGrid ? ledSize - 1 : ledSize;
+            for (int col = 0; col < pDesc.LedStrip.Width; ++col) {
+                for(int line = 0; line < pDesc.LedStrip.Height; ++line) {
+                    var color = GetColorValue(pDesc, col, line);
+                    if (color.GetBrightness() != 0.0f) {
+                        _LedRectangle.X = origin.X + (col * ledSize);
+                        _LedRectangle.Y = origin.Y + (line * ledSize);
+                        previewPanelBrush.Color = color;
+                        e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+                    }
                 }
             }
         }
 
-        private void DisplaySide(PaintEventArgs e, PreviewPart side)
+        private void DisplayRing(PaintEventArgs e, PreviewPartDescriptor pDesc)
         {
-            if (side == PreviewPart.LeftSide || side == PreviewPart.RightSide) {
-                var dim = PreviewParts[(int)side];
-
-                var center = new Point(dim.Rect.X + dim.Rect.Width / 2, dim.Rect.Y + dim.Rect.Height / 2);
-                var height = (dim.Rect.Height / dim.LedsStripSize) * dim.LedsStripSize;
-                var increment = new Point(0, dim.Rect.Height / dim.LedsStripSize);
-                var origin = new Point(center.X - increment.Y / 2, center.Y - height / 2);
-                DrawLedStrip(e, origin, increment, dim.Values);
-            }
-        }
-
-        private void DisplayBackboard(PaintEventArgs e)
-        {
-            var dim = PreviewParts[(int)PreviewPart.BackBoard];
-
-            var center = new Point(dim.Rect.X + dim.Rect.Width / 2, dim.Rect.Y + dim.Rect.Height / 2);
-            var aspectratio = (float)dim.LedsStripSize / dim.NbLedsStrips;
-            var bbwidth = (dim.Rect.Width / dim.LedsStripSize) * dim.LedsStripSize;
-            var bbheight = (int)(dim.Rect.Width / aspectratio);
-            var origin = new Point(center.X - bbwidth / 2, center.Y - bbheight / 2);
-            var increment = new Point(dim.Rect.Width / dim.LedsStripSize, 0);
-            for (int line = 0; line < BackboardNbLines; ++line) {
-                DrawLedStrip(e, origin, increment, dim.Values.Skip(line * dim.LedsStripSize * 3).Take(dim.LedsStripSize * 3).ToArray());
-                origin.Y += bbheight / dim.NbLedsStrips;
+            if (pDesc.Type != PreviewType.Ring || pDesc.LedStrip.Height != 1) return;
+            
+            var center = new Point(pDesc.Rect.X + pDesc.Rect.Width / 2, pDesc.Rect.Y + pDesc.Rect.Height / 2);
+            var radius = (int)(Math.Min(pDesc.Rect.Width, pDesc.Rect.Height) / 2 * 0.9f);
+            _LedRectangle.Width = _LedRectangle.Height = radius / (pDesc.LedStrip.Width/ 4);
+            previewPanelBrush.Color = Color.Black;
+            e.Graphics.FillRectangle(previewPanelBrush, pDesc.Rect);
+            for (int i = 0; i < pDesc.LedStrip.Width; ++i) {
+                var angle = (float)i / Math.PI * 2;
+                _LedRectangle.X = center.X + (int)((Math.Cos(angle) * radius) + 0.5f);
+                _LedRectangle.Y = center.Y + (int)((Math.Sin(angle) * radius) + 0.5f);
+                previewPanelBrush.Color = Color.FromArgb(pDesc.Values[i*3], pDesc.Values[(i*3) + 1], pDesc.Values[(i*3) + 2]);
+                if (!previewPanelBrush.Color.IsEmpty) {
+                    e.Graphics.FillRectangle(previewPanelBrush, _LedRectangle);
+                }
             }
         }
     }
