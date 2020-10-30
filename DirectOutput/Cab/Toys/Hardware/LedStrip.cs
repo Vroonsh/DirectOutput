@@ -294,7 +294,8 @@ namespace DirectOutput.Cab.Toys.Hardware
 
 
         //private int[,] LedMappingTable = new int[0, 0];
-        private int[,] OutputMappingTable = new int[0, 0];
+        [XmlIgnore]
+        public int[,] OutputMappingTable { get; private set; } = new int[0, 0];
 
         private void BuildMappingTables()
         {

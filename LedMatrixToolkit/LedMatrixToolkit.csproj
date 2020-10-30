@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>DirectOutputIcon_32.ico</ApplicationIcon>
+    <ApplicationIcon>LedMatrixToolkit.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -76,11 +76,20 @@
       <DependentUpon>LedMatrixToolkit.cs</DependentUpon>
     </Compile>
     <Compile Include="LedMatrixToolkitController.cs" />
+    <Compile Include="OpenConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenConfigDialog.Designer.cs">
+      <DependentUpon>OpenConfigDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <EmbeddedResource Include="LedMatrixToolkit.resx">
       <DependentUpon>LedMatrixToolkit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenConfigDialog.resx">
+      <DependentUpon>OpenConfigDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -106,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DirectOutputIcon_32.ico" />
+    <Content Include="LedMatrixToolkit.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectOutput\DirectOutput.csproj">
