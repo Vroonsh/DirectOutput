@@ -5,18 +5,28 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Drawing;
 
 namespace LedMatrixToolkit
 {
-    public enum BackboardDensity
-    {
-        LPM_30,
-        LPM_60,
-        LPM_144
-    }
-
     public class Settings
     {
+        private string _LastGlobalConfigFilename = "";
+
+        public string LastGlobalConfigFilename
+        {
+            get { return _LastGlobalConfigFilename; }
+            set { _LastGlobalConfigFilename = value; }
+        }
+
+        private string _LastLedControlIniFilename = "";
+
+        public string LastLedControlIniFilename
+        {
+            get { return _LastLedControlIniFilename; }
+            set { _LastLedControlIniFilename = value; }
+        }
+
         private string _LastRomName = "";
 
         public string LastRomName
@@ -25,30 +35,53 @@ namespace LedMatrixToolkit
             set { _LastRomName = value; }
         }
 
-        private List<string> _RomNames = new List<string>();
+        private List<string> _LedControlIniFileNames = new List<string>();
 
-        public List<string> RomNames
+        public List<string> LedControlIniFileNames
         {
-            get { return _RomNames; }
-            set { _RomNames = value; }
+            get { return _LedControlIniFileNames; }
+            set { _LedControlIniFileNames = value; }
         }
 
-        private int _BackboardNbLines = 8;
 
-        public int BackboardNbLines
+        private List<string> _GlobalConfigFilenames = new List<string>();
+
+        public List<string> GlobalConfigFilenames
         {
-            get { return _BackboardNbLines; }
-            set { _BackboardNbLines = value.Limit(1, 10); }
+            get { return _GlobalConfigFilenames; }
+            set { _GlobalConfigFilenames = value; }
         }
 
-        private BackboardDensity _BackboardDensity = BackboardDensity.LPM_144;
+        private int _PulseDurationMs = 100;
 
-        public BackboardDensity BackboardDensity
+        public int PulseDurationMs
         {
-            get { return _BackboardDensity; }
-            set { _BackboardDensity = value; }
+            get { return _PulseDurationMs; }
+            set { _PulseDurationMs = value.Limit(10, 5000); }
         }
 
+        private bool _ShowMatrixGrid = true;
+
+        public bool ShowMatrixGrid
+        {
+            get { return _ShowMatrixGrid; }
+            set { _ShowMatrixGrid = value; }
+        }
+
+        public class LedPreviewArea
+        {
+            public string Name = string.Empty;
+            public float X, Y, W, H;
+            public LedMatrixPreviewControl.PreviewType PreviewType = LedMatrixPreviewControl.PreviewType.Matrix;
+        }
+
+        private List<LedPreviewArea> _LedPreviewAreas = new List<LedPreviewArea>();
+
+        public List<LedPreviewArea> LedPreviewAreas
+        {
+            get { return _LedPreviewAreas; }
+            set { _LedPreviewAreas = value; }
+        }
 
         public void SaveSettings()
         {

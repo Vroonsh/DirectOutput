@@ -49,7 +49,7 @@ namespace LedMatrixToolkit
             this.TEPulse = new System.Windows.Forms.DataGridViewButtonColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGridEffect = new System.Windows.Forms.PropertyGrid();
-            this.panelPreview = new LedMatrixPreviewControl();
+            this.panelPreviewLedMatrix = new LedMatrixPreviewControl();
             this.tabControl1.SuspendLayout();
             this.tabPageTableEffects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TableElements)).BeginInit();
@@ -237,6 +237,7 @@ namespace LedMatrixToolkit
             "hirolcas",
             "hook",
             "hothand",
+            "hpgof",
             "hs",
             "hurr",
             "i500",
@@ -466,7 +467,7 @@ namespace LedMatrixToolkit
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panelPreview);
+            this.splitContainer1.Panel2.Controls.Add(this.panelPreviewLedMatrix);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
             this.splitContainer1.Size = new System.Drawing.Size(1698, 1000);
             this.splitContainer1.SplitterDistance = 1136;
@@ -480,17 +481,13 @@ namespace LedMatrixToolkit
             this.propertyGridEffect.Size = new System.Drawing.Size(459, 994);
             this.propertyGridEffect.TabIndex = 1;
             // 
-            // panelPreview
+            // panelPreviewLedMatrix
             // 
-            this.panelPreview.BackboardNbLines = 8;
-            this.panelPreview.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelPreview.LedsStripDensity = 144;
-            this.panelPreview.Location = new System.Drawing.Point(3, 3);
-            this.panelPreview.Margin = new System.Windows.Forms.Padding(0);
-            this.panelPreview.Name = "panelPreview";
-            this.panelPreview.Size = new System.Drawing.Size(552, 994);
-            this.panelPreview.TabIndex = 1;
+            this.panelPreviewLedMatrix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPreviewLedMatrix.Location = new System.Drawing.Point(3, 3);
+            this.panelPreviewLedMatrix.Name = "panelPreviewLedMatrix";
+            this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
+            this.panelPreviewLedMatrix.TabIndex = 0;
             // 
             // LedMatrixToolkit
             // 
@@ -502,6 +499,7 @@ namespace LedMatrixToolkit
             this.Name = "LedMatrixToolkit";
             this.Text = "Led Matrix Toolkit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LedMatrixToolkit_FormClosing);
+            this.Load += new System.EventHandler(this.LedMatrixToolkit_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPageTableEffects.ResumeLayout(false);
             this.tabPageTableEffects.PerformLayout();
@@ -515,7 +513,6 @@ namespace LedMatrixToolkit
         }
 
         #endregion
-        private LedMatrixPreviewControl panelPreview;
         private SplitContainer splitContainer1;
         private TabControl tabControl1;
         private TabPage tabPageEffectTemplates;
@@ -531,6 +528,7 @@ namespace LedMatrixToolkit
         private DataGridViewButtonColumn TEPulse;
         private Label label2;
         private ComboBox RomNameComboBox;
+        private LedMatrixPreviewControl panelPreviewLedMatrix;
     }
 }
 
