@@ -99,7 +99,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOFSetupPBXFixup", "DOFSetu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyInfo", "AssemblyInfo\AssemblyInfo.csproj", "{B153E2F0-22E6-445D-9B54-540C6AB85AF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedMatrixToolkit", "LedMatrixToolkit\LedMatrixToolkit.csproj", "{EF22DD92-10D2-4FB5-990D-A36E534C7044}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedControlToolkit", "LedControlToolkit\LedControlToolkit.csproj", "{EF22DD92-10D2-4FB5-990D-A36E534C7044}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
