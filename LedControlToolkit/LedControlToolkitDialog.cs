@@ -15,12 +15,12 @@ using System.Windows.Forms;
 
 namespace LedControlToolkit
 {
-    public partial class LedControlToolkit : Form
+    public partial class LedControlToolkitDialog : Form
     {
         private Pinball Pinball;
         private Settings Settings = new Settings();
 
-        public LedControlToolkit()
+        public LedControlToolkitDialog()
         {
             InitializeComponent();
 
