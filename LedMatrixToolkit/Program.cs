@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LedMatrixToolkit
+namespace LedControlToolkit
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace LedMatrixToolkit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LedMatrixToolkit());
+            Application.Run(new LedControlToolkit());
         }
     }
 }
