@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace LedMatrixToolkit
+namespace LedControlToolkit
 {
-    partial class LedMatrixToolkit
+    partial class LedControlToolkit
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -33,7 +33,7 @@ namespace LedMatrixToolkit
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedMatrixToolkit));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedControlToolkit));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageEffectTemplates = new System.Windows.Forms.TabPage();
             this.tabPageEffectEditor = new System.Windows.Forms.TabPage();
@@ -489,17 +489,17 @@ namespace LedMatrixToolkit
             this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
             this.panelPreviewLedMatrix.TabIndex = 0;
             // 
-            // LedMatrixToolkit
+            // LedControlToolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1698, 1000);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "LedMatrixToolkit";
-            this.Text = "Led Matrix Toolkit";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LedMatrixToolkit_FormClosing);
-            this.Load += new System.EventHandler(this.LedMatrixToolkit_Load);
+            this.Name = "LedControlToolkit";
+            this.Text = "LedControl Toolkit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LedControlToolkit_FormClosing);
+            this.Load += new System.EventHandler(this.LedControlToolkit_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPageTableEffects.ResumeLayout(false);
             this.tabPageTableEffects.PerformLayout();
