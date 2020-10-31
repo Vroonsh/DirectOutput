@@ -13,21 +13,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LedMatrixToolkit
+namespace LedControlToolkit
 {
-    public partial class LedMatrixToolkit : Form
+    public partial class LedControlToolkit : Form
     {
         private Pinball Pinball;
         private Settings Settings = new Settings();
 
-        public LedMatrixToolkit()
+        public LedControlToolkit()
         {
             InitializeComponent();
 
             Settings = Settings.LoadSettings();
         }
 
-        private void LedMatrixToolkit_FormClosing(object sender, FormClosingEventArgs e)
+        private void LedControlToolkit_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Pinball != null) {
                 Pinball.Finish();
@@ -129,21 +129,21 @@ namespace LedMatrixToolkit
                 Pinball.Finish();
             }
 
-            LedMatrixToolkitControllerAutoConfigurator.LastLedControlIniFilename = Settings.LastLedControlIniFilename;
+            LedControlToolkitControllerAutoConfigurator.LastLedControlIniFilename = Settings.LastLedControlIniFilename;
 
             Pinball = new Pinball();
             Pinball.Setup(GlobalConfigFilename: Settings.LastGlobalConfigFilename, RomName: Settings.LastRomName);
 
-            var controllers = Pinball.Cabinet.OutputControllers.Where(c => c is LedMatrixToolkitController).ToArray();
+            var controllers = Pinball.Cabinet.OutputControllers.Where(c => c is LedControlToolkitController).ToArray();
             if (controllers.Length > 0) {
-                (controllers[0] as LedMatrixToolkitController).OutputControl = panelPreviewLedMatrix;
+                (controllers[0] as LedControlToolkitController).OutputControl = panelPreviewLedMatrix;
             } else {
                 var ledControlFilename = Path.GetFileNameWithoutExtension(Settings.LastLedControlIniFilename);
                 var ledWizNumber = 30;
                 if (ledControlFilename.Contains("directoutputconfig")) {
                     ledWizNumber = Int32.Parse(ledControlFilename.Replace("directoutputconfig", ""));
                 }
-                var previewController = new LedMatrixToolkitController() { Name = "LedMatrixToolkitController", LedWizNumber = ledWizNumber };
+                var previewController = new LedControlToolkitController() { Name = "LedControlToolkitController", LedWizNumber = ledWizNumber };
                 previewController.Init(Pinball.Cabinet);
                 Pinball.Cabinet.OutputControllers.Add(previewController);
             }
@@ -172,7 +172,7 @@ namespace LedMatrixToolkit
             }
         }
 
-        private void LedMatrixToolkit_Load(object sender, EventArgs e)
+        private void LedControlToolkit_Load(object sender, EventArgs e)
         {
             if (!LoadConfig()) {
                 this.Close();

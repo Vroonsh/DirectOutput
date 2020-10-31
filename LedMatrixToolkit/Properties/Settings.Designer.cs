@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LedMatrixToolkit.Properties
+namespace LedControlToolkit.Properties
 {
 
 
