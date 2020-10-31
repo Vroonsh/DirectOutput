@@ -16,7 +16,7 @@ namespace LedControlToolkit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LedControlToolkit());
+            Application.Run(new LedControlToolkitDialog());
         }
     }
 }

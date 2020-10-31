@@ -2,7 +2,7 @@
 
 namespace LedControlToolkit
 {
-    partial class LedControlToolkit
+    partial class LedControlToolkitDialog
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -33,9 +33,10 @@ namespace LedControlToolkit
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedControlToolkit));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPageEffectTemplates = new System.Windows.Forms.TabPage();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedControlToolkitDialog));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.propertyGridEffect = new System.Windows.Forms.PropertyGrid();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageEffectEditor = new System.Windows.Forms.TabPage();
             this.tabPageTableEffects = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,39 +48,56 @@ namespace LedControlToolkit
             this.TEValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TEActivate = new System.Windows.Forms.DataGridViewButtonColumn();
             this.TEPulse = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.propertyGridEffect = new System.Windows.Forms.PropertyGrid();
-            this.panelPreviewLedMatrix = new LedMatrixPreviewControl();
-            this.tabControl1.SuspendLayout();
-            this.tabPageTableEffects.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).BeginInit();
+            this.tabPageSettings = new System.Windows.Forms.TabPage();
+            this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabControlMain.SuspendLayout();
+            this.tabPageTableEffects.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // splitContainer1
             // 
-            this.tabControl1.Controls.Add(this.tabPageEffectTemplates);
-            this.tabControl1.Controls.Add(this.tabPageEffectEditor);
-            this.tabControl1.Controls.Add(this.tabPageTableEffects);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1130, 994);
-            this.tabControl1.TabIndex = 0;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // tabPageEffectTemplates
+            // splitContainer1.Panel1
             // 
-            this.tabPageEffectTemplates.Location = new System.Drawing.Point(4, 22);
-            this.tabPageEffectTemplates.Name = "tabPageEffectTemplates";
-            this.tabPageEffectTemplates.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEffectTemplates.Size = new System.Drawing.Size(1122, 968);
-            this.tabPageEffectTemplates.TabIndex = 0;
-            this.tabPageEffectTemplates.Text = "Effect Templates";
-            this.tabPageEffectTemplates.UseVisualStyleBackColor = true;
+            this.splitContainer1.Panel1.Controls.Add(this.propertyGridEffect);
+            this.splitContainer1.Panel1.Controls.Add(this.tabControlMain);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(3);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panelPreviewLedMatrix);
+            this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
+            this.splitContainer1.Size = new System.Drawing.Size(1698, 1000);
+            this.splitContainer1.SplitterDistance = 1136;
+            this.splitContainer1.TabIndex = 2;
+            // 
+            // propertyGridEffect
+            // 
+            this.propertyGridEffect.Dock = System.Windows.Forms.DockStyle.Right;
+            this.propertyGridEffect.Location = new System.Drawing.Point(674, 3);
+            this.propertyGridEffect.Name = "propertyGridEffect";
+            this.propertyGridEffect.Size = new System.Drawing.Size(459, 994);
+            this.propertyGridEffect.TabIndex = 1;
+            // 
+            // tabControlMain
+            // 
+            this.tabControlMain.Controls.Add(this.tabPageEffectEditor);
+            this.tabControlMain.Controls.Add(this.tabPageTableEffects);
+            this.tabControlMain.Controls.Add(this.tabPageSettings);
+            this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlMain.Location = new System.Drawing.Point(3, 3);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(1130, 994);
+            this.tabControlMain.TabIndex = 0;
             // 
             // tabPageEffectEditor
             // 
@@ -453,33 +471,15 @@ namespace LedControlToolkit
             this.TEPulse.Name = "TEPulse";
             this.TEPulse.ReadOnly = true;
             // 
-            // splitContainer1
+            // tabPageSettings
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.propertyGridEffect);
-            this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
-            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(3);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.panelPreviewLedMatrix);
-            this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
-            this.splitContainer1.Size = new System.Drawing.Size(1698, 1000);
-            this.splitContainer1.SplitterDistance = 1136;
-            this.splitContainer1.TabIndex = 2;
-            // 
-            // propertyGridEffect
-            // 
-            this.propertyGridEffect.Dock = System.Windows.Forms.DockStyle.Right;
-            this.propertyGridEffect.Location = new System.Drawing.Point(674, 3);
-            this.propertyGridEffect.Name = "propertyGridEffect";
-            this.propertyGridEffect.Size = new System.Drawing.Size(459, 994);
-            this.propertyGridEffect.TabIndex = 1;
+            this.tabPageSettings.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSettings.Name = "tabPageSettings";
+            this.tabPageSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSettings.Size = new System.Drawing.Size(1122, 968);
+            this.tabPageSettings.TabIndex = 3;
+            this.tabPageSettings.Text = "Settings";
+            this.tabPageSettings.UseVisualStyleBackColor = true;
             // 
             // panelPreviewLedMatrix
             // 
@@ -489,36 +489,38 @@ namespace LedControlToolkit
             this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
             this.panelPreviewLedMatrix.TabIndex = 0;
             // 
-            // LedControlToolkit
+            // LedControlToolkitDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1698, 1000);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "LedControlToolkit";
+            this.Name = "LedControlToolkitDialog";
             this.Text = "LedControl Toolkit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LedControlToolkit_FormClosing);
             this.Load += new System.EventHandler(this.LedControlToolkit_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPageTableEffects.ResumeLayout(false);
-            this.tabPageTableEffects.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tabControlMain.ResumeLayout(false);
+            this.tabPageTableEffects.ResumeLayout(false);
+            this.tabPageTableEffects.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private SplitContainer splitContainer1;
-        private TabControl tabControl1;
-        private TabPage tabPageEffectTemplates;
+        private PropertyGrid propertyGridEffect;
+        private LedMatrixPreviewControl panelPreviewLedMatrix;
+        private TabControl tabControlMain;
         private TabPage tabPageEffectEditor;
         private TabPage tabPageTableEffects;
-        private PropertyGrid propertyGridEffect;
+        private Label label2;
+        private ComboBox RomNameComboBox;
         private DataGridView TableElements;
         private DataGridViewTextBoxColumn TEType;
         private DataGridViewTextBoxColumn TEName;
@@ -526,9 +528,7 @@ namespace LedControlToolkit
         private DataGridViewTextBoxColumn TEValue;
         private DataGridViewButtonColumn TEActivate;
         private DataGridViewButtonColumn TEPulse;
-        private Label label2;
-        private ComboBox RomNameComboBox;
-        private LedMatrixPreviewControl panelPreviewLedMatrix;
+        private TabPage tabPageSettings;
     }
 }
 
