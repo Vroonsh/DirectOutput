@@ -69,11 +69,11 @@
     <Compile Include="LedMatrixPreviewControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LedControlToolkit.cs">
+    <Compile Include="LedControlToolkitDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LedControlToolkit.Designer.cs">
-      <DependentUpon>LedControlToolkit.cs</DependentUpon>
+    <Compile Include="LedControlToolkitDialog.Designer.cs">
+      <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="LedMatrixToolkitController.cs" />
     <Compile Include="OpenConfigDialog.cs">
@@ -85,8 +85,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <EmbeddedResource Include="LedControlToolkit.resx">
-      <DependentUpon>LedControlToolkit.cs</DependentUpon>
+    <EmbeddedResource Include="LedControlToolkitDialog.resx">
+      <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenConfigDialog.resx">
       <DependentUpon>OpenConfigDialog.cs</DependentUpon>
