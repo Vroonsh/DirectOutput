@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LedMatrixToolkit
+namespace LedControlToolkit
 {
     public class LedMatrixPreviewControl : Panel
     {
@@ -35,12 +35,14 @@ namespace LedMatrixToolkit
         private Dictionary<string, PreviewPartDescriptor> PreviewParts = new Dictionary<string, PreviewPartDescriptor>();
 
         private SolidBrush previewPanelBrush = new SolidBrush(Color.Red);
+        private Font previewPanelFont = new Font(FontFamily.GenericSansSerif, 10.0f);
 
         private bool _Inited = false;
 
         private Rectangle _LedRectangle = new Rectangle();
 
         private bool ShowMatrixGrid = false;
+        public bool ShowDisplayAreas = false;
 
         public LedMatrixPreviewControl() : base()
         {
@@ -88,8 +90,12 @@ namespace LedMatrixToolkit
 
         private void DisplayPreviewAreas(PaintEventArgs e)
         {
+            if (!ShowDisplayAreas) return;
+
             previewPanelBrush.Color = Color.Green;
             foreach (var dim in PreviewParts.Values) {
+                var sizeName = e.Graphics.MeasureString(dim.LedStrip.Name, previewPanelFont);
+                e.Graphics.DrawString(dim.LedStrip.Name, previewPanelFont, previewPanelBrush, new Point(Math.Min(dim.Rect.X, Width - (int)sizeName.Width), dim.Rect.Y - (int)(previewPanelFont.Height * 1.5f)));
                 e.Graphics.DrawRectangle(new Pen(previewPanelBrush), dim.Rect);
             }
         }

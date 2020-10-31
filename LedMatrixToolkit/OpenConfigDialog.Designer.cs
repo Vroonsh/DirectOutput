@@ -1,4 +1,4 @@
-﻿namespace LedMatrixToolkit
+﻿namespace LedControlToolkit
 {
     partial class OpenConfigDialog
     {
@@ -153,7 +153,7 @@
             this.Name = "OpenConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "LedMatrix Toolkit Open Configuration";
+            this.Text = "LedControl Toolkit Open Configuration";
             this.ResumeLayout(false);
             this.PerformLayout();
 
