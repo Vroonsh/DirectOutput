@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using System.Reflection;
 using System.Drawing;
 
-namespace LedMatrixToolkit
+namespace LedControlToolkit
 {
     public class Settings
     {
@@ -101,7 +101,7 @@ namespace LedMatrixToolkit
 
                 }
                 new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"config")).CreateDirectoryPath();
-                Xml.WriteToFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"config","LedMatrixToolkitSettings.xml"));
+                Xml.WriteToFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"config","LedControlToolkitSettings.xml"));
             }
             catch
             {
@@ -114,7 +114,7 @@ namespace LedMatrixToolkit
         {
             try
             {
-                string SettingsXML = DirectOutput.General.FileReader.ReadFileToString(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config", "LedMatrixToolkitSettings.xml"));
+                string SettingsXML = DirectOutput.General.FileReader.ReadFileToString(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config", "LedControlToolkitSettings.xml"));
                 
                 using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(SettingsXML)))
                 {
