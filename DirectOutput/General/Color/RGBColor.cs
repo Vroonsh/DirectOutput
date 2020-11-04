@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -11,7 +13,9 @@ namespace DirectOutput.General.Color
     /// <summary>
     /// This class stores information on RGB colors used for toys and effects (e.g. RGBLed).
     /// </summary>
-    public class RGBColor 
+    [EditorAttribute(typeof(ColorEditor), typeof(UITypeEditor))]
+    [TypeConverter(typeof(ColorTypeConverter))]
+    public class RGBColor : IARGBConverter
     {
 
 
@@ -70,6 +74,22 @@ namespace DirectOutput.General.Color
             set {
                 SetColor(value);
             }
+        }
+
+        /// <summary>
+        /// IARGBConverter implementation of ToARGB
+        /// </summary>
+        /// <returns>argb color as int</returns>
+        public int ToARGB() => (255 << 24) | (Red << 16) | (Green << 8) | Blue;
+        /// <summary>
+        /// IARGBConverter implementation of FromARGB
+        /// </summary>
+        /// <param name="argb">the argb color input</param>
+        public void FromARGB(int argb)
+        {
+            Red = (argb & 0xFF0000) >> 16;
+            Green = (argb & 0xFF00) >> 8;
+            Blue = (argb & 0xFF);
         }
 
         /// <summary>
