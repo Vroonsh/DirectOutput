@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DirectOutput.General;
 
 using DirectOutput.General.BitmapHandling;
 using System.IO;
+using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
@@ -23,6 +21,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The number of the frame to be used (for animated gifs).
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The number of the frame to be used (for animated gifs).")]
         public int BitmapFrameNumber
         {
             get { return _BitmapFrameNumber; }
@@ -37,6 +36,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The top of the the part of the bitmap which is to be used.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The top of the the part of the bitmap which is to be used.")]
         public int BitmapTop
         {
             get { return _BitmapTop; }
@@ -51,6 +51,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The left boundary of the the part of the bitmap which is to be used.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The left boundary of the the part of the bitmap which is to be used.")]
         public int BitmapLeft
         {
             get { return _BitmapLeft; }
@@ -65,6 +66,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The width of the the part of the bitmap which is to be used.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The width of the the part of the bitmap which is to be used.")]
         public int BitmapWidth
         {
             get { return _BitmapWidth; }
@@ -79,6 +81,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The height of the the part of the bitmap which is to be used.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The height of the the part of the bitmap which is to be used.")]
         public int BitmapHeight
         {
             get { return _BitmapHeight; }
@@ -94,6 +97,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The data extract mode which defines how the data is extracted from the source bitmap.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The data extract mode which defines how the data is extracted from the source bitmap.")]
         public FastBitmapDataExtractModeEnum DataExtractMode
         {
             get { return _DataExtractMode; }

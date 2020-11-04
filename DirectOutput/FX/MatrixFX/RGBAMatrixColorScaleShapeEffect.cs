@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using DirectOutput.FX.MatrixFX.BitmapShapes;
 using DirectOutput.General.Color;
 
@@ -22,6 +21,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
+        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
         public RGBAColor ActiveColor
         {
             get { return _ActiveColor; }
@@ -37,6 +37,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
+        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }
