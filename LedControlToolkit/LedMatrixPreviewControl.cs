@@ -15,6 +15,7 @@ namespace LedControlToolkit
     {
         public enum PreviewType
         {
+            Invalid,
             Matrix,
             Ring
         }
@@ -22,7 +23,7 @@ namespace LedControlToolkit
         private class PreviewPartDescriptor
         {
             public LedStrip LedStrip;
-            public PreviewType Type = PreviewType.Matrix;
+            public PreviewType Type = PreviewType.Invalid;
             public RectangleF Area;
             public Rectangle Rect = new Rectangle();
             public int Offset;
@@ -33,6 +34,8 @@ namespace LedControlToolkit
 
         //Preview Panel Layout in ratio
         private Dictionary<string, PreviewPartDescriptor> PreviewParts = new Dictionary<string, PreviewPartDescriptor>();
+        private List<string> MissingLedstrips = new List<string>();
+        private List<string> MissingAreas = new List<string>();
 
         private SolidBrush previewPanelBrush = new SolidBrush(Color.Red);
         private Font previewPanelFont = new Font(FontFamily.GenericSansSerif, 10.0f);
@@ -41,8 +44,8 @@ namespace LedControlToolkit
 
         private Rectangle _LedRectangle = new Rectangle();
 
-        private bool ShowMatrixGrid = false;
-        public bool ShowDisplayAreas = false;
+        public bool ShowMatrixGrid = false;
+        public bool ShowPreviewAreas = false;
 
         public LedMatrixPreviewControl() : base()
         {
@@ -51,25 +54,35 @@ namespace LedControlToolkit
 
         public void SetupPreviewParts(Cabinet cabinet, Settings settings)
         {
-            ShowMatrixGrid = settings.ShowMatrixGrid;
-
             PreviewParts.Clear();
+            MissingLedstrips.Clear();
+            MissingAreas.Clear();
 
-            var ledStrips = cabinet.Toys.Where(T => T is LedStrip).Select(T => T as LedStrip);
-            
-            foreach(var area in settings.LedPreviewAreas) {
-                var ledstrip = ledStrips.First(L => string.Compare(L.Name.ToLower(), area.Name.ToLower()) == 0);
-                if (ledstrip != null) {
-                    PreviewParts[ledstrip.Name.ToLower()] = new PreviewPartDescriptor() {
-                        LedStrip = ledstrip,
-                        Offset = (ledstrip.FirstLedNumber - 1) * 3,
-                        Values = new byte[ledstrip.NumberOfOutputs],
+            var ledStrips = cabinet.Toys.Where(T => T is LedStrip).Select(T => T as LedStrip).ToArray();
 
-                        Area = new RectangleF(area.X, area.Y, area.W, area.H),
-                        Type = area.PreviewType
-                    };
+            foreach (var ledstrip in ledStrips) {
+                var areas = settings.LedPreviewAreas.Where(A => A.Name.Equals(ledstrip.Name, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+
+                PreviewParts[ledstrip.Name.ToLower()] = new PreviewPartDescriptor() {
+                    LedStrip = ledstrip,
+                    Offset = (ledstrip.FirstLedNumber - 1) * 3,
+                    Values = new byte[ledstrip.NumberOfOutputs],
+
+                    Area = areas.Length > 0 ? new RectangleF(areas[0].X, areas[0].Y, areas[0].Width, areas[0].Height) : new RectangleF(),
+                    Type = areas.Length > 0 ? areas[0].PreviewType : PreviewType.Invalid
+                };
+
+                if (areas.Length == 0) {
+                    MissingLedstrips.Add(ledstrip.Name);
                 }
             }
+
+            foreach (var area in settings.LedPreviewAreas) {
+                if (!PreviewParts.Values.Any(P => P.LedStrip.Name.Equals(area.Name, StringComparison.InvariantCultureIgnoreCase))){
+                    MissingAreas.Add(area.Name);
+                }
+            }
+
             RecomputePreviewParts();
             _Inited = true;
         }
@@ -88,9 +101,32 @@ namespace LedControlToolkit
             }
         }
 
+        private void DisplayAreaMissmatch(PaintEventArgs e)
+        {
+            previewPanelBrush.Color = Color.Red;
+            var y = 10;
+            if (MissingLedstrips.Count > 0) {
+                e.Graphics.DrawString("Ledstrips w/o area", previewPanelFont, previewPanelBrush, new Point(10, y));
+                y += previewPanelFont.Height;
+                foreach (var ls in MissingLedstrips) {
+                    e.Graphics.DrawString(ls, previewPanelFont, previewPanelBrush, new Point(20, y));
+                    y += previewPanelFont.Height;
+                }
+            }
+
+            if (MissingAreas.Count > 0) {
+                e.Graphics.DrawString("Areas w/o ledstrip", previewPanelFont, previewPanelBrush, new Point(10, y));
+                y += previewPanelFont.Height;
+                foreach (var area in MissingAreas) {
+                    e.Graphics.DrawString(area, previewPanelFont, previewPanelBrush, new Point(20, y));
+                    y += previewPanelFont.Height;
+                }
+            }
+        }
+
         private void DisplayPreviewAreas(PaintEventArgs e)
         {
-            if (!ShowDisplayAreas) return;
+            if (!ShowPreviewAreas) return;
 
             previewPanelBrush.Color = Color.Green;
             foreach (var dim in PreviewParts.Values) {
@@ -127,6 +163,8 @@ namespace LedControlToolkit
             e.Graphics.Clear(Color.MidnightBlue);
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+            DisplayAreaMissmatch(e);
             DisplayPreviewAreas(e);
             foreach (var part in PreviewParts.Values) {
                 if (part.Type == PreviewType.Ring) {
@@ -179,7 +217,8 @@ namespace LedControlToolkit
             if (pDesc.Type != PreviewType.Matrix) return;
 
             var center = new Point(pDesc.Rect.X + pDesc.Rect.Width / 2, pDesc.Rect.Y + pDesc.Rect.Height / 2);
-            var aspectratio = (float)pDesc.LedStrip.Width / pDesc.LedStrip.Height;
+
+            //Round width & height to ledstrip matrix dimensions
             var width = (pDesc.Rect.Width / pDesc.LedStrip.Width) * pDesc.LedStrip.Width;
             var height = (pDesc.Rect.Height / pDesc.LedStrip.Height) * pDesc.LedStrip.Height;
 
