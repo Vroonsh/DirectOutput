@@ -117,6 +117,8 @@
   <ItemGroup>
     <Content Include="DirectOutputIcon_32.ico" />
     <Content Include="LedControlToolkit.ico" />
+    <None Include="Properties\red_cross.png" />
+    <None Include="Properties\green_gears.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectOutput\DirectOutput.csproj">
