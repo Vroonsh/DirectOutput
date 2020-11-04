@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -11,7 +13,9 @@ namespace DirectOutput.General.Color
     /// <summary>
     /// This class stores information on colors used for toys and effects (e.g. RGBLed).
     /// </summary>
-    public class RGBAColor
+    [EditorAttribute(typeof(ColorEditor), typeof(UITypeEditor))]
+    [TypeConverter(typeof(ColorTypeConverter))]
+    public class RGBAColor : IARGBConverter
     {
 
 
@@ -80,6 +84,7 @@ namespace DirectOutput.General.Color
         /// Returns the hexadecimal code for the color.
         /// </summary>
         /// <value>6 digit hexadecimal color code with leading  &#35;(e.g. &#35;ff0000 for red).</value>
+        [Browsable(false)]
         public string HexColor
         {
             get
@@ -101,8 +106,22 @@ namespace DirectOutput.General.Color
             return new RGBAColor(Red, Green, Blue, Alpha);
         }
 
-
-
+        /// <summary>
+        /// IARGBConverter implementation of ToARGB
+        /// </summary>
+        /// <returns>argb color as int</returns>
+        public int ToARGB() => (Alpha << 24) | (Red << 16) | (Green << 8) | Blue;
+        /// <summary>
+        /// IARGBConverter implementation of FromARGB
+        /// </summary>
+        /// <param name="argb">the argb color input</param>
+        public void FromARGB(int argb)
+        {
+            Alpha = (int)((argb & 0xFF000000) >> 24);
+            Red = (argb & 0xFF0000) >> 16;
+            Green = (argb & 0xFF00) >> 8;
+            Blue = (argb & 0xFF);
+        }
 
         /// <summary>
         /// Sets the RGBA components of the Color.
