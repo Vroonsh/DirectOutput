@@ -6,11 +6,40 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace LedControlToolkit
 {
     public class Settings
     {
+        public class LedPreviewArea
+        {
+            public int Id => Name.GetHashCode();
+            public string Name { get; set; }
+            private float _X = 0.0f;
+            private float _Y = 0.0f;
+            private float _Width = 0.5f;
+            private float _Height = 0.5f;
+
+            public LedPreviewArea() { }
+
+            public LedPreviewArea(LedPreviewArea ledPreviewArea)
+            {
+                this.Name = ledPreviewArea.Name;
+                this.X = ledPreviewArea.X;
+                this.Y = ledPreviewArea.Y;
+                this.Width = ledPreviewArea.Width;
+                this.Height = ledPreviewArea.Height;
+                this.PreviewType = ledPreviewArea.PreviewType;
+            }
+
+            public float X { get { return _X; } set { _X = value.Limit(0.0f, 1.0f); } }
+            public float Y { get { return _Y; } set { _Y = value.Limit(0.0f, 1.0f); } }
+            public float Width { get { return _Width; } set { _Width = value.Limit(0.0f, 1.0f); } }
+            public float Height { get { return _Height; } set { _Height = value.Limit(0.0f, 1.0f); } }
+            public LedMatrixPreviewControl.PreviewType PreviewType { get; set; } = LedMatrixPreviewControl.PreviewType.Matrix;
+        }
+
         private string _LastGlobalConfigFilename = "";
 
         public string LastGlobalConfigFilename
@@ -68,11 +97,12 @@ namespace LedControlToolkit
             set { _ShowMatrixGrid = value; }
         }
 
-        public class LedPreviewArea
+        private bool _ShowPreviewAreas = true;
+
+        public bool ShowPreviewAreas
         {
-            public string Name = string.Empty;
-            public float X, Y, W, H;
-            public LedMatrixPreviewControl.PreviewType PreviewType = LedMatrixPreviewControl.PreviewType.Matrix;
+            get { return _ShowPreviewAreas; }
+            set { _ShowPreviewAreas = value; }
         }
 
         private List<LedPreviewArea> _LedPreviewAreas = new List<LedPreviewArea>();
