@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -22,6 +23,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The duration for fading up.
         /// </value>
+        [CategoryAttribute("Fade"), DescriptionAttribute("The duration for fading up.")]
         public int FadeUpDuration
         {
             get { return _FadeUpDuration; }
@@ -36,6 +38,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The duration for the fading down.
         /// </value>
+        [CategoryAttribute("Fade"), DescriptionAttribute("The duration for the fading down.")]
         public int FadeDownDuration
         {
             get { return _FadeDownDuration; }
@@ -51,6 +54,7 @@ namespace DirectOutput.FX.TimmedFX
         /// The fade duration mode.<br/>
         /// Depending on the FadeDurationMode the transition from the current to the target value will use one of the duration values directly or use the duration values to determine how long it would take to fade through the whole possible value range and the effective fading duration will depend on the defference between the current and the target value.
         /// </value>
+        [CategoryAttribute("Fade"), DescriptionAttribute("Depending on the FadeDurationMode the transition from the current to the target value will use one of the duration values directly or use the duration values to determine how long it would take to fade through the whole possible value range and the effective fading duration will depend on the defference between the current and the target value.")]
         public FadeEffectDurationModeEnum FadeDurationMode
         {
             get { return _FadeDurationMode; }
