@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using DirectOutput.Table;
 
 namespace DirectOutput.FX.TimmedFX
@@ -18,6 +18,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The extended duration in milliseconds.
         /// </value>
+        [CategoryAttribute("Duration"), DescriptionAttribute("The extended duration in milliseconds.")]
         public int DurationMs
         {
             get { return _DurationMs; }

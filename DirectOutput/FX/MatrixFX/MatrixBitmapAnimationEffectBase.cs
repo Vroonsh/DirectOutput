@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DirectOutput.General.BitmapHandling;
 using DirectOutput.General;
-using DirectOutput.Cab.Toys.Layer;
+using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
@@ -18,6 +15,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The direction in which the effect will step formward through the source image to get the next frame of the animation. 
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The direction in which the effect will step formward through the source image to get the next frame of the animation.")]
         public MatrixAnimationStepDirectionEnum AnimationStepDirection
         {
             get { return _AnimationStepDirection; }
@@ -32,6 +30,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The size of the step in pixels or frames (depending on the \ref AnimationStepDirection) to the next frame of the animation.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The size of the step in pixels or frames (depending on the \ref AnimationStepDirection) to the next frame of the animation.")]
         public int AnimationStepSize
         {
             get { return _AnimationStepSize; }
@@ -47,6 +46,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The number of frames for the whole animation.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The number of frames for the whole animation.")]
         public int AnimationFrameCount
         {
             get { return _AnimationFrameCount; }
@@ -61,6 +61,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The animation behaviour defines if a animation should run only once, run in a loop or continue at its last position when triggered.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The animation behaviour defines if a animation should run only once, run in a loop or continue at its last position when triggered.")]
         public AnimationBehaviourEnum AnimationBehaviour
         {
             get { return _AnimationBehaviour; }
@@ -76,6 +77,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The animation frame duration in miliseconds. Defaults to 30ms if not set.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The animation frame duration in miliseconds. Defaults to 30ms if not set.")]
         public int AnimationFrameDurationMs
         {
             get { return _AnimationFrameDurationMs; }
@@ -92,6 +94,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The number of the frame to be displayed.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The number of the frame to be displayed.")]
         public int BitmapFrameNumber
         {
             get { return _BitmapFrameNumber; }
@@ -106,6 +109,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The top of the the part of the bitmap which is to be displayed.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The top of the the part of the bitmap which is to be displayed.")]
         public int BitmapTop
         {
             get { return _BitmapTop; }
@@ -120,6 +124,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The left boundary in pixels of the the part of the bitmap which is to be displayed.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The left boundary in pixels of the the part of the bitmap which is to be displayed.")]
         public int BitmapLeft
         {
             get { return _BitmapLeft; }
@@ -134,6 +139,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The width in pixels of the the part of the bitmap which is to be displayed. -1 selects the fully width resp. the remaining width from the BitMapLeft position.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The width in pixels of the the part of the bitmap which is to be displayed. -1 selects the fully width resp. the remaining width from the BitMapLeft position.")]
         public int BitmapWidth
         {
             get { return _BitmapWidth; }
@@ -148,6 +154,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The height of the the part of the bitmap which is to be displayed. -1 selects the fully height resp. the remaining height from the BitMapTop position.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The height of the the part of the bitmap which is to be displayed. -1 selects the fully height resp. the remaining height from the BitMapTop position.")]
         public int BitmapHeight
         {
             get { return _BitmapHeight; }
@@ -163,6 +170,7 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The data extract mode which defines how the data is extracted from the source bitmap.
         /// </value>
+        [CategoryAttribute("Bitmap"), DescriptionAttribute("The data extract mode which defines how the data is extracted from the source bitmap.")]
         public FastBitmapDataExtractModeEnum DataExtractMode
         {
             get { return _DataExtractMode; }
