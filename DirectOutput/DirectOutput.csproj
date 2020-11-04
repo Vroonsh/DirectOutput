@@ -254,6 +254,9 @@
     <Compile Include="FX\ValueFX\ValueMapFullRangeEffect.cs" />
     <Compile Include="General\Analog\AnalogAlpha.cs" />
     <Compile Include="General\BitmapHandling\UnsafeBitmap.cs" />
+    <Compile Include="General\Color\ColorEditor.cs" />
+    <Compile Include="General\Color\ColorTypeConverter.cs" />
+    <Compile Include="General\Color\IARGBConverter.cs" />
     <Compile Include="General\CurveList.cs" />
     <Compile Include="Cab\Toys\IToyUpdatable.cs" />
     <Compile Include="Cab\Toys\Layer\AlphaMappingTable.cs" />
