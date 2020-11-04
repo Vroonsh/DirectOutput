@@ -1,6 +1,8 @@
 ﻿using DirectOutput;
 using DirectOutput.Cab.Toys.Hardware;
 using DirectOutput.FX;
+using DirectOutput.GlobalConfiguration;
+using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
 using System;
 using System.Collections.Generic;
@@ -153,6 +155,33 @@ namespace LedControlToolkit
             SetupPinball();
         }
 
+        public void LoadTableShortNames()
+        {
+            FileInfo GlobalConfigFile = new FileInfo(Settings.LastGlobalConfigFilename);
+            var GlobalConfig = DirectOutput.GlobalConfiguration.GlobalConfig.GetGlobalConfigFromConfigXmlFile(GlobalConfigFile.FullName);
+            if (GlobalConfig == null) {
+                Log.Write("No global config file loaded");
+                //set new global config object if it config could not be loaded from the file.
+                GlobalConfig = new GlobalConfig();
+            }
+            GlobalConfig.GlobalConfigFilename = GlobalConfigFile.FullName;
+            Dictionary<int, FileInfo> LedControlIniFiles = GlobalConfig.GetIniFilesDictionary();
+            LedControlConfigList L = new LedControlConfigList();
+
+            LedControlIniFiles = LedControlIniFiles.Where(INI => INI.Value.FullName == Settings.LastLedControlIniFilename).ToDictionary(INI => INI.Key, INI => INI.Value);
+
+            RomNameComboBox.Items.Clear();
+            RomNameComboBox.Items.Add("");
+            if (LedControlIniFiles.Count > 0) {
+                L.LoadLedControlFiles(LedControlIniFiles, false);
+                Log.Write("{0} directoutputconfig.ini or ledcontrol.ini files loaded.".Build(LedControlIniFiles.Count));
+                RomNameComboBox.Items.AddRange(L[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
+            } else {
+                Log.Write("No directoutputconfig.ini or ledcontrol.ini files found.");
+            }
+
+        }
+
         public bool LoadConfig()
         {
             OpenConfigDialog OCD = new OpenConfigDialog(Settings);
@@ -162,6 +191,8 @@ namespace LedControlToolkit
                 numericUpDownPulseDuration.Value = Settings.PulseDurationMs;
                 checkBoxPreviewArea.Checked = Settings.ShowPreviewAreas;
                 checkBoxPreviewGrid.Checked = Settings.ShowMatrixGrid;
+
+                LoadTableShortNames();
 
                 UpdatePreviewAreaListControl();
 
