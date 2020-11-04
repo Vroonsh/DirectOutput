@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using DirectOutput.General.Generic;
 using DirectOutput.Table;
 
@@ -35,6 +32,11 @@ namespace DirectOutput.FX
         /// </summary>
         public virtual void Finish() {}
 
-
+        /// <summary>
+        /// Will tell if this effect or any targeted effects have an action on the provided toys list
+        /// </summary>
+        /// <param name="ToyNames">a list of toy names</param>
+        /// <returns>true if any effect in the chain is acting on at least one of the provided toys</returns>
+        public virtual bool ActOnAnyToys(IEnumerable<string> ToyNames) => false;
     }
 }
