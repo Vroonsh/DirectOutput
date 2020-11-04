@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DirectOutput.FX;
 using DirectOutput.Table;
 using System.Xml.Serialization;
 
@@ -72,7 +68,7 @@ namespace DirectOutput.FX
             {
                 return _Effect;
             }
-            private set
+            set
             {
                 _Effect = value;
             }
