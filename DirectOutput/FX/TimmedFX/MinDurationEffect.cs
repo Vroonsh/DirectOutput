@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.Xml.Serialization;
 using DirectOutput.Table;
 
@@ -25,6 +23,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// Valid values are Restart (restarts the minimal duration) or Ignore (keeps the org duration).
         /// </value>
+        [CategoryAttribute("Duration"), DescriptionAttribute("Valid values are Restart (restarts the minimal duration) or Ignore (keeps the org duration).")]
         public RetriggerBehaviourEnum RetriggerBehaviour
         {
             get { return _RetriggerBehaviour; }
@@ -39,6 +38,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The minimal effect duration in milliseconds.
         /// </value>
+        [CategoryAttribute("Duration"), DescriptionAttribute("The minimal effect duration in milliseconds.")]
         public int MinDurationMs
         {
             get { return _DurationMs; }
@@ -54,6 +54,7 @@ namespace DirectOutput.FX.TimmedFX
         ///   <c>true</c> if active; otherwise <c>false</c>.
         /// </value>
         [XmlIgnoreAttribute]
+        [Browsable(false)]
         public bool Active { get; private set; }
 
         private TableElementData UntriggerData;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using DirectOutput.Table;
 
 namespace DirectOutput.FX.TimmedFX
@@ -22,6 +19,7 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The delay in milliseconds.
         /// </value>
+        [CategoryAttribute("Delay"), DescriptionAttribute("The delay in milliseconds.")]
         public int DelayMs
         {
             get { return _DelayMs; }

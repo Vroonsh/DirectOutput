@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DirectOutput.Cab.Toys.Layer;
 using System.Xml.Serialization;
 using DirectOutput.Cab.Toys;
 using DirectOutput.General.Analog;
@@ -20,7 +18,6 @@ namespace DirectOutput.FX.AnalogToyFX
         protected Table.Table Table;
 
         private string _ToyName;
-
 
         /// <summary>
         /// Name of the AnalogToy.
@@ -103,6 +100,15 @@ namespace DirectOutput.FX.AnalogToyFX
             this.Table = null;
             base.Finish();
         }
-    
+
+        /// <summary>
+        /// Will tell if this effect or any targeted effects have an action on the provided toys list
+        /// </summary>
+        /// <param name="ToyNames">a list of toy names</param>
+        /// <returns>true if any effect in the chain is acting on at least one of the provided toys</returns>
+        public override bool ActOnAnyToys(IEnumerable<string> ToyNames)
+        {
+            return ToyNames.Any(N => N.Equals(_ToyName, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }
