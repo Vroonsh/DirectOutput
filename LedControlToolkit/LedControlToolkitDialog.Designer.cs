@@ -29,34 +29,44 @@ namespace LedControlToolkit
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedControlToolkitDialog));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGridEffect = new System.Windows.Forms.PropertyGrid();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageEffectEditor = new System.Windows.Forms.TabPage();
-            this.tabPageTableEffects = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.buttonPulseTable = new System.Windows.Forms.Button();
+            this.buttonActivationTable = new System.Windows.Forms.Button();
+            this.numericUpDownPulseDuration = new System.Windows.Forms.NumericUpDown();
+            this.labelPulseDelay = new System.Windows.Forms.Label();
+            this.treeViewTableLedEffects = new System.Windows.Forms.TreeView();
+            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.labelRomName = new System.Windows.Forms.Label();
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
-            this.TableElements = new System.Windows.Forms.DataGridView();
-            this.TEType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TEName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TENumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TEValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TEActivate = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.TEPulse = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.buttonSaveEffect = new System.Windows.Forms.Button();
+            this.buttonLoadEffect = new System.Windows.Forms.Button();
+            this.buttonNewEffectList = new System.Windows.Forms.Button();
+            this.treeViewEffect = new System.Windows.Forms.TreeView();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
+            this.buttonSaveSettings = new System.Windows.Forms.Button();
+            this.buttonDeleteArea = new System.Windows.Forms.Button();
+            this.buttonDuplicateArea = new System.Windows.Forms.Button();
+            this.buttonNewArea = new System.Windows.Forms.Button();
+            this.listBoxPreviewAreas = new System.Windows.Forms.ListBox();
+            this.checkBoxPreviewArea = new System.Windows.Forms.CheckBox();
+            this.checkBoxPreviewGrid = new System.Windows.Forms.CheckBox();
             this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabControlMain.SuspendLayout();
-            this.tabPageTableEffects.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).BeginInit();
+            this.tabPageEffectEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).BeginInit();
+            this.tabPageSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -82,15 +92,15 @@ namespace LedControlToolkit
             // propertyGridEffect
             // 
             this.propertyGridEffect.Dock = System.Windows.Forms.DockStyle.Right;
-            this.propertyGridEffect.Location = new System.Drawing.Point(674, 3);
+            this.propertyGridEffect.Location = new System.Drawing.Point(733, 3);
             this.propertyGridEffect.Name = "propertyGridEffect";
-            this.propertyGridEffect.Size = new System.Drawing.Size(459, 994);
+            this.propertyGridEffect.Size = new System.Drawing.Size(400, 994);
             this.propertyGridEffect.TabIndex = 1;
+            this.propertyGridEffect.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridEffect_PropertyValueChanged);
             // 
             // tabControlMain
             // 
             this.tabControlMain.Controls.Add(this.tabPageEffectEditor);
-            this.tabControlMain.Controls.Add(this.tabPageTableEffects);
             this.tabControlMain.Controls.Add(this.tabPageSettings);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.Location = new System.Drawing.Point(3, 3);
@@ -101,6 +111,20 @@ namespace LedControlToolkit
             // 
             // tabPageEffectEditor
             // 
+            this.tabPageEffectEditor.Controls.Add(this.label1);
+            this.tabPageEffectEditor.Controls.Add(this.button1);
+            this.tabPageEffectEditor.Controls.Add(this.button2);
+            this.tabPageEffectEditor.Controls.Add(this.buttonPulseTable);
+            this.tabPageEffectEditor.Controls.Add(this.buttonActivationTable);
+            this.tabPageEffectEditor.Controls.Add(this.numericUpDownPulseDuration);
+            this.tabPageEffectEditor.Controls.Add(this.labelPulseDelay);
+            this.tabPageEffectEditor.Controls.Add(this.treeViewTableLedEffects);
+            this.tabPageEffectEditor.Controls.Add(this.labelRomName);
+            this.tabPageEffectEditor.Controls.Add(this.RomNameComboBox);
+            this.tabPageEffectEditor.Controls.Add(this.buttonSaveEffect);
+            this.tabPageEffectEditor.Controls.Add(this.buttonLoadEffect);
+            this.tabPageEffectEditor.Controls.Add(this.buttonNewEffectList);
+            this.tabPageEffectEditor.Controls.Add(this.treeViewEffect);
             this.tabPageEffectEditor.Location = new System.Drawing.Point(4, 22);
             this.tabPageEffectEditor.Name = "tabPageEffectEditor";
             this.tabPageEffectEditor.Padding = new System.Windows.Forms.Padding(3);
@@ -108,28 +132,116 @@ namespace LedControlToolkit
             this.tabPageEffectEditor.TabIndex = 1;
             this.tabPageEffectEditor.Text = "Effect Editor";
             this.tabPageEffectEditor.UseVisualStyleBackColor = true;
+            this.tabPageEffectEditor.Enter += new System.EventHandler(this.tabPageEffectEditor_Enter);
             // 
-            // tabPageTableEffects
+            // label1
             // 
-            this.tabPageTableEffects.Controls.Add(this.label2);
-            this.tabPageTableEffects.Controls.Add(this.RomNameComboBox);
-            this.tabPageTableEffects.Controls.Add(this.TableElements);
-            this.tabPageTableEffects.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTableEffects.Name = "tabPageTableEffects";
-            this.tabPageTableEffects.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTableEffects.Size = new System.Drawing.Size(1122, 968);
-            this.tabPageTableEffects.TabIndex = 2;
-            this.tabPageTableEffects.Text = "Table Effects";
-            this.tabPageTableEffects.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 484);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "Table Effects";
             // 
-            // label2
+            // button1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(39, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "RomName:";
+            this.button1.Location = new System.Drawing.Point(88, 443);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "Pulse";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(7, 443);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 21;
+            this.button2.Text = "Activate";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // buttonPulseTable
+            // 
+            this.buttonPulseTable.Location = new System.Drawing.Point(88, 939);
+            this.buttonPulseTable.Name = "buttonPulseTable";
+            this.buttonPulseTable.Size = new System.Drawing.Size(75, 23);
+            this.buttonPulseTable.TabIndex = 20;
+            this.buttonPulseTable.Text = "Pulse";
+            this.buttonPulseTable.UseVisualStyleBackColor = true;
+            this.buttonPulseTable.Click += new System.EventHandler(this.buttonPulseTable_Click);
+            // 
+            // buttonActivationTable
+            // 
+            this.buttonActivationTable.Location = new System.Drawing.Point(7, 939);
+            this.buttonActivationTable.Name = "buttonActivationTable";
+            this.buttonActivationTable.Size = new System.Drawing.Size(75, 23);
+            this.buttonActivationTable.TabIndex = 19;
+            this.buttonActivationTable.Text = "Activate";
+            this.buttonActivationTable.UseVisualStyleBackColor = true;
+            this.buttonActivationTable.Click += new System.EventHandler(this.buttonActivationTable_Click);
+            // 
+            // numericUpDownPulseDuration
+            // 
+            this.numericUpDownPulseDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPulseDuration.Location = new System.Drawing.Point(600, 7);
+            this.numericUpDownPulseDuration.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericUpDownPulseDuration.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownPulseDuration.Name = "numericUpDownPulseDuration";
+            this.numericUpDownPulseDuration.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownPulseDuration.TabIndex = 18;
+            this.numericUpDownPulseDuration.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            // 
+            // labelPulseDelay
+            // 
+            this.labelPulseDelay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelPulseDelay.AutoSize = true;
+            this.labelPulseDelay.Location = new System.Drawing.Point(518, 9);
+            this.labelPulseDelay.Name = "labelPulseDelay";
+            this.labelPulseDelay.Size = new System.Drawing.Size(76, 13);
+            this.labelPulseDelay.TabIndex = 17;
+            this.labelPulseDelay.Text = "Pulse Duration";
+            // 
+            // treeViewTableLedEffects
+            // 
+            this.treeViewTableLedEffects.ImageIndex = 0;
+            this.treeViewTableLedEffects.ImageList = this.imageListIcons;
+            this.treeViewTableLedEffects.Location = new System.Drawing.Point(9, 527);
+            this.treeViewTableLedEffects.Name = "treeViewTableLedEffects";
+            this.treeViewTableLedEffects.SelectedImageIndex = 0;
+            this.treeViewTableLedEffects.Size = new System.Drawing.Size(711, 409);
+            this.treeViewTableLedEffects.TabIndex = 16;
+            this.treeViewTableLedEffects.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
+            // 
+            // imageListIcons
+            // 
+            this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
+            this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
+            this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
+            // 
+            // labelRomName
+            // 
+            this.labelRomName.AutoSize = true;
+            this.labelRomName.Location = new System.Drawing.Point(6, 500);
+            this.labelRomName.Name = "labelRomName";
+            this.labelRomName.Size = new System.Drawing.Size(60, 13);
+            this.labelRomName.TabIndex = 15;
+            this.labelRomName.Text = "RomName:";
             // 
             // RomNameComboBox
             // 
@@ -399,80 +511,57 @@ namespace LedControlToolkit
             "wwfr",
             "Xenon",
             "xfiles"});
-            this.RomNameComboBox.Location = new System.Drawing.Point(137, 3);
+            this.RomNameComboBox.Location = new System.Drawing.Point(72, 500);
             this.RomNameComboBox.Name = "RomNameComboBox";
-            this.RomNameComboBox.Size = new System.Drawing.Size(524, 21);
-            this.RomNameComboBox.TabIndex = 11;
+            this.RomNameComboBox.Size = new System.Drawing.Size(648, 21);
+            this.RomNameComboBox.TabIndex = 14;
             this.RomNameComboBox.SelectedIndexChanged += new System.EventHandler(this.RomNameComboBox_SelectedIndexChanged);
             // 
-            // TableElements
+            // buttonSaveEffect
             // 
-            this.TableElements.AllowUserToAddRows = false;
-            this.TableElements.AllowUserToDeleteRows = false;
-            this.TableElements.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonSaveEffect.Location = new System.Drawing.Point(192, 6);
+            this.buttonSaveEffect.Name = "buttonSaveEffect";
+            this.buttonSaveEffect.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveEffect.TabIndex = 3;
+            this.buttonSaveEffect.Text = "Save As...";
+            this.buttonSaveEffect.UseVisualStyleBackColor = true;
+            // 
+            // buttonLoadEffect
+            // 
+            this.buttonLoadEffect.Location = new System.Drawing.Point(111, 6);
+            this.buttonLoadEffect.Name = "buttonLoadEffect";
+            this.buttonLoadEffect.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoadEffect.TabIndex = 2;
+            this.buttonLoadEffect.Text = "Load";
+            this.buttonLoadEffect.UseVisualStyleBackColor = true;
+            // 
+            // buttonNewEffectList
+            // 
+            this.buttonNewEffectList.Location = new System.Drawing.Point(7, 6);
+            this.buttonNewEffectList.Name = "buttonNewEffectList";
+            this.buttonNewEffectList.Size = new System.Drawing.Size(98, 23);
+            this.buttonNewEffectList.TabIndex = 1;
+            this.buttonNewEffectList.Text = "New Effect List";
+            this.buttonNewEffectList.UseVisualStyleBackColor = true;
+            // 
+            // treeViewEffect
+            // 
+            this.treeViewEffect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TableElements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.TableElements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.TEType,
-            this.TEName,
-            this.TENumber,
-            this.TEValue,
-            this.TEActivate,
-            this.TEPulse});
-            this.TableElements.Location = new System.Drawing.Point(6, 35);
-            this.TableElements.Name = "TableElements";
-            this.TableElements.RowHeadersVisible = false;
-            this.TableElements.Size = new System.Drawing.Size(655, 433);
-            this.TableElements.TabIndex = 1;
-            this.TableElements.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TableElements_CellClick);
-            this.TableElements.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.TableElements_CellValueChanged);
-            // 
-            // TEType
-            // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.TEType.DefaultCellStyle = dataGridViewCellStyle1;
-            this.TEType.HeaderText = "Type";
-            this.TEType.Name = "TEType";
-            this.TEType.ReadOnly = true;
-            // 
-            // TEName
-            // 
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.TEName.DefaultCellStyle = dataGridViewCellStyle2;
-            this.TEName.HeaderText = "Name";
-            this.TEName.Name = "TEName";
-            this.TEName.ReadOnly = true;
-            // 
-            // TENumber
-            // 
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.TENumber.DefaultCellStyle = dataGridViewCellStyle3;
-            this.TENumber.HeaderText = "Number";
-            this.TENumber.Name = "TENumber";
-            this.TENumber.ReadOnly = true;
-            // 
-            // TEValue
-            // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.TEValue.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TEValue.HeaderText = "Value";
-            this.TEValue.Name = "TEValue";
-            // 
-            // TEActivate
-            // 
-            this.TEActivate.HeaderText = "Activate";
-            this.TEActivate.Name = "TEActivate";
-            this.TEActivate.ReadOnly = true;
-            // 
-            // TEPulse
-            // 
-            this.TEPulse.HeaderText = "Pulse";
-            this.TEPulse.Name = "TEPulse";
-            this.TEPulse.ReadOnly = true;
+            this.treeViewEffect.Location = new System.Drawing.Point(6, 33);
+            this.treeViewEffect.Name = "treeViewEffect";
+            this.treeViewEffect.Size = new System.Drawing.Size(714, 404);
+            this.treeViewEffect.TabIndex = 0;
             // 
             // tabPageSettings
             // 
+            this.tabPageSettings.Controls.Add(this.buttonSaveSettings);
+            this.tabPageSettings.Controls.Add(this.buttonDeleteArea);
+            this.tabPageSettings.Controls.Add(this.buttonDuplicateArea);
+            this.tabPageSettings.Controls.Add(this.buttonNewArea);
+            this.tabPageSettings.Controls.Add(this.listBoxPreviewAreas);
+            this.tabPageSettings.Controls.Add(this.checkBoxPreviewArea);
+            this.tabPageSettings.Controls.Add(this.checkBoxPreviewGrid);
             this.tabPageSettings.Location = new System.Drawing.Point(4, 22);
             this.tabPageSettings.Name = "tabPageSettings";
             this.tabPageSettings.Padding = new System.Windows.Forms.Padding(3);
@@ -480,6 +569,81 @@ namespace LedControlToolkit
             this.tabPageSettings.TabIndex = 3;
             this.tabPageSettings.Text = "Settings";
             this.tabPageSettings.UseVisualStyleBackColor = true;
+            this.tabPageSettings.Enter += new System.EventHandler(this.tabPageSettings_Enter);
+            // 
+            // buttonSaveSettings
+            // 
+            this.buttonSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveSettings.Location = new System.Drawing.Point(583, 939);
+            this.buttonSaveSettings.Name = "buttonSaveSettings";
+            this.buttonSaveSettings.Size = new System.Drawing.Size(137, 23);
+            this.buttonSaveSettings.TabIndex = 8;
+            this.buttonSaveSettings.Text = "Save Settings";
+            this.buttonSaveSettings.UseVisualStyleBackColor = true;
+            this.buttonSaveSettings.Click += new System.EventHandler(this.buttonSaveSettings_Click);
+            // 
+            // buttonDeleteArea
+            // 
+            this.buttonDeleteArea.Location = new System.Drawing.Point(233, 302);
+            this.buttonDeleteArea.Name = "buttonDeleteArea";
+            this.buttonDeleteArea.Size = new System.Drawing.Size(137, 23);
+            this.buttonDeleteArea.TabIndex = 7;
+            this.buttonDeleteArea.Text = "Delete Selected Area";
+            this.buttonDeleteArea.UseVisualStyleBackColor = true;
+            this.buttonDeleteArea.Click += new System.EventHandler(this.buttonDeleteArea_Click);
+            // 
+            // buttonDuplicateArea
+            // 
+            this.buttonDuplicateArea.Location = new System.Drawing.Point(90, 302);
+            this.buttonDuplicateArea.Name = "buttonDuplicateArea";
+            this.buttonDuplicateArea.Size = new System.Drawing.Size(137, 23);
+            this.buttonDuplicateArea.TabIndex = 6;
+            this.buttonDuplicateArea.Text = "Duplicate Selected Area";
+            this.buttonDuplicateArea.UseVisualStyleBackColor = true;
+            this.buttonDuplicateArea.Click += new System.EventHandler(this.buttonDuplicateArea_Click);
+            // 
+            // buttonNewArea
+            // 
+            this.buttonNewArea.Location = new System.Drawing.Point(9, 302);
+            this.buttonNewArea.Name = "buttonNewArea";
+            this.buttonNewArea.Size = new System.Drawing.Size(75, 23);
+            this.buttonNewArea.TabIndex = 5;
+            this.buttonNewArea.Text = "New Area";
+            this.buttonNewArea.UseVisualStyleBackColor = true;
+            this.buttonNewArea.Click += new System.EventHandler(this.buttonNewArea_Click);
+            // 
+            // listBoxPreviewAreas
+            // 
+            this.listBoxPreviewAreas.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxPreviewAreas.FormattingEnabled = true;
+            this.listBoxPreviewAreas.Location = new System.Drawing.Point(9, 84);
+            this.listBoxPreviewAreas.Name = "listBoxPreviewAreas";
+            this.listBoxPreviewAreas.Size = new System.Drawing.Size(711, 212);
+            this.listBoxPreviewAreas.TabIndex = 4;
+            this.listBoxPreviewAreas.SelectedIndexChanged += new System.EventHandler(this.listBoxPreviewAreas_SelectedIndexChanged);
+            // 
+            // checkBoxPreviewArea
+            // 
+            this.checkBoxPreviewArea.AutoSize = true;
+            this.checkBoxPreviewArea.Location = new System.Drawing.Point(9, 58);
+            this.checkBoxPreviewArea.Name = "checkBoxPreviewArea";
+            this.checkBoxPreviewArea.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxPreviewArea.TabIndex = 3;
+            this.checkBoxPreviewArea.Text = "Display preview areas";
+            this.checkBoxPreviewArea.UseVisualStyleBackColor = true;
+            this.checkBoxPreviewArea.CheckedChanged += new System.EventHandler(this.checkBoxPreviewArea_CheckedChanged);
+            // 
+            // checkBoxPreviewGrid
+            // 
+            this.checkBoxPreviewGrid.AutoSize = true;
+            this.checkBoxPreviewGrid.Location = new System.Drawing.Point(9, 35);
+            this.checkBoxPreviewGrid.Name = "checkBoxPreviewGrid";
+            this.checkBoxPreviewGrid.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxPreviewGrid.TabIndex = 2;
+            this.checkBoxPreviewGrid.Text = "Display ledstrips grid";
+            this.checkBoxPreviewGrid.UseVisualStyleBackColor = true;
+            this.checkBoxPreviewGrid.CheckedChanged += new System.EventHandler(this.checkBoxPreviewGrid_CheckedChanged);
             // 
             // panelPreviewLedMatrix
             // 
@@ -505,30 +669,52 @@ namespace LedControlToolkit
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControlMain.ResumeLayout(false);
-            this.tabPageTableEffects.ResumeLayout(false);
-            this.tabPageTableEffects.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TableElements)).EndInit();
+            this.tabPageEffectEditor.ResumeLayout(false);
+            this.tabPageEffectEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).EndInit();
+            this.tabPageSettings.ResumeLayout(false);
+            this.tabPageSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
         private SplitContainer splitContainer1;
+
         private PropertyGrid propertyGridEffect;
         private LedMatrixPreviewControl panelPreviewLedMatrix;
         private TabControl tabControlMain;
+
+        #region Effect Editor Tab
         private TabPage tabPageEffectEditor;
-        private TabPage tabPageTableEffects;
-        private Label label2;
+        private Button buttonSaveEffect;
+        private Button buttonLoadEffect;
+        private Button buttonNewEffectList;
+        private TreeView treeViewEffect;
+        private Label labelRomName;
         private ComboBox RomNameComboBox;
-        private DataGridView TableElements;
-        private DataGridViewTextBoxColumn TEType;
-        private DataGridViewTextBoxColumn TEName;
-        private DataGridViewTextBoxColumn TENumber;
-        private DataGridViewTextBoxColumn TEValue;
-        private DataGridViewButtonColumn TEActivate;
-        private DataGridViewButtonColumn TEPulse;
+        #endregion
+
+        #region Settings Tab
         private TabPage tabPageSettings;
+        #endregion
+        private CheckBox checkBoxPreviewArea;
+        private CheckBox checkBoxPreviewGrid;
+        private ListBox listBoxPreviewAreas;
+        private Button buttonNewArea;
+        private Button buttonDeleteArea;
+        private Button buttonDuplicateArea;
+        private Button buttonSaveSettings;
+        private TreeView treeViewTableLedEffects;
+        private NumericUpDown numericUpDownPulseDuration;
+        private Label labelPulseDelay;
+        private Button button1;
+        private Button button2;
+        private Button buttonPulseTable;
+        private Button buttonActivationTable;
+        private Label label1;
+        private ImageList imageListIcons;
     }
 }
 
