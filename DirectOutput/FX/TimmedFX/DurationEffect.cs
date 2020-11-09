@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace DirectOutput.FX.TimmedFX
 {
@@ -34,7 +33,6 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The effect duration in milliseconds.
         /// </value>
-        [CategoryAttribute("Duration"), DescriptionAttribute("The effect duration in milliseconds.")]
         public int DurationMs
         {
             get { return _DurationMs; }
@@ -49,7 +47,6 @@ namespace DirectOutput.FX.TimmedFX
         ///   <c>true</c> if active; otherwise <c>false</c>.
         /// </value>
         [XmlIgnoreAttribute]
-        [Browsable(false)]
         public bool Active { get; private set; }
 
         /// <summary>
