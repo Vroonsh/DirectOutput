@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DirectOutput.General.Generic;
+using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
 
 namespace DirectOutput.FX

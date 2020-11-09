@@ -1,12 +1,11 @@
 ﻿using DirectOutput.General.Color;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
     /// <summary>
     /// Does create random flickering with a defineable density, durations and color within the spefied area of a ledstrip.
     /// </summary>
-    public class RGBAMatrixFlickerEffect : MatrixFlickerEffectBase<RGBAColor>
+    public class RGBAMatrixFlickerEffect : MatrixFlickerEffectBase<RGBAColor>, IMatrixRGBAColor
     {
         private const int RefreshIntervalMs = 30;
 
@@ -19,7 +18,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
         public RGBAColor ActiveColor
         {
             get { return _ActiveColor; }
@@ -35,7 +33,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }
