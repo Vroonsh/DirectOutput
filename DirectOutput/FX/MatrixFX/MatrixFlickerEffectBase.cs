@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
     /// <summary>
     /// Does create random flickering with a defineable density, durations and value within the spefied area of a matrix toy.
     /// </summary>
-    public abstract class MatrixFlickerEffectBase<MatrixElementType> : MatrixEffectBase<MatrixElementType>
+    public abstract class MatrixFlickerEffectBase<MatrixElementType> : MatrixEffectBase<MatrixElementType>, IMatrixFlickerEffect
     {
         private const int RefreshIntervalMs = 30;
 
@@ -26,7 +25,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The density if the flickering in percent.
         /// </value>
-        [CategoryAttribute("Flicker"), DescriptionAttribute("The density if the flickering in percent.")]
         public int Density
         {
             get { return _Density; }
@@ -42,7 +40,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The min duration in milliseconds for a single flicker/blink of a element.
         /// </value>
-        [CategoryAttribute("Flicker"), DescriptionAttribute("The min duration in milliseconds for a single flicker/blink of a element.")]
         public int MinFlickerDurationMs
         {
             get { return _MinFlickerDurationMs; }
@@ -58,7 +55,6 @@ namespace DirectOutput.FX.MatrixFX
         /// The max duration in milliseconds for a single flicker/blink of a element.
         /// </value>
 
-        [CategoryAttribute("Flicker"), DescriptionAttribute("The max duration in milliseconds for a single flicker/blink of a element.")]
         public int MaxFlickerDurationMs
         {
             get { return _MaxFlickerDurationMs; }
@@ -74,7 +70,6 @@ namespace DirectOutput.FX.MatrixFX
         /// The fade up duration in milliseconds for a single flicker/blink of a element.
         /// </value>
 
-        [CategoryAttribute("Flicker"), DescriptionAttribute("The fade up duration in milliseconds for a single flicker/blink of a element.")]
         public int FlickerFadeUpDurationMs
         {
             get { return _FlickerFadeUpDurationMs; }
@@ -90,7 +85,6 @@ namespace DirectOutput.FX.MatrixFX
         /// The fade down duration in milliseconds for a single flicker/blink of a element.
         /// </value>
 
-        [CategoryAttribute("Flicker"), DescriptionAttribute("The fade down duration in milliseconds for a single flicker/blink of a element.")]
         public int FlickerFadeDownDurationMs
         {
             get { return _FlickerFadeDownDurationMs; }
