@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
@@ -7,7 +6,7 @@ namespace DirectOutput.FX.MatrixFX
     /// Base class for effects shift values through a matrix of elements.
     /// </summary>
     /// <typeparam name="MatrixElementType">The type of the atrix element type.</typeparam>
-    public abstract class MatrixShiftEffectBase<MatrixElementType> : MatrixEffectBase<MatrixElementType>
+    public abstract class MatrixShiftEffectBase<MatrixElementType> : MatrixEffectBase<MatrixElementType>, IMatrixShiftEffect
     {
         private const int RefreshIntervalMs = 30;
 
@@ -20,7 +19,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The shift direction (Left, Right, Up, Down).
         /// </value>
-        [CategoryAttribute("Shift"), DescriptionAttribute("The shift direction (Left, Right, Up, Down).")]
         public MatrixShiftDirectionEnum ShiftDirection
         {
             get { return _ShiftDirection; }
@@ -37,7 +35,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The shift speed in percentage of the effect area (Left, Top, Width, Height properties) per second .
         /// </value>
-        [CategoryAttribute("Shift"), DescriptionAttribute("The shift speed in percentage of the effect area (Left, Top, Width, Height properties) per second .")]
         public float ShiftSpeed
         {
             get { return _ShiftSpeed; }
@@ -53,7 +50,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The acceleration for the shift speed in percent of the effect area per second.
         /// </value>
-        [CategoryAttribute("Shift"), DescriptionAttribute("The acceleration for the shift speed in percent of the effect area per second.")]
         public float ShiftAcceleration
         {
             get { return _ShiftAcceleration; }

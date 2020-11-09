@@ -66,6 +66,7 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="EffectTreeNodes.cs" />
     <Compile Include="LedMatrixPreviewControl.cs">
       <SubType>Component</SubType>
     </Compile>
