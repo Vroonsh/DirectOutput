@@ -1,12 +1,11 @@
 ﻿using DirectOutput.General.Color;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
     /// <summary>
     ///  Sets the spefied area of matrix to the specified colors depending on the trigger value.
     /// </summary>
-    public class RGBAMatrixColorEffect : MatrixValueEffectBase<RGBAColor>
+    public class RGBAMatrixColorEffect : MatrixValueEffectBase<RGBAColor>, IMatrixRGBAColor
     {
 
         private RGBAColor _ActiveColor = new RGBAColor(0xff, 0xff, 0xff, 0xff);
@@ -18,7 +17,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
         public RGBAColor ActiveColor
         {
             get { return _ActiveColor; }
@@ -34,7 +32,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace DirectOutput.FX.TimmedFX
 {
@@ -17,7 +16,6 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The high value for the blinking. Values between 0 and 255 define the actual values which have to be output during the on phase of the blinking. A value of -1 defines that the value which has been received by the trigger event is used.
         /// </value>
-        [CategoryAttribute("Blink"), DescriptionAttribute("The high value for the blinking. Values between 0 and 255 define the actual values which have to be output during the on phase of the blinking. A value of -1 defines that the value which has been received by the trigger event is used.")]
         public int HighValue
         {
             get { return _ActiveValue; }
@@ -32,17 +30,11 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The low value for the blinking (0-255).
         /// </value>
-        [CategoryAttribute("Blink"), DescriptionAttribute("The low value for the blinking (0-255).")]
         public int LowValue
         {
             get { return _LowValue; }
             set { _LowValue = value.Limit(0, 255); }
         }
-
-
-
-
-
 
         private int _DurationActiveMs = 500;
 
@@ -52,7 +44,6 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The active duration of the blinking in milliseconds.
         /// </value>
-        [CategoryAttribute("Blink"), DescriptionAttribute("The active duration of the blinking in milliseconds.")]
         public int DurationActiveMs
         {
             get { return _DurationActiveMs; }
@@ -68,7 +59,6 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The inactive duration of the blinking in milliseconds.
         /// </value>
-        [CategoryAttribute("Blink"), DescriptionAttribute("The inactive duration of the blinking in milliseconds.")]
         public int DurationInactiveMs
         {
             get { return _DurationInactiveMs; }
@@ -84,7 +74,6 @@ namespace DirectOutput.FX.TimmedFX
         /// <value>
         /// The untrigger behaviour defines how the blinking stops.
         /// </value>
-        [CategoryAttribute("Blink"), DescriptionAttribute("The untrigger behaviour defines how the blinking stops.")]
         public BlinkEffectUntriggerBehaviourEnum UntriggerBehaviour
         {
             get { return _UntriggerBehaviour; }
@@ -100,7 +89,6 @@ namespace DirectOutput.FX.TimmedFX
         ///   <c>true</c> if active; otherwise <c>false</c>.
         /// </value>
         [XmlIgnoreAttribute]
-        [Browsable(false)]
         public bool Active { get; private set; }
 
 
@@ -202,6 +190,5 @@ namespace DirectOutput.FX.TimmedFX
             catch { }
             base.Finish();
         }
-
     }
 }

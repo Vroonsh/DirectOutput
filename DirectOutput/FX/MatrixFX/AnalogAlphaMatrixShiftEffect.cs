@@ -11,7 +11,7 @@ namespace DirectOutput.FX.MatrixFX
     /// Same kind of effect like the RGBAMatrixShift effect, but for AnalogAlpha elements (just about everything which is not a RGBA element).
     /// 
     /// </summary>
-    public class AnalogAlphaMatrixShiftEffect : MatrixShiftEffectBase<AnalogAlpha>
+    public class AnalogAlphaMatrixShiftEffect : MatrixShiftEffectBase<AnalogAlpha>, IMatrixAnalogValue
     {
         private const int RefreshIntervalMs = 30;
 

@@ -8,16 +8,16 @@ namespace DirectOutput.FX.MatrixFX
     /// <summary>
     /// Shift directions for LedStrip effects
     /// </summary>
-    public enum MatrixShiftDirectionEnum
+    public enum MatrixShiftDirectionEnum 
     {
         /// <summary>
         /// Shift left
         /// </summary>
-        Left='L',
+        Left = 'L',
         /// <summary>
         /// Shift right
         /// </summary>
-        Right='R',
+        Right = 'R',
         /// <summary>
         /// Shift up
         /// </summary>
@@ -25,6 +25,10 @@ namespace DirectOutput.FX.MatrixFX
         /// <summary>
         /// Shift down
         /// </summary>
-        Down='D'
+        Down = 'D',
+        /// <summary>
+        /// Invalid
+        /// </summary>
+        Invalid = 'I'
     }
 }

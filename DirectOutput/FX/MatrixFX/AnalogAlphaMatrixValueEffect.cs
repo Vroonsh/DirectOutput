@@ -11,7 +11,7 @@ namespace DirectOutput.FX.MatrixFX
     /// <summary>
     /// Sets the spefied area of matrix to the specified values depending on the trigger value.
     /// </summary>
-    public class AnalogAlphaMatrixValueEffect : MatrixValueEffectBase<AnalogAlpha>
+    public class AnalogAlphaMatrixValueEffect : MatrixValueEffectBase<AnalogAlpha>, IMatrixAnalogValue
     {
 
         private AnalogAlpha _ActiveValue = new AnalogAlpha(0xff, 0xff);

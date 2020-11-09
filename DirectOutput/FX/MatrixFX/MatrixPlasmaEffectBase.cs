@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace DirectOutput.FX.MatrixFX
@@ -16,7 +15,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The plasma speed.
         /// </value>
-        [CategoryAttribute("Plasma"), DescriptionAttribute("The plasma speed.")]
         public int PlasmaSpeed
         {
             get { return _PlasmaSpeed; }
@@ -33,7 +31,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The plasma scale.
         /// </value>
-        [CategoryAttribute("Plasma"), DescriptionAttribute("The plasma scale.")]
         public int PlasmaScale
         {
             get { return _PlasmaScale; }
@@ -50,7 +47,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The plasma density.
         /// </value>
-        [CategoryAttribute("Plasma"), DescriptionAttribute("The plasma density.")]
         public int PlasmaDensity
         {
             get { return _PlasmaDensity; }

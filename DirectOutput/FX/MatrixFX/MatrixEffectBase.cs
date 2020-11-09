@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using DirectOutput.Cab.Toys;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
@@ -22,7 +21,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The name of the toy which is controlled by the effect.
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The name of the toy which is controlled by the effect.")]
         public string ToyName
         {
             get { return _ToyName; }
@@ -58,7 +56,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The width in percent of the target area for the effect (0-100).
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The width in percent of the target area for the effect (0-100).")]
         public float Width
         {
             get { return _Width; }
@@ -73,7 +70,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The height in percent of the target area for the effect (0-100).
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The height in percent of the target area for the effect (0-100).")]
         public float Height
         {
             get { return _Height; }
@@ -88,7 +84,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The left resp. X position of the upper left corner in percent of the target area for the effect (0-100).
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The left resp. X position of the upper left corner in percent of the target area for the effect (0-100).")]
         public float Left
         {
             get { return _Left; }
@@ -103,7 +98,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The top resp. Y position of the upper left corner in percent of the target area for the effect (0-100).
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The top resp. Y position of the upper left corner in percent of the target area for the effect (0-100).")]
         public float Top
         {
             get { return _Top; }
@@ -111,7 +105,18 @@ namespace DirectOutput.FX.MatrixFX
         }
 
 
-
+        private bool _FixedLayerNr = false;
+        /// <summary>
+        /// Gets or sets if the LayerNr has been set by the TableConfigSetting
+        /// </summary>
+        /// <value>
+        /// true is the LayerNr has been set by the TableConfigSetting
+        /// </value>
+        public bool FixedLayerNr
+        {
+            get { return _FixedLayerNr; }
+            set { _FixedLayerNr = value; }
+        }
 
         private int _LayerNr = 0;
 
@@ -121,7 +126,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The number of the target layer for the effect.
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("The number of the target layer for the effect.")]
         public int LayerNr
         {
             get { return _LayerNr; }
@@ -137,7 +141,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// Fade (active and inactive values/color will fade depending on trigger value) or OnOff (actvice value/color is used for trigger values >0, otherwise inactive value/color will be used).
         /// </value>
-        [CategoryAttribute("Matrix Effect"), DescriptionAttribute("Fade (active and inactive values/color will fade depending on trigger value) or OnOff (actvice value/color is used for trigger values >0, otherwise inactive value/color will be used).")]
         public FadeModeEnum FadeMode
         {
             get { return _FadeMode; }
