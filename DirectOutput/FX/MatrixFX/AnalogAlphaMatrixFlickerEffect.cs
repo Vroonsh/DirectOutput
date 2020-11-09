@@ -10,7 +10,7 @@ namespace DirectOutput.FX.MatrixFX
     /// <summary>
     /// Does create random flickering with a defineable density, durations and value within the spefied area of a matrix.
     /// </summary>
-    public class AnalogAlphaMatrixFlickerEffect : MatrixFlickerEffectBase<AnalogAlpha>
+    public class AnalogAlphaMatrixFlickerEffect : MatrixFlickerEffectBase<AnalogAlpha>, IMatrixAnalogValue
     {
         private const int RefreshIntervalMs = 30;
 

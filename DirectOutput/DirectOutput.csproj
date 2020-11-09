@@ -225,6 +225,11 @@
     <Compile Include="FX\MatrixFX\BitmapShapes\Shape.cs" />
     <Compile Include="FX\MatrixFX\BitmapShapes\ShapeDefinitions.cs" />
     <Compile Include="FX\MatrixFX\BitmapShapes\ShapeList.cs" />
+    <Compile Include="FX\MatrixFX\IMatrixAnalogValue.cs" />
+    <Compile Include="FX\MatrixFX\IMatrixBitmapAnimationEffect.cs" />
+    <Compile Include="FX\MatrixFX\IMatrixFlickerEffect.cs" />
+    <Compile Include="FX\MatrixFX\IMatrixRGBAColor.cs" />
+    <Compile Include="FX\MatrixFX\IMatrixShiftEffect.cs" />
     <Compile Include="FX\MatrixFX\MatrixPlasmaEffectBase.cs" />
     <Compile Include="FX\MatrixFX\RGBAMatrixColorScaleShapeEffect.cs" />
     <Compile Include="FX\MatrixFX\RGBAMatrixColorScaleBitmapAnimationEffect.cs" />
