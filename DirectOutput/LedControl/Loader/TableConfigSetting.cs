@@ -971,7 +971,11 @@ namespace DirectOutput.LedControl.Loader
 
             //Blink and/or duration export
             if (Blink == -1) {
-                configToolStr += $"BLINK {BlinkIntervalMs} ";
+                if (BlinkIntervalMs != 1000) {
+                    configToolStr += $"BLINK {BlinkIntervalMs} ";
+                } else {
+                    configToolStr += $"BLINK ";
+                }
             } else if (Blink > 0) {
                 configToolStr += $"{Blink * BlinkIntervalMs} {Blink} ";
             } else if (DurationMs >= 0) {
