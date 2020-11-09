@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using DirectOutput.General.Color;
 
 namespace DirectOutput.FX.MatrixFX
@@ -8,10 +7,10 @@ namespace DirectOutput.FX.MatrixFX
     /// Displayes a classical plasma effect on a RGBA matrix/ledstrip array.
     /// For more details on the math of the plasma effect, read the following page: http://www.bidouille.org/prog/plasma
     /// </summary>
-    public class RGBAMatrixPlasmaEffect : MatrixPlasmaEffectBase<RGBAColor>
+    public class RGBAMatrixPlasmaEffect : MatrixPlasmaEffectBase<RGBAColor>, IMatrixRGBAColor2
     {
 
-        private RGBAColor _ActiveColor1 = new RGBAColor(0x00, 0x00, 0xff, 0xff);
+        private RGBAColor _ActiveColor = new RGBAColor(0x00, 0x00, 0xff, 0xff);
 
         /// <summary>
         /// Gets or sets the first active color.
@@ -19,11 +18,10 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
-        public RGBAColor ActiveColor1
+        public RGBAColor ActiveColor
         {
-            get { return _ActiveColor1; }
-            set { _ActiveColor1 = value; }
+            get { return _ActiveColor; }
+            set { _ActiveColor = value; }
         }
 
 
@@ -35,7 +33,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color 2.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color 2.")]
         public RGBAColor ActiveColor2
         {
             get { return _ActiveColor2; }
@@ -51,7 +48,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }
@@ -64,10 +60,10 @@ namespace DirectOutput.FX.MatrixFX
 
             double BlendVal = (Math.Sin(Value * Math.PI * 2 + Time) + 1) / 2;
             RGBAColor Blended = new RGBAColor(
-                (int)(BlendVal * ActiveColor1.Red + (1 - BlendVal) * ActiveColor2.Red),
-                (int)(BlendVal * ActiveColor1.Green + (1 - BlendVal) * ActiveColor2.Green),
-                (int)(BlendVal * ActiveColor1.Blue + (1 - BlendVal) * ActiveColor2.Blue),
-                (int)((BlendVal * ActiveColor1.Alpha + (1 - BlendVal) * ActiveColor2.Alpha) * Value)
+                (int)(BlendVal * ActiveColor.Red + (1 - BlendVal) * ActiveColor2.Red),
+                (int)(BlendVal * ActiveColor.Green + (1 - BlendVal) * ActiveColor2.Green),
+                (int)(BlendVal * ActiveColor.Blue + (1 - BlendVal) * ActiveColor2.Blue),
+                (int)((BlendVal * ActiveColor.Alpha + (1 - BlendVal) * ActiveColor2.Alpha) * Value)
                 );
 
 

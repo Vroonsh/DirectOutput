@@ -1,6 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DirectOutput.FX;
+using DirectOutput.FX.AnalogToyFX;
+using DirectOutput.FX.ConditionFX;
 using DirectOutput.FX.MatrixFX;
+using DirectOutput.FX.RGBAFX;
+using DirectOutput.FX.TimmedFX;
+using DirectOutput.FX.ValueFX;
+using DirectOutput.General.Analog;
+using DirectOutput.General.Color;
+using DirectOutput.Table;
 
 namespace DirectOutput.LedControl.Loader
 {
@@ -42,13 +52,13 @@ namespace DirectOutput.LedControl.Loader
         /// <summary>
         /// The table element triggering the effect (if available)
         /// </summary>
-        public string TableElement = null;
+        public string TableElement { get; set; } = null;
 
 
         /// <summary>
         /// The condition if available.
         /// </summary>
-        public string Condition = null;
+        public string Condition { get; set; } = null;
 
 
         /// <summary>
@@ -204,7 +214,7 @@ namespace DirectOutput.LedControl.Loader
         }
 
 
-        public int BlinkLow;
+        public int BlinkLow { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the trigger value for the effect is inverted.
@@ -241,33 +251,33 @@ namespace DirectOutput.LedControl.Loader
         public int? Layer { get; set; }
 
 
-        public int AreaLeft = 0;
-        public int AreaTop = 0;
-        public int AreaWidth = 100;
-        public int AreaHeight = 100;
-        public int AreaSpeed = 100;
-        public int AreaAcceleration = 0;
-        public int AreaFlickerDensity = 0;
-        public int AreaFlickerMinDurationMs = 0;
-        public int AreaFlickerMaxDurationMs = 0;
-        public int AreaFlickerFadeDurationMs = 0;
-        public MatrixShiftDirectionEnum? AreaDirection = null;
+        public int AreaLeft { get; set; } = 0;
+        public int AreaTop { get; set; } = 0;
+        public int AreaWidth { get; set; } = 100;
+        public int AreaHeight { get; set; } = 100;
+        public int AreaSpeed { get; set; } = 100;
+        public int AreaAcceleration { get; set; } = 0;
+        public int AreaFlickerDensity { get; set; } = 0;
+        public int AreaFlickerMinDurationMs { get; set; } = 0;
+        public int AreaFlickerMaxDurationMs { get; set; } = 0;
+        public int AreaFlickerFadeDurationMs { get; set; } = 0;
+        public MatrixShiftDirectionEnum AreaDirection { get; set; } = MatrixShiftDirectionEnum.Invalid;
         public bool IsArea = false;
 
         public bool IsBitmap = false;
-        public int AreaBitmapTop = 0;
-        public int AreaBitmapLeft = 0;
-        public int AreaBitmapWidth = -1;
-        public int AreaBitmapHeight = -1;
-        public int AreaBitmapFrame = 0;
+        public int AreaBitmapTop { get; set; } = 0;
+        public int AreaBitmapLeft { get; set; } = 0;
+        public int AreaBitmapWidth { get; set; } = -1;
+        public int AreaBitmapHeight { get; set; } = -1;
+        public int AreaBitmapFrame { get; set; } = 0;
 
-        public int AreaBitmapAnimationStepSize = 1;
-        public int AreaBitmapAnimationStepCount = 0;
-        public int AreaBitmapAnimationFrameDuration = 30;
-        public MatrixAnimationStepDirectionEnum AreaBitmapAnimationDirection = MatrixAnimationStepDirectionEnum.Frame;
-        public AnimationBehaviourEnum AreaBitmapAnimationBehaviour = AnimationBehaviourEnum.Loop;
+        public int AreaBitmapAnimationStepSize { get; set; } = 1;
+        public int AreaBitmapAnimationStepCount { get; set; } = 0;
+        public int AreaBitmapAnimationFrameDuration { get; set; } = 30;
+        public MatrixAnimationStepDirectionEnum AreaBitmapAnimationDirection { get; set; } = MatrixAnimationStepDirectionEnum.Frame;
+        public AnimationBehaviourEnum AreaBitmapAnimationBehaviour { get; set; } = AnimationBehaviourEnum.Loop;
 
-        public string ShapeName=null;
+        public string ShapeName { get; set; } = string.Empty;
 
 
         public bool IsPlasma = false;
@@ -278,7 +288,6 @@ namespace DirectOutput.LedControl.Loader
 
 
         //public int PlasmaScale = 100;
-
 
         /// <summary>
         /// Parses the setting data. <br />
@@ -764,8 +773,274 @@ namespace DirectOutput.LedControl.Loader
 
         }
 
+        public void FromEffect(IEffect Effect)
+        {
+            IEffect currentFX = Effect;
+            NoBool = true; //Until there is a ValueMapFullRangeEffect
+            while (currentFX != null) {
+                if (currentFX is TableElementConditionEffect conditionFX) {
+                    OutputControl = OutputControlEnum.Condition;
+                    Condition = conditionFX.Condition;
+                } else if (currentFX is ValueMapFullRangeEffect) {
+                    NoBool = false;
+                } else if (currentFX is ValueInvertEffect) {
+                    Invert = true;
+                } else if (currentFX is DelayEffect delayFX) {
+                    WaitDurationMs = delayFX.DelayMs;
+                } else if (currentFX is ExtendDurationEffect extDurationFX) {
+                    ExtDurationMs = extDurationFX.DurationMs;
+                } else if (currentFX is MinDurationEffect minDurationFX) {
+                    if (minDurationFX.Name.Split(' ').Last() != "DefaultMinDurationEffect") {
+                        MinDurationMs = minDurationFX.MinDurationMs;
+                    }
+                } else if (currentFX is MaxDurationEffect maxDurationFX) {
+                    MaxDurationMs = maxDurationFX.MaxDurationMs;
+                } else if (currentFX is DurationEffect durationFX) {
+                    //TargetEffect is a blink effect, Blink will be > 0 based on Duration & BlinkDuration
+                    if (durationFX.TargetEffect is BlinkEffect blinkFX) {
+                        var duration = durationFX.DurationMs;
+                        BlinkIntervalMs = blinkFX.DurationActiveMs + blinkFX.DurationInactiveMs;
+                        Blink = durationFX.DurationMs / BlinkIntervalMs;
+                        DurationMs = 0;
+                    } else {
+                        DurationMs = durationFX.DurationMs;
+                        Blink = 0;
+                    }
+                } else if (currentFX is BlinkEffect blinkFX) {
+                    //Is there a nested Blink ?
+                    if (blinkFX.TargetEffect is BlinkEffect nestedBlinkFX) {
+                        BlinkLow = nestedBlinkFX.LowValue;
+                        BlinkIntervalMsNested = nestedBlinkFX.DurationActiveMs + nestedBlinkFX.DurationInactiveMs;
+                        BlinkPulseWidthNested = (int)(((double)nestedBlinkFX.DurationActiveMs * 100 / BlinkIntervalMsNested)+0.5f);
+                        currentFX = blinkFX.TargetEffect;
+                    } else if (Blink == 0) {
+                        //Not already set by previous DurationEffect
+                        Blink = -1;
+                        DurationMs = 1000;
+                        BlinkLow = blinkFX.LowValue;
+                        BlinkIntervalMs = blinkFX.DurationActiveMs + blinkFX.DurationInactiveMs;
+                        BlinkPulseWidth = (int)(((double)blinkFX.DurationActiveMs * 100 / BlinkIntervalMs)+0.5f);
+                    }
+                } else if (currentFX is FadeEffect fadeFX) {
+                    FadingDownDurationMs = fadeFX.FadeDownDuration;
+                    FadingUpDurationMs = fadeFX.FadeUpDuration;
+                } else if (currentFX is AnalogToyValueEffect analogToyValueFX) {
+                    Intensity = analogToyValueFX.ActiveValue.Alpha;
+                } else if (currentFX is RGBAColorEffect rgbaColorFX) {
+                    //TODO find the ColorConfig
+                    ColorName = rgbaColorFX.ActiveColor.ToString();
+                } else if (currentFX is IMatrixEffect matrixFX) {
+                    IsArea = true;
 
+                    if (matrixFX.FixedLayerNr) {
+                        Layer = matrixFX.LayerNr;
+                    }
 
+                    AreaTop = (int)matrixFX.Top;
+                    AreaLeft = (int)matrixFX.Left;
+                    AreaWidth = (int)matrixFX.Width;
+                    AreaHeight = (int)matrixFX.Height;
+
+                    if (currentFX is IMatrixShiftEffect matrixShiftFX) {
+                        AreaDirection = matrixShiftFX.ShiftDirection;
+                        AreaAcceleration = (int)matrixShiftFX.ShiftAcceleration;
+                        AreaSpeed = (int)matrixShiftFX.ShiftSpeed;
+                    }
+
+                    if (currentFX is IMatrixFlickerEffect matrixFlickerFX) {
+                        AreaFlickerDensity = matrixFlickerFX.Density;
+                        AreaFlickerMinDurationMs = matrixFlickerFX.MinFlickerDurationMs;
+                        AreaFlickerMaxDurationMs = matrixFlickerFX.MaxFlickerDurationMs;
+                        //Average the fades duration in case they were changed elsewhere
+                        AreaFlickerFadeDurationMs = (matrixFlickerFX.FlickerFadeDownDurationMs + matrixFlickerFX.FlickerFadeUpDurationMs) / 2;
+                    }
+
+                    if (currentFX is IMatrixBitmapEffect matrixBitmapFX) {
+                        IsBitmap = true;
+
+                        AreaBitmapTop = matrixBitmapFX.BitmapTop;
+                        AreaBitmapLeft = matrixBitmapFX.BitmapLeft;
+                        AreaBitmapWidth = matrixBitmapFX.BitmapWidth;
+                        AreaBitmapHeight = matrixBitmapFX.BitmapHeight;
+                        AreaBitmapFrame = matrixBitmapFX.BitmapFrameNumber;
+                    }
+
+                    if (currentFX is IMatrixBitmapAnimationEffect matrixBitmapAnimationFX) {
+                        AreaBitmapAnimationDirection = matrixBitmapAnimationFX.AnimationStepDirection;
+                        AreaBitmapAnimationBehaviour = matrixBitmapAnimationFX.AnimationBehaviour;
+                        AreaBitmapAnimationFrameDuration = matrixBitmapAnimationFX.AnimationFrameDurationMs;
+                        AreaBitmapAnimationStepCount = matrixBitmapAnimationFX.AnimationFrameCount;
+                        AreaBitmapAnimationStepSize = matrixBitmapAnimationFX.AnimationStepSize;
+                    }
+
+                    if (currentFX is IMatrixAnalogValue matrixAnalogFX) {
+                        Intensity = matrixAnalogFX.ActiveValue.Alpha;
+                    }
+
+                    if (currentFX is IMatrixRGBAColor matrixRGBAFX) {
+                        ColorName = matrixRGBAFX.ActiveColor.ToString();
+                        if (currentFX is IMatrixRGBAColor2 matrixRGBA2FX) {
+                            ColorName2 = matrixRGBA2FX.ActiveColor2.ToString();
+                        }
+                    }
+
+                    if (currentFX is RGBAMatrixPlasmaEffect plasmaMatrixFX) {
+                        IsPlasma = true;
+                        PlasmaDensity = plasmaMatrixFX.PlasmaDensity;
+                        PlasmaSpeed = plasmaMatrixFX.PlasmaSpeed;
+                    } else if (currentFX is RGBAMatrixShapeEffect || currentFX is RGBAMatrixColorScaleShapeEffect) {
+                        if (currentFX is RGBAMatrixColorScaleShapeEffect rgbaShapeFX) {
+                            ShapeName = rgbaShapeFX.ShapeName;
+                            ColorName = rgbaShapeFX.ActiveColor.ToString();
+                        } else {
+                            ShapeName = (currentFX as RGBAMatrixShapeEffect).ShapeName;
+                        }
+                    }
+                } 
+
+                if (currentFX is EffectEffectBase effectEffect) {
+                    currentFX = effectEffect.TargetEffect;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        private string GetConfigToolCommand<T>(T value, T defaultValue, string command)
+        {
+            if (value == null || (value?.Equals(defaultValue) ?? false)) {
+                return string.Empty;
+            }
+            return $"{command}{value.ToString()} ";
+        }
+
+        private string GetConfigToolCommand(string value, string command)
+        {
+            if (value.IsNullOrEmpty()) {
+                return string.Empty;
+            }
+
+            return $"{command}{value} ";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToConfigToolCommand(ColorList colorList = null)
+        {
+            string configToolStr = string.Empty;
+
+            switch (OutputControl) {
+                case OutputControlEnum.FixedOn:
+                    configToolStr += "ON ";
+                    break;
+                case OutputControlEnum.FixedOff:
+                    configToolStr += "OFF ";
+                    break;
+                case OutputControlEnum.Controlled: {
+                    configToolStr += $"{TableElement} ";
+                    break;
+                }
+                case OutputControlEnum.Condition:
+                    configToolStr += $"{Condition} ";
+                    break;
+            }
+
+            //Main Color
+            configToolStr += GetConfigToolCommand(ColorName, string.Empty);
+
+            if (Invert) {
+                configToolStr += "INVERT ";
+            }
+
+            if (NoBool) {
+                configToolStr += "NOBOOL ";
+            }
+
+            //Blink and/or duration export
+            if (Blink == -1) {
+                configToolStr += $"BLINK {BlinkIntervalMs} ";
+            } else if (Blink > 0) {
+                configToolStr += $"{Blink * BlinkIntervalMs} {Blink} ";
+            } else if (DurationMs >= 0) {
+                configToolStr += $"{DurationMs} ";
+            }
+
+            //Blink & nested blink
+            configToolStr += GetConfigToolCommand(BlinkLow, 0, "BL#");
+            configToolStr += GetConfigToolCommand(BlinkPulseWidth, 50, "BPW");
+            configToolStr += GetConfigToolCommand(BlinkIntervalMsNested, 0, "BNP");
+            configToolStr += GetConfigToolCommand(BlinkPulseWidthNested, 50, "BNPW");
+
+            //Durations
+            configToolStr += GetConfigToolCommand(MinDurationMs, 0, "M");
+            configToolStr += GetConfigToolCommand(MaxDurationMs, 0, "MAX");
+            configToolStr += GetConfigToolCommand(WaitDurationMs, 0, "W");
+            if (FadingUpDurationMs == FadingDownDurationMs) {
+                configToolStr += GetConfigToolCommand(FadingDownDurationMs, 0, "F");
+            } else {
+                configToolStr += GetConfigToolCommand(FadingUpDurationMs, 0, "FU");
+                configToolStr += GetConfigToolCommand(FadingDownDurationMs, 0, "FD");
+            }
+
+            //Intensity
+            configToolStr += GetConfigToolCommand(Intensity, -1, "I#");
+
+            //Layer
+            configToolStr += GetConfigToolCommand(Layer, 0, "L");
+
+            if (IsArea) {
+                configToolStr += GetConfigToolCommand(AreaTop, 0, "AT");
+                configToolStr += GetConfigToolCommand(AreaLeft, 0, "AL");
+                configToolStr += GetConfigToolCommand(AreaWidth, 100, "AW");
+                configToolStr += GetConfigToolCommand(AreaHeight, 100, "AH");
+
+                configToolStr += GetConfigToolCommand(ShapeName, "SHP");
+
+                if (IsPlasma) {
+                    configToolStr += GetConfigToolCommand(PlasmaSpeed, 0,"APS");
+                    configToolStr += GetConfigToolCommand(PlasmaDensity, 0, "APD");
+                    configToolStr += GetConfigToolCommand(ColorName2, "APC");
+                }
+
+                if (IsBitmap) {
+                    configToolStr += GetConfigToolCommand(AreaBitmapTop, 0, "ABT");
+                    configToolStr += GetConfigToolCommand(AreaBitmapLeft, 0, "ABL");
+                    configToolStr += GetConfigToolCommand(AreaBitmapWidth, -1, "ABW");
+                    configToolStr += GetConfigToolCommand(AreaBitmapHeight, -1, "ABH");
+                    configToolStr += GetConfigToolCommand(AreaBitmapFrame, 0, "ABF");
+
+                    //BitmapAnimation
+                    configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepSize, 1, "AAS");
+                    configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepCount, 0, "AAC");
+                    configToolStr += GetConfigToolCommand(AreaBitmapAnimationFrameDuration, 30, "AAF");
+                    configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationDirection, (char)MatrixAnimationStepDirectionEnum.Frame, "AAD");
+                    configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationBehaviour, (char)AnimationBehaviourEnum.Loop, "AAB");
+                }
+
+                //Flicker
+                configToolStr += GetConfigToolCommand(AreaFlickerDensity, 0, "AFDEN");
+                configToolStr += GetConfigToolCommand(AreaFlickerMinDurationMs, 0, "AFMIN");
+                configToolStr += GetConfigToolCommand(AreaFlickerMaxDurationMs, 0, "AFMAX");
+                configToolStr += GetConfigToolCommand(AreaFlickerFadeDurationMs, 0, "AFFADE");
+
+                //Shift
+                configToolStr += GetConfigToolCommand(AreaAcceleration, 0, "ASA");
+                configToolStr += GetConfigToolCommand(AreaSpeed, 100, "ASS");
+                configToolStr += GetConfigToolCommand((char)AreaDirection, (char)MatrixShiftDirectionEnum.Invalid, "ASD"); 
+            }
+
+            if (colorList != null) {
+                foreach(var col in colorList) {
+                    if (configToolStr.Contains(col.ToString())){
+                        configToolStr = configToolStr.Replace(col.ToString(), col.Name);
+                    }
+                }
+            }
+
+            return configToolStr.TrimEnd(' ');
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableConfigSetting"/> class.

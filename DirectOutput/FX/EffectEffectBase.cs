@@ -2,7 +2,6 @@
 using DirectOutput.Table;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DirectOutput.FX
 {
@@ -17,7 +16,6 @@ namespace DirectOutput.FX
         /// Name of the target effect.<br/>
         /// Triggers EffectNameChanged if value is changed.
         /// </summary>    
-        [Browsable(false)]
         public string TargetEffectName
         {
             get { return _TargetEffectName; }
@@ -46,7 +44,6 @@ namespace DirectOutput.FX
         /// The property is resolved from the TargetEffectName. If TargetEffectName is empty or unknown this property will return null.
         /// </summary>
         [XmlIgnoreAttribute]
-        [Browsable(false)]
         public IEffect TargetEffect
         {
             get
