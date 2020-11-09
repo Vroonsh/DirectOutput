@@ -5,6 +5,7 @@ namespace DirectOutput.FX.MatrixFX
     {
         DirectOutput.FX.FadeModeEnum FadeMode { get; set; }
         float Height { get; set; }
+        bool FixedLayerNr { get; set; }
         int LayerNr { get; set; }
         float Left { get; set; }
         float Top { get; set; }

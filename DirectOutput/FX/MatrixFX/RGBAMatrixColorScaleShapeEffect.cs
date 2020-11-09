@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using DirectOutput.FX.MatrixFX.BitmapShapes;
 using DirectOutput.General.Color;
@@ -9,7 +8,7 @@ namespace DirectOutput.FX.MatrixFX
     /// <summary>
     /// Displays a shape on a RGBA matrix (typically a ledstrip array). The color of the displayed shape is controlled by the effect.
     /// </summary>
-    public class RGBAMatrixColorScaleShapeEffect : MatrixEffectBase<RGBAColor>
+    public class RGBAMatrixColorScaleShapeEffect : MatrixEffectBase<RGBAColor>, IMatrixRGBAColor
     {
 
         private RGBAColor _ActiveColor = new RGBAColor(0xff, 0xff, 0xff, 0xff);
@@ -21,7 +20,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
         public RGBAColor ActiveColor
         {
             get { return _ActiveColor; }
@@ -37,7 +35,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }

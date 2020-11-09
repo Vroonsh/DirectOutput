@@ -1,6 +1,5 @@
 ﻿using DirectOutput.General.BitmapHandling;
 using DirectOutput.General.Color;
-using System.ComponentModel;
 
 namespace DirectOutput.FX.MatrixFX
 {
@@ -14,7 +13,7 @@ namespace DirectOutput.FX.MatrixFX
     /// 
     /// The image extraction takes place upon initalization of the framework. While the framework is active, it only outputs the previously extracted and scaled data to allow for better performance. 
     /// </summary>
-    public class RGBAMatrixColorScaleBitmapAnimationEffect : MatrixBitmapAnimationEffectBase<RGBAColor>
+    public class RGBAMatrixColorScaleBitmapAnimationEffect : MatrixBitmapAnimationEffectBase<RGBAColor>, IMatrixRGBAColor
     {
         private RGBAColor _ActiveColor = new RGBAColor(0xff, 0xff, 0xff, 0xff);
 
@@ -25,7 +24,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The active color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The active color.")]
         public RGBAColor ActiveColor
         {
             get { return _ActiveColor; }
@@ -41,7 +39,6 @@ namespace DirectOutput.FX.MatrixFX
         /// <value>
         /// The inactive color.
         /// </value>
-        [CategoryAttribute("Colors"), DescriptionAttribute("The inactive color.")]
         public RGBAColor InactiveColor
         {
             get { return _InactiveColor; }

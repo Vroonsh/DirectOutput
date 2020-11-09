@@ -41,6 +41,19 @@ namespace DirectOutput.FX.AnalogToyFX
 
         protected AnalogAlpha Layer { get; private set; }
 
+        private bool _FixedLayerNr = false;
+        /// <summary>
+        /// Gets or sets if the LayerNr has been set by the TableConfigSetting
+        /// </summary>
+        /// <value>
+        /// true is the LayerNr has been set by the TableConfigSetting
+        /// </value>
+        public bool FixedLayerNr
+        {
+            get { return _FixedLayerNr; }
+            set { _FixedLayerNr = value; }
+        }
+
         private int _LayerNr = 0;
 
         /// <summary>
