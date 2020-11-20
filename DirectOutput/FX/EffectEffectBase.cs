@@ -131,7 +131,7 @@ namespace DirectOutput.FX
             if (TargetEffect != null) {
                 return TargetEffect.ActOnAnyToys(ToyNames);
             }
-            return false;
+            return base.ActOnAnyToys(ToyNames);
         }
     }
 }

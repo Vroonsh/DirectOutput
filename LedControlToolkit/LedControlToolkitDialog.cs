@@ -215,7 +215,11 @@ namespace LedControlToolkit
 
         private void tabPageEffectEditor_Enter(object sender, EventArgs e)
         {
-            propertyGridEffect.SelectedObject = (treeViewTableLedEffects.SelectedNode as EffectTreeNode)?.TCS;
+            if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode){
+                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectTreeNode.TCS);
+            } else {
+                propertyGridEffect.SelectedObject = null;
+            }
         }
 
         private void tabPageSettings_Enter(object sender, EventArgs e)
@@ -238,7 +242,7 @@ namespace LedControlToolkit
             if (propertyGrid.SelectedObject is Settings.LedPreviewArea selectedArea) {
                 if (e.ChangedItem.PropertyDescriptor.Name == "Name") {
                     //Check if there is no duplicate zone area names
-                    foreach(var pArea in Settings.LedPreviewAreas) {
+                    foreach (var pArea in Settings.LedPreviewAreas) {
                         if (pArea != selectedArea && pArea.Name.Equals(selectedArea.Name, StringComparison.InvariantCultureIgnoreCase)) {
                             MessageBox.Show($"There is already another preview area named {selectedArea.Name}.\nPlease choose another name.", "Duplicate preview area names", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             selectedArea.Name = e.OldValue as string;
@@ -250,6 +254,12 @@ namespace LedControlToolkit
                 }
                 panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
                 panelPreviewLedMatrix.Refresh();
+            } else if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
+                if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
+                    if (effectTreeNode.TCS == TCSDesc.WrappedTCS) {
+                        effectTreeNode.Refresh();
+                    }
+                }
             }
         }
 
@@ -326,7 +336,7 @@ namespace LedControlToolkit
                     if (te != null) {
                         Pinball.Table.TableElements.Remove(te);
                     }
-                    propertyGridEffect.SelectedObject = effectNode.TCS;
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS);
                     CurrentSelectedTE = effectNode.TestTE;
                     Pinball.Table.TableElements.Add(CurrentSelectedTE);
                 } else if (e.Node is TableElementTreeNode tableElementNode) {
