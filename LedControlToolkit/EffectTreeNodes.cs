@@ -30,6 +30,14 @@ namespace LedControlToolkit
             Text = DofConfigCommand;
         }
 
+        public void Refresh()
+        {
+            DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
+            Text = DofConfigCommand;
+
+            //TODO Rebuild Effect
+        }
+
         public override string ToString() => DofConfigCommand;
 
         public IEffect Effect { get; set; }
