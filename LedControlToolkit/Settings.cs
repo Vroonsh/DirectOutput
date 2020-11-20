@@ -14,7 +14,9 @@ namespace LedControlToolkit
     {
         public class LedPreviewArea
         {
+            [Browsable(false)]
             public int Id => Name.GetHashCode();
+
             public string Name { get; set; }
             private float _X = 0.0f;
             private float _Y = 0.0f;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DirectOutput.FX;
 using DirectOutput.FX.AnalogToyFX;
@@ -27,6 +28,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The output control enum value.
         /// </value>
+        [Category("Trigger")]
+        [DisplayName("Output Control")]
+        [Description("Defines the control mode for a output. It can be constantly on, off or it can be controlled by a element of a pinball table.")]
+        [DefaultValue(OutputControlEnum.FixedOn)]
         public OutputControlEnum OutputControl { get; set; }
 
         /// <summary>
@@ -36,6 +41,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The name of the color as specified in the color section of the Ledcontrol.ini file.
         /// </value>
+        [Category("Colors")]
+        [DisplayName("Color Name")]
+        [Description("The name of the color of the setting.\nThis should only be set for RGB outputs.")]
+        [DefaultValue("")]
         public string ColorName { get; set; }
 
 
@@ -46,18 +55,27 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The color config.
         /// </value>
+        [Category("Colors")]
+        [DisplayName("Color Config")]
+        [Description("The color config attached to the Color Name.")]
         public ColorConfig ColorConfig { get; set; }
 
 
         /// <summary>
         /// The table element triggering the effect (if available)
         /// </summary>
+        [Category("Trigger")]
+        [DisplayName("Table Element")]
+        [Description("The table element triggering the effect (if available)")]
         public string TableElement { get; set; } = null;
 
 
         /// <summary>
         /// The condition if available.
         /// </summary>
+        [Category("Trigger")]
+        [DisplayName("Condition")]
+        [Description("The condition if available.")]
         public string Condition { get; set; } = null;
 
 
@@ -68,6 +86,9 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The type of the output.
         /// </value>
+        [DisplayName("Output Type")]
+        [Description("The type of the output.\nThe value of this property depends on the value of the ColorName property.")]
+        [ReadOnly(true)]
         public OutputTypeEnum OutputType
         {
             get
@@ -82,6 +103,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The duration in milliseconds.
         /// </value>
+        [Category("Timers")]
+        [DisplayName("Duration (ms)")]
+        [Description("The duration in milliseconds.")]
+        [DefaultValue(0)]
         public int DurationMs { get; set; }
 
         private int _MinDurationMs = 0;
@@ -92,6 +117,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The minimum duration in milliseconds.
         /// </value>
+        [Category("Timers")]
+        [DisplayName("Min Duration (ms)")]
+        [Description("The minimum duration in milliseconds.")]
+        [DefaultValue(0)]
         public int MinDurationMs
         {
             get { return _MinDurationMs; }
@@ -105,6 +134,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The max duration of the effect in milliseconds.
         /// </value>
+        [Category("Timers")]
+        [DisplayName("Max Duration (ms)")]
+        [Description("The max duration for the effect in milliseconds.")]
+        [DefaultValue(0)]
         public int MaxDurationMs { get; set; }
 
         /// <summary>
@@ -113,6 +146,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The extended duration of the effect in milliseconds.
         /// </value>
+        [Category("Timers")]
+        [DisplayName("Extended Duration (ms)")]
+        [Description("The extended duration for the effect in milliseconds.")]
+        [DefaultValue(0)]
         public int ExtDurationMs { get; set; }
 
         private int _Intensity;
@@ -123,6 +160,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The intensity.
         /// </value>
+        [Category("Colors")]
+        [DisplayName("Intensity")]
+        [Description("The intensity.\nIf the property \"Color Name\" is set, this property will always be -1.")]
+        [DefaultValue(-1)]
         public int Intensity
         {
 
@@ -138,6 +179,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The duration of the fading in milliseconds.
         /// </value>
+        [Category("Fade")]
+        [DisplayName("Fading Up Duration (ms)")]
+        [Description("The duration for fading up in milliseconds.")]
+        [DefaultValue(0)]
         public int FadingUpDurationMs
         {
             get { return _FadingDurationUpMs; }
@@ -152,6 +197,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The duration of the fading in milliseconds.
         /// </value>
+        [Category("Fade")]
+        [DisplayName("Fading Down Duration (ms)")]
+        [Description("The duration for fading down in milliseconds.")]
+        [DefaultValue(0)]
         public int FadingDownDurationMs
         {
             get { return _FadingDownDurationMs; }
@@ -164,6 +213,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The number of blinks. -1 means infinite number of blinks.
         /// </value>
+        [Category("Blink")]
+        [DisplayName("Blink Numbers")]
+        [Description("The number blinks.\n-1 means infinite number of blinks.")]
+        [DefaultValue(0)]
         public int Blink { get; set; }
 
         /// <summary>
@@ -172,6 +225,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The blink interval in  milliseconds.
         /// </value>
+        [Category("Blink")]
+        [DisplayName("Blink Interval (ms)")]
+        [Description("The blink interval in milliseconds.")]
+        [DefaultValue(0)]
         public int BlinkIntervalMs { get; set; }
 
 
@@ -181,6 +238,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The blink interval in milliseconds for nested blinking.
         /// </value>
+        [Category("Blink")]
+        [DisplayName("Blink Interval Nested (ms)")]
+        [Description("The blink interval in milliseconds for nested blinking.")]
+        [DefaultValue(0)]
         public int BlinkIntervalMsNested { get; set; }
 
         private int _BlinkPulseWidthNested = 50;
@@ -192,6 +253,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The width of the blink pulse for nested blinking.
         /// </value>
+        [Category("Blink")]
+        [DisplayName("Blink Pulse Width Nested (%)")]
+        [Description("The width of the blink pulse for nested blinking.\nValue must be between 1 and 99 (defaults to 50).")]
+        [DefaultValue(50)]
         public int BlinkPulseWidthNested
         {
             get { return _BlinkPulseWidthNested; }
@@ -207,6 +272,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The width of the blink pulse.
         /// </value>
+        [Category("Blink")]
+        [DisplayName("Blink Pulse Width (%)")]
+        [Description("The width of the blink pulse.\nValue must be between 1 and 99 (defaults to 50).")]
+        [DefaultValue(50)]
         public int BlinkPulseWidth
         {
             get { return _BlinkPulseWidth; }
@@ -214,7 +283,17 @@ namespace DirectOutput.LedControl.Loader
         }
 
 
-        public int BlinkLow { get; private set; }
+        private int _BlinkLow = 0;
+
+        [Category("Blink")]
+        [DisplayName("Blink Low Intensity")]
+        [Description("The width of the blink low intensity.\nValue must be between 0 and 255 (defaults to 0).")]
+        [DefaultValue(0)]
+        public int BlinkLow
+        {
+            get { return _BlinkLow; }
+            set { _BlinkLow = value.Limit(0, 255); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the trigger value for the effect is inverted.
@@ -222,6 +301,9 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         ///   <c>true</c> if invert; otherwise, <c>false</c>.
         /// </value>
+        [DisplayName("Invert")]
+        [Description("A value indicating whether the trigger value for the effect is inverted.")]
+        [DefaultValue(false)]
         public bool Invert { get; set; }
 
         /// <summary>
@@ -230,6 +312,9 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         ///   <c>true</c> if [no bool]; otherwise, <c>false</c>.
         /// </value>
+        [DisplayName("NoBool")]
+        [Description("Indicates the trigger value of the effect is not to be treated as a boolean value resp. that the value should not be mapped to 0 or 255 (255 for all values which are not 0).")]
+        [DefaultValue(false)]
         public bool NoBool { get; set; }
 
 
@@ -239,6 +324,10 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The wait duration in milliseconds
         /// </value>
+        [Category("Timers")]
+        [DisplayName("Wait Duration (ms)")]
+        [Description("The wait duration before the effect is triggered.")]
+        [DefaultValue(0)]
         public int WaitDurationMs { get; set; }
 
 
@@ -248,43 +337,160 @@ namespace DirectOutput.LedControl.Loader
         /// <value>
         /// The layer for the settings.
         /// </value>
+        [DisplayName("Layer")]
+        [Description("The layer for the settings.")]
         public int? Layer { get; set; }
 
 
+        [Category("Area")]
+        [DisplayName("Left (%)")]
+        [Description("The left position of the area effect in percentage.")]
+        [DefaultValue(0)]
         public int AreaLeft { get; set; } = 0;
+        [Category("Area")]
+        [DisplayName("Top (%)")]
+        [Description("The top position of the area effect in percentage.")]
+        [DefaultValue(0)]
         public int AreaTop { get; set; } = 0;
+        [Category("Area")]
+        [DisplayName("Width (%)")]
+        [Description("The width of the area effect in percentage.")]
+        [DefaultValue(100)]
         public int AreaWidth { get; set; } = 100;
+        [Category("Area")]
+        [DisplayName("Height (%)")]
+        [Description("The height of the area effect in percentage.")]
+        [DefaultValue(100)]
         public int AreaHeight { get; set; } = 100;
+        [Category("Shift")]
+        [DisplayName("Speed")]
+        [Description("The shift speed in percentage of the effect area per second.\n" +
+                     "A speed setting of 100 will shift through the whole area of the effect in 1 second.\n" +
+                     "200 will shift through the effect area in .5 seconds. 33 will shift through the effect area in approx. 3 seconds.\n" +
+                     "Max. speed is 10000 (shift through the effect area in 1/100 seconds). Min. speed is 1 (shifts through the effect area in 100 seconds).")]
+        [DefaultValue(100)]
         public int AreaSpeed { get; set; } = 100;
+        [Category("Shift")]
+        [DisplayName("Acceleration")]
+        [Description("The acceleration for the shift speed in percent of the effect area per second.\n" +
+                     "Acceleration can be zero, positive or negative. Positive values will increase the shift speed.\n" +
+                     "Speed will be increased up to a max value of 10000. Negative values will decrease the shift speed.\n" +
+                     "Speed will be decreased down to a minimum speed of 1.")]
+        [DefaultValue(0)]
         public int AreaAcceleration { get; set; } = 0;
+        [Category("Flicker")]
+        [DisplayName("Density (%)")]
+        [Description("The density of the flickering in percent.\n" +
+                     "For 0 no elements of the defined area will will flicker, for 50 half of the elements will flicker, for 100 all elements will flicker.")]
+        [DefaultValue(0)]
         public int AreaFlickerDensity { get; set; } = 0;
+        [Category("Flicker")]
+        [DisplayName("Min Duration (ms)")]
+        [Description("The min duration in milliseconds for a single flicker/blink of a element.")]
+        [DefaultValue(0)]
         public int AreaFlickerMinDurationMs { get; set; } = 0;
+        [Category("Flicker")]
+        [DisplayName("Max Duration (ms)")]
+        [Description("The max duration in milliseconds for a single flicker/blink of a element.")]
+        [DefaultValue(0)]
         public int AreaFlickerMaxDurationMs { get; set; } = 0;
+        [Category("Flicker")]
+        [DisplayName("Fade Duration (ms)")]
+        [Description("The up & down fade durations in milliseconds for a single flicker/blink of a element.")]
+        [DefaultValue(0)]
         public int AreaFlickerFadeDurationMs { get; set; } = 0;
+        [Category("Shift")]
+        [DisplayName("Direction")]
+        [Description("The shift direction resp. the direction in which the color moves (Left, Right, Up, Down).")]
+        [DefaultValue(MatrixShiftDirectionEnum.Invalid)]
         public MatrixShiftDirectionEnum AreaDirection { get; set; } = MatrixShiftDirectionEnum.Invalid;
         public bool IsArea = false;
 
         public bool IsBitmap = false;
+        [Category("Bitmap")]
+        [DisplayName("Top (pixels)")]
+        [Description("The top position in pixels of the bitmap area in the reference image.")]
+        [DefaultValue(0)]
         public int AreaBitmapTop { get; set; } = 0;
+        [Category("Bitmap")]
+        [DisplayName("Left (pixels)")]
+        [Description("The left position in pixels of the bitmap area in the reference image.")]
+        [DefaultValue(0)]
         public int AreaBitmapLeft { get; set; } = 0;
+        [Category("Bitmap")]
+        [DisplayName("Width (pixels)")]
+        [Description("The width in pixels of the bitmap area in the reference image.")]
+        [DefaultValue(-1)]
         public int AreaBitmapWidth { get; set; } = -1;
+        [Category("Bitmap")]
+        [DisplayName("Height (pixels)")]
+        [Description("The height in pixels of the bitmap area in the reference image.")]
+        [DefaultValue(-1)]
         public int AreaBitmapHeight { get; set; } = -1;
+        [Category("Bitmap")]
+        [DisplayName("Frame")]
+        [Description("The frame used in the reference image, if it's a Gif.")]
+        [DefaultValue(0)]
         public int AreaBitmapFrame { get; set; } = 0;
-
+        [Category("Bitmap")]
+        [DisplayName("Animation Step Size (pixels)")]
+        [Description("The step in pixels between two steps of the bitmap animation.\nStep Size could be negative.")]
+        [DefaultValue(1)]
         public int AreaBitmapAnimationStepSize { get; set; } = 1;
+        [Category("Bitmap")]
+        [DisplayName("Animation Step Count")]
+        [Description("The number of steps of the bitmap animation.")]
+        [DefaultValue(0)]
         public int AreaBitmapAnimationStepCount { get; set; } = 0;
+        [Category("Bitmap")]
+        [DisplayName("Animation Step Duration (ms)")]
+        [Description("The delay in milliseconds between steps of the bitmap animation.")]
+        [DefaultValue(30)]
         public int AreaBitmapAnimationFrameDuration { get; set; } = 30;
+        [Category("Bitmap")]
+        [DisplayName("Animation Direction")]
+        [Description("The direction of the bitmap animation.\n" +
+                     "Frame : animation goes through image frames (Gif only).\n" +
+                     "Right/Down : animation shift through image pixels to the right/down using StepSize")]
+        [DefaultValue(MatrixAnimationStepDirectionEnum.Frame)]
         public MatrixAnimationStepDirectionEnum AreaBitmapAnimationDirection { get; set; } = MatrixAnimationStepDirectionEnum.Frame;
+        [Category("Bitmap")]
+        [DisplayName("Animation Behaviour")]
+        [Description("The behaviour of the bitmap animation.\n" +
+                     "Once : restarts when triggered, play only once.\n" +
+                     "Loop : restarts when triggered, play in loop" +
+                     "Continue : continue existing animation when triggered then loops.")]
+        [DefaultValue(AnimationBehaviourEnum.Loop)]
         public AnimationBehaviourEnum AreaBitmapAnimationBehaviour { get; set; } = AnimationBehaviourEnum.Loop;
 
+        [Category("Shape")]
+        [DisplayName("Shape Name")]
+        [Description("The name of a predifined shape from DirectOutputShapes.xml")]
+        [DefaultValue("")]
         public string ShapeName { get; set; } = string.Empty;
 
 
         public bool IsPlasma = false;
-        public int PlasmaSpeed = 100;
-        public int PlasmaDensity = 100;
-        public string ColorName2 = "";
-        public ColorConfig ColorConfig2 = null;
+        [Category("Plasma")]
+        [DisplayName("Speed")]
+        [Description("The plasma speed")]
+        [DefaultValue(100)]
+        public int PlasmaSpeed { get; set; } = 100;
+        [Category("Plasma")]
+        [DisplayName("Density")]
+        [Description("The plasma density")]
+        [DefaultValue(100)]
+        public int PlasmaDensity { get; set; } = 100;
+        [Category("Plasma")]
+        [DisplayName("Color Name 2")]
+        [Description("The plasma secondary color name")]
+        [DefaultValue("")]
+        public string ColorName2 { get; set; } = string.Empty;
+        [Category("Plasma")]
+        [DisplayName("Color Config 2")]
+        [Description("The plasma secondary color config")]
+        [DefaultValue("")]
+        public ColorConfig ColorConfig2 { get; set; } = null;
 
 
         //public int PlasmaScale = 100;
