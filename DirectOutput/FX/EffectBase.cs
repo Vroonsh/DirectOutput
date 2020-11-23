@@ -39,5 +39,14 @@ namespace DirectOutput.FX
         /// <param name="ToyNames">a list of toy names</param>
         /// <returns>true if any effect in the chain is acting on at least one of the provided toys</returns>
         public virtual bool ActOnAnyToys(IEnumerable<string> ToyNames) => false;
+
+        /// <summary>
+        /// Will populate a List with all effects from an effect hierarchy
+        /// </summary>
+        /// <param name="Effects">a List of effets to fill</param>
+        public virtual void GetAllEffects(List<IEffect> Effects)
+        {
+            Effects.Add(this);
+        }
     }
 }

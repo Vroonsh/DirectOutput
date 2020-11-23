@@ -133,5 +133,17 @@ namespace DirectOutput.FX
             }
             return base.ActOnAnyToys(ToyNames);
         }
+
+        /// <summary>
+        /// Will populate a List with all effects from an effect hierarchy
+        /// </summary>
+        /// <param name="Effects">a List of effets to fill</param>
+        public override void GetAllEffects(List<IEffect> Effects)
+        {
+            Effects.Add(this);
+            if (TargetEffect != null) {
+                TargetEffect.GetAllEffects(Effects);
+            }
+        }
     }
 }
