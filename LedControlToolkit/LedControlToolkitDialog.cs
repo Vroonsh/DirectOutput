@@ -1,6 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.Cab.Toys.Hardware;
 using DirectOutput.FX;
+using DirectOutput.FX.MatrixFX;
 using DirectOutput.General.Color;
 using DirectOutput.GlobalConfiguration;
 using DirectOutput.LedControl.Loader;
@@ -24,9 +25,16 @@ namespace LedControlToolkit
     public partial class LedControlToolkitDialog : Form
     {
         private Pinball Pinball;
+        private Table PinballTable = null;
+        private Table EditionTable = new Table();
         private Settings Settings = new Settings();
-
         private LedControlConfig LedControlConfigData;
+
+        DirectOutput.LedControl.Setup.Configurator RebuildConfigurator = new DirectOutput.LedControl.Setup.Configurator();
+
+        private Table CurrentTable = null;
+        TreeNode CurrentTableSelectedNode = null;
+        TableElement CurrentSelectedTE = null;
 
         public LedControlToolkitDialog()
         {
@@ -109,6 +117,8 @@ namespace LedControlToolkit
                 previewController.Init(Pinball.Cabinet);
                 Pinball.Cabinet.OutputControllers.Add(previewController);
             }
+
+            PinballTable = Pinball.Table;
 
             panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
 
@@ -257,7 +267,7 @@ namespace LedControlToolkit
             } else if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
                 if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
                     if (effectTreeNode.TCS == TCSDesc.WrappedTCS) {
-                        effectTreeNode.Refresh();
+                        effectTreeNode.Rebuild(Pinball, RebuildConfigurator);
                     }
                 }
             }
@@ -317,9 +327,6 @@ namespace LedControlToolkit
             Settings.SaveSettings();
         }
 
-        TreeNode CurrentTableSelectedNode = null;
-        TableElement CurrentSelectedTE = null;
-
         private void SetEffectTreeNodeActive(TreeNode node, int active)
         {
             node.ImageIndex = active;
@@ -345,6 +352,8 @@ namespace LedControlToolkit
                 } else {
                     propertyGridEffect.SelectedObject = null;
                 }
+
+                CurrentTable = PinballTable;
 
                 if (CurrentSelectedTE != null) {
                     if (CurrentTableSelectedNode != null) {
