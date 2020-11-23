@@ -130,6 +130,8 @@ namespace LedControlToolkit
         {
             var combo = (sender as ComboBox);
             Settings.LastRomName = combo.Text;
+            treeViewTableLedEffects.Nodes.Clear();
+            treeViewTableLedEffects.Refresh();
             SetupPinball();
         }
 
