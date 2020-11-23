@@ -13,7 +13,9 @@ The properties are automatically converted to dofconfigtool compatible commands 
 
 Next step will be to create brand new effects which could be save/load using xml files.
 
+Standalone releases are available in the releases section, they're provided with their own DirectOutput.dll so you can extract them in a separate directory than your DirectOutput installation. 
 If you want to test this tool at its early stage, it'll be really appreciate.
-And also feel free to create issues on ths branch for any feedback, bug or improvement.
+Nothing is saved in any of your congif files, only tool settings are in a config subdirectory.
+And also feel free to create issues on this branch for any feedback, bug or improvement.
 
 Cheers
