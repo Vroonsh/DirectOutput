@@ -187,6 +187,31 @@ namespace DirectOutput.General.Generic
             return ItemRemoved;
         }
 
+        /// <summary>
+        /// Remove items from an ExtList using a predicate
+        /// </summary>
+        /// <param name="Match">The predicate to test.</param>
+        /// <returns>The removeed items count</returns>
+        public int RemoveAll(Predicate<T> Match)
+        {
+            int ItemRemoved = 0;
+
+            var items = _InternalList.FindAll(Match);
+            foreach (var item in items) {
+                int Index = _InternalList.IndexOf(item);
+                if (BeforeRemove != null) {
+                    BeforeRemove(this, new RemoveEventArgs<T>(Index, item));
+                }
+
+                _InternalList.Remove(item);
+                ItemRemoved++;
+                if (AfterRemove != null) {
+                    AfterRemove(this, new RemoveEventArgs<T>(Index, item));
+                }
+            }
+
+            return ItemRemoved;
+        }
 
         /// <summary>
         /// Removes a item at a specified index.
