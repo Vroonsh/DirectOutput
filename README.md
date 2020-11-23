@@ -1,35 +1,19 @@
-DirectOutput Framework R3++, Grand Unified Edition
+This branch is a try to create a toolkit to ease Matrix effects creation.
 
-DirectOutput is an add-in for Visual Pinball and other programs that
-provides software control over external feedback devices in a virtual
-pinball cabinet.  
+The new tool is called LedControl Toolkit.
+Its purpose is to edit effects without needing to have addressable ledstrip hardware connected.
 
-Feedback devices are things like lights, beacons, solenoids, shaker
-motors, and gear motors that augment the "video game" action with
-audio, visual, and tactile effects.  These feedback devices are
-physically connected to the PC through an "output controller",
-typically a USB device.  A variety of output controllers are in common
-use, including LedWiz, PacLed, SainSmart USB relay boards, and
-open-source systems such as Pinscape.  
+For doing so, it uses the current DirectOutput.dll (slighly modified but nothing should change in its behavior).
+It then redirect outputs to a new Winforms based Led Controller to preview the effects.
+It's using your usual config files (globalconfig, cabinet.xml & led control inifiles) to setup your toolkit workspace.
 
-DOF acts as a hardware virtualization layer: it provides a common
-interface to the different hardware devices so that the pinball
-simulator software doesn't have to speak 10 different USB protocols.
-DOF also handles all details of effects timing and device state
-management, so that the pinball simulator doesn't have to know
-anything about the physical devices; it merely sends DOF data on the
-abstract game events, and DOF takes care of mapping the game events to
-device effects, mapping the device effects to hardware states that
-evolve over time, and mapping the hardware states to the output
-controller protocol commands necessary to effect same.
+For now, you can only browse through all available table configs from provided inifile, test the effects and modify them.
+Effect edition is done through a property grid which expose a Table Config Setting line for each effect.
+The properties are automatically converted to dofconfigtool compatible commands you can then inject in the online tool.
 
-DOF documentation can be found at http://directoutput.github.io/DirectOutput/
+Next step will be to create brand new effects which could be save/load using xml files.
 
-This is the mjr "Grand Unified" edition of DOF, which merges all of
-the known forks as of January 2018.  Several forks with different
-add-on features have emerged since the last official DOF release from
-SwissLizard in December 2015.  This edition is an attempt to re-unify
-all of this work under a single version so that users don't have to
-pick subsets of available features - just pick this version and you'll
-have them all.
+If you want to test this tool at its early stage, it'll be really appreciate.
+And also feel free to create issues on ths branch for any feedback, bug or improvement.
 
+Cheers
