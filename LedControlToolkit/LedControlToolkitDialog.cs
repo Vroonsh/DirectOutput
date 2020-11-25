@@ -36,6 +36,7 @@ namespace LedControlToolkit
         TreeNode CurrentTableSelectedNode = null;
         TableElement CurrentSelectedTE = null;
 
+        #region Main Dialog
         public LedControlToolkitDialog()
         {
             InitializeComponent();
@@ -46,6 +47,8 @@ namespace LedControlToolkit
             treeViewTableLedEffects.FullRowSelect = true;
             treeViewTableLedEffects.HideSelection = false;
             treeViewEffect.ImageList = imageListIcons;
+            treeViewEffect.FullRowSelect = true;
+            treeViewEffect.HideSelection = false;
         }
 
         private void LedControlToolkit_FormClosing(object sender, FormClosingEventArgs e)
@@ -59,38 +62,6 @@ namespace LedControlToolkit
             Settings.ShowPreviewAreas = panelPreviewLedMatrix.ShowPreviewAreas;
 
             Settings.SaveSettings();
-        }
-
-        private void DisplayTableElements()
-        {
-            Pinball.Table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
-
-            treeViewTableLedEffects.Nodes.Clear();
-            var ledstrips = Pinball.Cabinet.Toys.Where(T => T is LedStrip).Select(T => (T as LedStrip).Name).ToArray();
-            var effects = Pinball.Table.Effects.Where(E => E.ActOnAnyToys(ledstrips)).ToList();
-
-            List<TableElement> assignedeffects = new List<TableElement>();
-            foreach (TableElement TE in Pinball.Table.TableElements) {
-                foreach (var effect in TE.AssignedEffects) {
-                    if (effects.Contains(effect.Effect)) {
-                        assignedeffects.Add(TE);
-                        break;
-                    }
-                }
-            }
-
-            foreach(var tableElement in assignedeffects) {
-                var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
-                var listNode = new TableElementTreeNode(tableElement, tableElement.AssignedEffects.Select(A => A.Effect).ToArray()); 
-
-                foreach(var effect in tableElement.AssignedEffects) {
-                    var effectTypeName = effect.Effect.GetType().ToString();
-                    var effectNode = new EffectTreeNode(tableElement, effect.Effect, LedControlConfigData);
-                    listNode.Nodes.Add(effectNode);
-                }
-
-                treeViewTableLedEffects.Nodes.Add(listNode);
-            }
         }
 
         private void SetupPinball()
@@ -123,45 +94,7 @@ namespace LedControlToolkit
             panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
 
             Pinball.Init();
-            DisplayTableElements();
-        }
-
-        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var combo = (sender as ComboBox);
-            Settings.LastRomName = combo.Text;
-            treeViewTableLedEffects.Nodes.Clear();
-            treeViewTableLedEffects.Refresh();
-            SetupPinball();
-        }
-
-        public void LoadLedControlConfigData()
-        {
-            FileInfo GlobalConfigFile = new FileInfo(Settings.LastGlobalConfigFilename);
-            var GlobalConfig = DirectOutput.GlobalConfiguration.GlobalConfig.GetGlobalConfigFromConfigXmlFile(GlobalConfigFile.FullName);
-            if (GlobalConfig == null) {
-                Log.Write("No global config file loaded");
-                //set new global config object if it config could not be loaded from the file.
-                GlobalConfig = new GlobalConfig();
-            }
-            GlobalConfig.GlobalConfigFilename = GlobalConfigFile.FullName;
-            Dictionary<int, FileInfo> LedControlIniFiles = GlobalConfig.GetIniFilesDictionary();
-            LedControlConfigList L = new LedControlConfigList();
-
-            LedControlIniFiles = LedControlIniFiles.Where(INI => INI.Value.FullName == Settings.LastLedControlIniFilename).ToDictionary(INI => INI.Key, INI => INI.Value);
-
-            LedControlConfigData = null;
-
-            RomNameComboBox.Items.Clear();
-            RomNameComboBox.Items.Add("");
-            if (LedControlIniFiles.Count > 0) {
-                L.LoadLedControlFiles(LedControlIniFiles, false);
-                Log.Write("{0} directoutputconfig.ini or ledcontrol.ini files loaded.".Build(LedControlIniFiles.Count));
-                LedControlConfigData = L[0]; 
-                RomNameComboBox.Items.AddRange(LedControlConfigData.TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
-            } else {
-                Log.Write("No directoutputconfig.ini or ledcontrol.ini files found.");
-            }
+            PopulateTableElements();
         }
 
         public bool LoadConfig()
@@ -193,7 +126,165 @@ namespace LedControlToolkit
             }
         }
 
-        private void CheckPreviewAreaMissmatch()
+        public void LoadLedControlConfigData()
+        {
+            FileInfo GlobalConfigFile = new FileInfo(Settings.LastGlobalConfigFilename);
+            var GlobalConfig = DirectOutput.GlobalConfiguration.GlobalConfig.GetGlobalConfigFromConfigXmlFile(GlobalConfigFile.FullName);
+            if (GlobalConfig == null) {
+                Log.Write("No global config file loaded");
+                //set new global config object if it config could not be loaded from the file.
+                GlobalConfig = new GlobalConfig();
+            }
+            GlobalConfig.GlobalConfigFilename = GlobalConfigFile.FullName;
+            Dictionary<int, FileInfo> LedControlIniFiles = GlobalConfig.GetIniFilesDictionary();
+            LedControlConfigList L = new LedControlConfigList();
+
+            LedControlIniFiles = LedControlIniFiles.Where(INI => INI.Value.FullName == Settings.LastLedControlIniFilename).ToDictionary(INI => INI.Key, INI => INI.Value);
+
+            LedControlConfigData = null;
+
+            RomNameComboBox.Items.Clear();
+            RomNameComboBox.Items.Add("");
+            if (LedControlIniFiles.Count > 0) {
+                L.LoadLedControlFiles(LedControlIniFiles, false);
+                Log.Write("{0} directoutputconfig.ini or ledcontrol.ini files loaded.".Build(LedControlIniFiles.Count));
+                LedControlConfigData = L[0];
+                RomNameComboBox.Items.AddRange(LedControlConfigData.TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
+            } else {
+                Log.Write("No directoutputconfig.ini or ledcontrol.ini files found.");
+            }
+        }
+
+        #endregion
+
+        #region Effects Panel
+        private void tabPageEffectEditor_Enter(object sender, EventArgs e)
+        {
+            if (treeViewEffect.SelectedNode is EffectTreeNode effectTreeNode) {
+                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectTreeNode.TCS);
+            } else if (treeViewTableLedEffects.SelectedNode is EffectTreeNode tableEffectTreeNode) {
+                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(tableEffectTreeNode.TCS);
+            } else {
+                propertyGridEffect.SelectedObject = null;
+            }
+        }
+        #endregion
+
+        #region Effect Editor
+
+        #endregion
+
+        #region Table Effects
+        private void PopulateTableElements()
+        {
+            Pinball.Table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
+
+            treeViewTableLedEffects.Nodes.Clear();
+            var ledstrips = Pinball.Cabinet.Toys.Where(T => T is LedStrip).Select(T => (T as LedStrip).Name).ToArray();
+            var effects = Pinball.Table.Effects.Where(E => E.ActOnAnyToys(ledstrips)).ToList();
+
+            List<TableElement> assignedeffects = new List<TableElement>();
+            foreach (TableElement TE in Pinball.Table.TableElements) {
+                foreach (var effect in TE.AssignedEffects) {
+                    if (effects.Contains(effect.Effect)) {
+                        assignedeffects.Add(TE);
+                        break;
+                    }
+                }
+            }
+
+            foreach (var tableElement in assignedeffects) {
+                var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
+                var listNode = new TableElementTreeNode(tableElement, tableElement.AssignedEffects.Select(A => A.Effect).ToArray());
+
+                foreach (var effect in tableElement.AssignedEffects) {
+                    var effectTypeName = effect.Effect.GetType().ToString();
+                    var effectNode = new EffectTreeNode(tableElement, effect.Effect, LedControlConfigData);
+                    listNode.Nodes.Add(effectNode);
+                }
+
+                treeViewTableLedEffects.Nodes.Add(listNode);
+            }
+        }
+
+        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var combo = (sender as ComboBox);
+            Settings.LastRomName = combo.Text;
+            treeViewTableLedEffects.Nodes.Clear();
+            treeViewTableLedEffects.Refresh();
+            SetupPinball();
+        }
+
+        private void buttonActivationTable_Click(object sender, EventArgs e)
+        {
+            if (CurrentTableSelectedNode != null) {
+                TableElementData D = CurrentSelectedTE.GetTableElementData();
+                D.Value = D.Value > 0 ? 0 : 255;
+                Pinball.ReceiveData(D);
+                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
+                UpdateActivationButton(buttonActivationTable, D.Value);
+            }
+        }
+
+        private void buttonPulseTable_Click(object sender, EventArgs e)
+        {
+            if (CurrentTableSelectedNode != null) {
+                TableElementData D = CurrentSelectedTE.GetTableElementData();
+                D.Value = D.Value > 0 ? 0 : 255;
+                Pinball.ReceiveData(D);
+                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
+                UpdatePulseButton(buttonPulseTable, D.Value);
+                Thread.Sleep((int)numericUpDownPulseDuration.Value);
+                D.Value = D.Value > 0 ? 0 : 255;
+                Pinball.ReceiveData(D);
+                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
+                UpdatePulseButton(buttonPulseTable, D.Value);
+            }
+        }
+
+        private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) {
+
+                CurrentTableSelectedNode = e.Node;
+                if (e.Node is EffectTreeNode effectNode) {
+                    var te = Pinball.Table.TableElements.FirstOrDefault(T => T.Name.Equals(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
+                    if (te != null) {
+                        Pinball.Table.TableElements.Remove(te);
+                    }
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS);
+                    CurrentSelectedTE = effectNode.TestTE;
+                    Pinball.Table.TableElements.Add(CurrentSelectedTE);
+                } else if (e.Node is TableElementTreeNode tableElementNode) {
+                    propertyGridEffect.SelectedObject = null;
+                    CurrentSelectedTE = tableElementNode.TE;
+                } else {
+                    propertyGridEffect.SelectedObject = null;
+                }
+
+                CurrentTable = PinballTable;
+
+                if (CurrentSelectedTE != null) {
+                    if (CurrentTableSelectedNode != null) {
+                        var D = CurrentSelectedTE.GetTableElementData();
+                        UpdateActivationButton(buttonActivationTable, D.Value);
+                        UpdatePulseButton(buttonPulseTable, D.Value);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Settings Editor
+        private void tabPageSettings_Enter(object sender, EventArgs e)
+        {
+            propertyGridEffect.SelectedObject = listBoxPreviewAreas.SelectedItem;
+        }
+
+        private string[] GetMissingLedStrips()
         {
             var ledstrips = Pinball.Cabinet.Toys.Where(T => T is LedStrip).Select(T => T as LedStrip).ToArray();
             List<string> missingLedstrip = new List<string>();
@@ -202,10 +293,16 @@ namespace LedControlToolkit
                     missingLedstrip.Add(ledstrip.Name);
                 }
             }
+            return missingLedstrip.ToArray();
+        }
 
-            if (missingLedstrip.Count != 0) {
+        private void CheckPreviewAreaMissmatch()
+        {
+            var missingLedstrip = GetMissingLedStrips();
+
+            if (missingLedstrip.Length != 0) {
                 if (MessageBox.Show("There are missing ledstrips from cabinet in preview areas settings.\n" +
-                                $"Missing ledstrips :\n\t{string.Join(", ", missingLedstrip.ToArray())}\n\n" +
+                                $"Missing ledstrips :\n\t{string.Join(", ", missingLedstrip)}\n\n" +
                                 $"Do you want to update your preview areas settings now ?",
                                 "Preview areas missmatch", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
                     tabControlMain.SelectedIndex = 1;
@@ -225,53 +322,11 @@ namespace LedControlToolkit
             panelPreviewLedMatrix.Refresh();
         }
 
-        private void tabPageEffectEditor_Enter(object sender, EventArgs e)
-        {
-            if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode){
-                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectTreeNode.TCS);
-            } else {
-                propertyGridEffect.SelectedObject = null;
-            }
-        }
-
-        private void tabPageSettings_Enter(object sender, EventArgs e)
-        {
-            propertyGridEffect.SelectedObject = listBoxPreviewAreas.SelectedItem;
-        }
-
-
         private void listBoxPreviewAreas_SelectedIndexChanged(object sender, EventArgs e)
         {
             var listCtrl = (sender as ListControl);
             if (listCtrl.SelectedIndex != -1) {
                 propertyGridEffect.SelectedObject = listBoxPreviewAreas.SelectedItem;
-            }
-        }
-
-        private void propertyGridEffect_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            var propertyGrid = (s as PropertyGrid);
-            if (propertyGrid.SelectedObject is Settings.LedPreviewArea selectedArea) {
-                if (e.ChangedItem.PropertyDescriptor.Name == "Name") {
-                    //Check if there is no duplicate zone area names
-                    foreach (var pArea in Settings.LedPreviewAreas) {
-                        if (pArea != selectedArea && pArea.Name.Equals(selectedArea.Name, StringComparison.InvariantCultureIgnoreCase)) {
-                            MessageBox.Show($"There is already another preview area named {selectedArea.Name}.\nPlease choose another name.", "Duplicate preview area names", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            selectedArea.Name = e.OldValue as string;
-                            return;
-                        }
-                    }
-
-                    UpdatePreviewAreaListControl();
-                }
-                panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
-                panelPreviewLedMatrix.Refresh();
-            } else if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
-                if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
-                    if (effectTreeNode.TCS == TCSDesc.WrappedTCS) {
-                        effectTreeNode.Rebuild(Pinball, RebuildConfigurator);
-                    }
-                }
             }
         }
 
@@ -294,11 +349,23 @@ namespace LedControlToolkit
             return newAreaName;
         }
 
+        private void buttonCreateMissingAreas_Click(object sender, EventArgs e)
+        {
+            var missingLedstrips = GetMissingLedStrips();
+            foreach (var ledstrip in missingLedstrips) {
+                Settings.LedPreviewAreas.Add(new Settings.LedPreviewArea() { Name = ledstrip });
+            }
+            UpdatePreviewAreaListControl();
+            listBoxPreviewAreas.SelectedIndex = listBoxPreviewAreas.Items.Count - 1;
+            panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
+            panelPreviewLedMatrix.Refresh();
+        }
+
         private void buttonNewArea_Click(object sender, EventArgs e)
         {
             Settings.LedPreviewAreas.Add(new Settings.LedPreviewArea() { Name = GetNewAreaName() });
             UpdatePreviewAreaListControl();
-            listBoxPreviewAreas.SelectedIndex = listBoxPreviewAreas.Items.Count-1;
+            listBoxPreviewAreas.SelectedIndex = listBoxPreviewAreas.Items.Count - 1;
             panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
             panelPreviewLedMatrix.Refresh();
         }
@@ -329,70 +396,65 @@ namespace LedControlToolkit
             Settings.SaveSettings();
         }
 
+        #endregion
+
+        #region Property Grid
+        private void propertyGridEffect_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            var propertyGrid = (s as PropertyGrid);
+            if (propertyGrid.SelectedObject is Settings.LedPreviewArea selectedArea) {
+                switch (e.ChangedItem.PropertyDescriptor.Name) {
+                    case "Name": {
+                        //Check if there is no duplicate zone area names
+                        foreach (var pArea in Settings.LedPreviewAreas) {
+                            if (pArea != selectedArea && pArea.Name.Equals(selectedArea.Name, StringComparison.InvariantCultureIgnoreCase)) {
+                                MessageBox.Show($"There is already another preview area named {selectedArea.Name}.\nPlease choose another name.", "Duplicate preview area names", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                selectedArea.Name = e.OldValue as string;
+                                return;
+                            }
+                        }
+
+                        UpdatePreviewAreaListControl();
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+                }
+
+                panelPreviewLedMatrix.SetupPreviewParts(Pinball.Cabinet, Settings);
+                panelPreviewLedMatrix.Refresh();
+            } else if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
+                if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
+                    if (effectTreeNode.TCS == TCSDesc.WrappedTCS) {
+                        effectTreeNode.Rebuild(Pinball, RebuildConfigurator);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Helpers
         private void SetEffectTreeNodeActive(TreeNode node, int active)
         {
             node.ImageIndex = active;
             node.SelectedImageIndex = active;
         }
 
-        private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void UpdateActivationButton(Button but, int value)
         {
-            if (e.Button == MouseButtons.Left) {
-
-                CurrentTableSelectedNode = e.Node;
-                if (e.Node is EffectTreeNode effectNode) {
-                    var te = Pinball.Table.TableElements.FirstOrDefault(T => T.Name.Equals(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
-                    if (te != null) {
-                        Pinball.Table.TableElements.Remove(te);
-                    }
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS);
-                    CurrentSelectedTE = effectNode.TestTE;
-                    Pinball.Table.TableElements.Add(CurrentSelectedTE);
-                } else if (e.Node is TableElementTreeNode tableElementNode) {
-                    propertyGridEffect.SelectedObject = null;
-                    CurrentSelectedTE = tableElementNode.TE;
-                } else {
-                    propertyGridEffect.SelectedObject = null;
-                }
-
-                CurrentTable = PinballTable;
-
-                if (CurrentSelectedTE != null) {
-                    if (CurrentTableSelectedNode != null) {
-                        var D = CurrentSelectedTE.GetTableElementData();
-                        buttonActivationTable.Text = D.Value > 0 ? "Dectivate" : "Activate";
-                        buttonPulseTable.Text = D.Value > 0 ? @"Pulse ¯\_/¯" : @"Pulse _/¯\_";
-                    }
-                }
-            }
+            but.Text = value > 0 ? "Dectivate" : "Activate";
+            but.Refresh();
         }
 
-        private void buttonActivationTable_Click(object sender, EventArgs e)
+        private void UpdatePulseButton(Button but, int value)
         {
-            if (CurrentTableSelectedNode != null) {
-                TableElementData D = CurrentSelectedTE.GetTableElementData();
-                D.Value = D.Value > 0 ? 0 : 1;
-                Pinball.ReceiveData(D);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
-                buttonActivationTable.Text = D.Value > 0 ? "Dectivate" : "Activate";
-            }
+            but.Text = value > 0 ? @"Pulse ¯\_/¯" : @"Pulse _/¯\_";
+            but.Refresh();
         }
-
-        private void buttonPulseTable_Click(object sender, EventArgs e)
-        {
-            if (CurrentTableSelectedNode != null) {
-                TableElementData D = CurrentSelectedTE.GetTableElementData();
-                D.Value = D.Value > 0 ? 0 : 1;
-                Pinball.ReceiveData(D);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
-                buttonPulseTable.Text = D.Value > 0 ? @"Pulse ¯\_/¯" : @"Pulse _/¯\_";
-                Thread.Sleep((int)numericUpDownPulseDuration.Value);
-                D.Value = D.Value > 0 ? 0 : 1;
-                Pinball.ReceiveData(D);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, D.Value > 0 ? 1 : 0);
-                buttonPulseTable.Text = D.Value > 0 ? @"Pulse ¯\_/¯" : @"Pulse _/¯\_";
-            }
-        }
+        #endregion
 
     }
 }
