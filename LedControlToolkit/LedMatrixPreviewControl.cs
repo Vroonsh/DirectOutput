@@ -3,6 +3,7 @@ using DirectOutput.Cab.Toys.Hardware;
 using DirectOutput.Cab.Toys.Layer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,18 @@ namespace LedControlToolkit
             Invalid,
             Matrix,
             Ring
+        }
+
+        public enum ConfigToolOutput
+        {
+            [Description("PF Back Effects MX")]
+            PFBackEffectsMX,
+            [Description("PF Left Effects MX")]
+            PFLeftEffectsMX,
+            [Description("PF Right Effects MX")]
+            PFRightEffectsMX,
+            [Description("RGB Undercab Complex MX")]
+            RGBUndercabComplexMX
         }
 
         private class PreviewPartDescriptor
@@ -68,7 +81,7 @@ namespace LedControlToolkit
                     Offset = (ledstrip.FirstLedNumber - 1) * 3,
                     Values = new byte[ledstrip.NumberOfOutputs],
 
-                    Area = areas.Length > 0 ? new RectangleF(areas[0].X, areas[0].Y, areas[0].Width, areas[0].Height) : new RectangleF(),
+                    Area = areas.Length > 0 ? new RectangleF(areas[0].Left, areas[0].Top, areas[0].Width, areas[0].Height) : new RectangleF(),
                     Type = areas.Length > 0 ? areas[0].PreviewType : PreviewType.Invalid
                 };
 
@@ -131,7 +144,7 @@ namespace LedControlToolkit
             previewPanelBrush.Color = Color.Green;
             foreach (var dim in PreviewParts.Values) {
                 var sizeName = e.Graphics.MeasureString(dim.LedStrip.Name, previewPanelFont);
-                e.Graphics.DrawString(dim.LedStrip.Name, previewPanelFont, previewPanelBrush, new Point(Math.Min(dim.Rect.X, Width - (int)sizeName.Width), dim.Rect.Y - (int)(previewPanelFont.Height * 1.5f)));
+                e.Graphics.DrawString(dim.LedStrip.Name, previewPanelFont, previewPanelBrush, new Point(Math.Min(dim.Rect.X, Width - (int)sizeName.Width), Math.Max(0, dim.Rect.Y - (int)(previewPanelFont.Height * 1.05f))));
                 e.Graphics.DrawRectangle(new Pen(previewPanelBrush), dim.Rect);
             }
         }
@@ -164,7 +177,6 @@ namespace LedControlToolkit
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
-            DisplayAreaMissmatch(e);
             DisplayPreviewAreas(e);
             foreach (var part in PreviewParts.Values) {
                 if (part.Type == PreviewType.Ring) {
@@ -173,6 +185,8 @@ namespace LedControlToolkit
                     DisplayMatrix(e, part);
                 }
             }
+
+            DisplayAreaMissmatch(e);
         }
 
         private void DrawLedStrip(PaintEventArgs e, Point origin, Point increment, byte[] values)
