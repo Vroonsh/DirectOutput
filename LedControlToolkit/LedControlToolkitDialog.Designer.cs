@@ -59,6 +59,7 @@ namespace LedControlToolkit
             this.checkBoxPreviewArea = new System.Windows.Forms.CheckBox();
             this.checkBoxPreviewGrid = new System.Windows.Forms.CheckBox();
             this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
+            this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -200,7 +201,7 @@ namespace LedControlToolkit
             this.numericUpDownPulseDuration.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownPulseDuration.TabIndex = 18;
             this.numericUpDownPulseDuration.Value = new decimal(new int[] {
-            300,
+            100,
             0,
             0,
             0});
@@ -294,6 +295,7 @@ namespace LedControlToolkit
             // 
             // tabPageSettings
             // 
+            this.tabPageSettings.Controls.Add(this.buttonCreateMissingAreas);
             this.tabPageSettings.Controls.Add(this.buttonSaveSettings);
             this.tabPageSettings.Controls.Add(this.buttonDeleteArea);
             this.tabPageSettings.Controls.Add(this.buttonDuplicateArea);
@@ -323,7 +325,7 @@ namespace LedControlToolkit
             // 
             // buttonDeleteArea
             // 
-            this.buttonDeleteArea.Location = new System.Drawing.Point(233, 302);
+            this.buttonDeleteArea.Location = new System.Drawing.Point(360, 302);
             this.buttonDeleteArea.Name = "buttonDeleteArea";
             this.buttonDeleteArea.Size = new System.Drawing.Size(137, 23);
             this.buttonDeleteArea.TabIndex = 7;
@@ -333,7 +335,7 @@ namespace LedControlToolkit
             // 
             // buttonDuplicateArea
             // 
-            this.buttonDuplicateArea.Location = new System.Drawing.Point(90, 302);
+            this.buttonDuplicateArea.Location = new System.Drawing.Point(217, 301);
             this.buttonDuplicateArea.Name = "buttonDuplicateArea";
             this.buttonDuplicateArea.Size = new System.Drawing.Size(137, 23);
             this.buttonDuplicateArea.TabIndex = 6;
@@ -343,7 +345,7 @@ namespace LedControlToolkit
             // 
             // buttonNewArea
             // 
-            this.buttonNewArea.Location = new System.Drawing.Point(9, 302);
+            this.buttonNewArea.Location = new System.Drawing.Point(136, 301);
             this.buttonNewArea.Name = "buttonNewArea";
             this.buttonNewArea.Size = new System.Drawing.Size(75, 23);
             this.buttonNewArea.TabIndex = 5;
@@ -391,6 +393,16 @@ namespace LedControlToolkit
             this.panelPreviewLedMatrix.Name = "panelPreviewLedMatrix";
             this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
             this.panelPreviewLedMatrix.TabIndex = 0;
+            // 
+            // buttonCreateMissingAreas
+            // 
+            this.buttonCreateMissingAreas.Location = new System.Drawing.Point(9, 301);
+            this.buttonCreateMissingAreas.Name = "buttonCreateMissingAreas";
+            this.buttonCreateMissingAreas.Size = new System.Drawing.Size(121, 23);
+            this.buttonCreateMissingAreas.TabIndex = 9;
+            this.buttonCreateMissingAreas.Text = "Create Missing Areas";
+            this.buttonCreateMissingAreas.UseVisualStyleBackColor = true;
+            this.buttonCreateMissingAreas.Click += new System.EventHandler(this.buttonCreateMissingAreas_Click);
             // 
             // LedControlToolkitDialog
             // 
@@ -454,6 +466,7 @@ namespace LedControlToolkit
         private Button buttonActivationTable;
         private Label label1;
         private ImageList imageListIcons;
+        private Button buttonCreateMissingAreas;
     }
 }
 
