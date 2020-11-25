@@ -18,8 +18,8 @@ namespace LedControlToolkit
             public int Id => Name.GetHashCode();
 
             public string Name { get; set; }
-            private float _X = 0.0f;
-            private float _Y = 0.0f;
+            private float _Left = 0.0f;
+            private float _Top = 0.0f;
             private float _Width = 0.5f;
             private float _Height = 0.5f;
 
@@ -28,18 +28,25 @@ namespace LedControlToolkit
             public LedPreviewArea(LedPreviewArea ledPreviewArea)
             {
                 this.Name = ledPreviewArea.Name;
-                this.X = ledPreviewArea.X;
-                this.Y = ledPreviewArea.Y;
+                this.Left = ledPreviewArea.Left;
+                this.Top = ledPreviewArea.Top;
                 this.Width = ledPreviewArea.Width;
                 this.Height = ledPreviewArea.Height;
                 this.PreviewType = ledPreviewArea.PreviewType;
             }
 
-            public float X { get { return _X; } set { _X = value.Limit(0.0f, 1.0f); } }
-            public float Y { get { return _Y; } set { _Y = value.Limit(0.0f, 1.0f); } }
+            [Category("Dimensions")]
+            public float Left { get { return _Left; } set { _Left = value.Limit(0.0f, 1.0f); } }
+            [Category("Dimensions")]
+            public float Top { get { return _Top; } set { _Top = value.Limit(0.0f, 1.0f); } }
+            [Category("Dimensions")]
             public float Width { get { return _Width; } set { _Width = value.Limit(0.0f, 1.0f); } }
+            [Category("Dimensions")]
             public float Height { get { return _Height; } set { _Height = value.Limit(0.0f, 1.0f); } }
+            [Description("Preview Area Type")]
             public LedMatrixPreviewControl.PreviewType PreviewType { get; set; } = LedMatrixPreviewControl.PreviewType.Matrix;
+            [Description("ConfigTool Output")]
+            public LedMatrixPreviewControl.ConfigToolOutput ConfigToolOutput { get; set; } = LedMatrixPreviewControl.ConfigToolOutput.PFBackEffectsMX;
         }
 
         private string _LastGlobalConfigFilename = "";
