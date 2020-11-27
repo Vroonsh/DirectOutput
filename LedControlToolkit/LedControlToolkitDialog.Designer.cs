@@ -51,6 +51,7 @@ namespace LedControlToolkit
             this.buttonNewEffectList = new System.Windows.Forms.Button();
             this.treeViewEffect = new System.Windows.Forms.TreeView();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
+            this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
             this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.buttonDeleteArea = new System.Windows.Forms.Button();
             this.buttonDuplicateArea = new System.Windows.Forms.Button();
@@ -59,7 +60,6 @@ namespace LedControlToolkit
             this.checkBoxPreviewArea = new System.Windows.Forms.CheckBox();
             this.checkBoxPreviewGrid = new System.Windows.Forms.CheckBox();
             this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
-            this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -140,9 +140,9 @@ namespace LedControlToolkit
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 484);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(141, 13);
             this.label1.TabIndex = 23;
-            this.label1.Text = "Table Effects";
+            this.label1.Text = "DofConfigTool Table Effects";
             // 
             // button1
             // 
@@ -288,10 +288,11 @@ namespace LedControlToolkit
             // 
             this.treeViewEffect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewEffect.Location = new System.Drawing.Point(6, 33);
+            this.treeViewEffect.Location = new System.Drawing.Point(7, 35);
             this.treeViewEffect.Name = "treeViewEffect";
             this.treeViewEffect.Size = new System.Drawing.Size(714, 404);
             this.treeViewEffect.TabIndex = 0;
+            this.treeViewEffect.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             // 
             // tabPageSettings
             // 
@@ -311,6 +312,16 @@ namespace LedControlToolkit
             this.tabPageSettings.Text = "Settings";
             this.tabPageSettings.UseVisualStyleBackColor = true;
             this.tabPageSettings.Enter += new System.EventHandler(this.tabPageSettings_Enter);
+            // 
+            // buttonCreateMissingAreas
+            // 
+            this.buttonCreateMissingAreas.Location = new System.Drawing.Point(9, 301);
+            this.buttonCreateMissingAreas.Name = "buttonCreateMissingAreas";
+            this.buttonCreateMissingAreas.Size = new System.Drawing.Size(121, 23);
+            this.buttonCreateMissingAreas.TabIndex = 9;
+            this.buttonCreateMissingAreas.Text = "Create Missing Areas";
+            this.buttonCreateMissingAreas.UseVisualStyleBackColor = true;
+            this.buttonCreateMissingAreas.Click += new System.EventHandler(this.buttonCreateMissingAreas_Click);
             // 
             // buttonSaveSettings
             // 
@@ -393,16 +404,6 @@ namespace LedControlToolkit
             this.panelPreviewLedMatrix.Name = "panelPreviewLedMatrix";
             this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
             this.panelPreviewLedMatrix.TabIndex = 0;
-            // 
-            // buttonCreateMissingAreas
-            // 
-            this.buttonCreateMissingAreas.Location = new System.Drawing.Point(9, 301);
-            this.buttonCreateMissingAreas.Name = "buttonCreateMissingAreas";
-            this.buttonCreateMissingAreas.Size = new System.Drawing.Size(121, 23);
-            this.buttonCreateMissingAreas.TabIndex = 9;
-            this.buttonCreateMissingAreas.Text = "Create Missing Areas";
-            this.buttonCreateMissingAreas.UseVisualStyleBackColor = true;
-            this.buttonCreateMissingAreas.Click += new System.EventHandler(this.buttonCreateMissingAreas_Click);
             // 
             // LedControlToolkitDialog
             // 
