@@ -10,15 +10,6 @@ using System.Threading.Tasks;
 
 namespace LedControlToolkit
 {
-    class TCSPropertyDescriptor
-    {
-        public bool Browsable = true;
-        public string Category = string.Empty;
-        public bool ReadOnly = false;
-        public Type TypeConverter = null;
-        public UITypeEditor TypeEditor = null;
-    }
-
     class TableConfigSettingTypeDescriptor : CustomTypeDescriptor
     {
         public bool EditableTrigger { get; set; } = false;
@@ -27,20 +18,20 @@ namespace LedControlToolkit
 
         public OutputControlEnum OutputControl { get; set; }
 
-        private Dictionary<string, TCSPropertyDescriptor> TCSPropertyDescriptors = new Dictionary<string, TCSPropertyDescriptor>();
+        private Dictionary<string, PropertyDescriptorHandler> TCSPropertyDescriptors = new Dictionary<string, PropertyDescriptorHandler>();
 
         public TableConfigSettingTypeDescriptor(TableConfigSetting TCS)
             : base(TypeDescriptor.GetProvider(TCS).GetTypeDescriptor(TCS))
         {
             WrappedTCS = TCS;
 
-            TCSPropertyDescriptors["OutputControl"] = new TCSPropertyDescriptor() { ReadOnly = !EditableTrigger };
-            TCSPropertyDescriptors["TableElement"] = new TCSPropertyDescriptor() { ReadOnly = !EditableTrigger };
-            TCSPropertyDescriptors["Condition"] = new TCSPropertyDescriptor() { ReadOnly = !EditableTrigger };
+            TCSPropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
+            TCSPropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
+            TCSPropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
 
-            TCSPropertyDescriptors["OutputType"] = new TCSPropertyDescriptor() { Browsable = false };
-            TCSPropertyDescriptors["ColorConfig"] = new TCSPropertyDescriptor() { Browsable = false };
-            TCSPropertyDescriptors["ColorConfig2"] = new TCSPropertyDescriptor() { Browsable = false };
+            TCSPropertyDescriptors["OutputType"] = new PropertyDescriptorHandler() { Browsable = false };
+            TCSPropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { Browsable = false };
+            TCSPropertyDescriptors["ColorConfig2"] = new PropertyDescriptorHandler() { Browsable = false };
         }
 
         public override PropertyDescriptorCollection GetProperties()
