@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace LedControlToolkit
 {
-    public class EffectTreeNode : TreeNode
+    public class EffectTreeNode : TreeNode, ITableElementTreeNode
     {
         public static readonly string TableElementTestName = "LedControlToolkit_EffectTreeNode_Test";
 
@@ -32,7 +32,7 @@ namespace LedControlToolkit
             Text = DofConfigCommand;
         }
 
-        public void Rebuild(Pinball Pinball, DirectOutput.LedControl.Setup.Configurator RebuildConfigurator)
+        public void Rebuild(LedControlToolkitHandler Handler)
         {
             //Update Name
             DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
@@ -48,7 +48,7 @@ namespace LedControlToolkit
             if (matrixEffect != null) {
                 ToyName = matrixEffect.ToyName;
             }
-            var Toy = Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            var Toy = Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
 
             //Retrieve necessary data for the Configurator directly from the effect name
             var nameData = Effect.Name.Split(' ');
@@ -67,27 +67,27 @@ namespace LedControlToolkit
 
             //Remove all effects from Table & AssignedEffects before rebuilding
             foreach (var eff in allEffects) {
-                Pinball.Table.Effects.Remove(eff);
-                foreach (var TE in Pinball.Table.TableElements) {
+                Handler.Pinball.Table.Effects.Remove(eff);
+                foreach (var TE in Handler.Pinball.Table.TableElements) {
                     TE.AssignedEffects.RemoveAll(AE => AE.Effect == eff);
                 }
             }
 
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
-            var newEffect = RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, Pinball.Table, Toy, LedWizNumber, Pinball.GlobalConfig.IniFilesPath, Pinball.Table.RomName);
+            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, Handler.Pinball.Table, Toy, LedWizNumber, Handler.Pinball.GlobalConfig.IniFilesPath, Handler.Pinball.Table.RomName);
 
             //Reorder Assigned effects as they should be from the ini file & resolve effect from effectname
-            foreach (var TE in Pinball.Table.TableElements) {
+            foreach (var TE in Handler.Pinball.Table.TableElements) {
                 TE.AssignedEffects.Sort((E1, E2) => E1.EffectName.CompareTo(E2.EffectName));
                 foreach (var assignEff in TE.AssignedEffects) {
-                    assignEff.Init(Pinball.Table);
+                    assignEff.Init(Handler.Pinball.Table);
                 }
             }
 
             //cascade call Init on all effects (ahad to init one after each other because of the TargetEffect resolution)
             var curEffect = newEffect;
             while (curEffect != null) {
-                curEffect.Init(Pinball.Table);
+                curEffect.Init(Handler.Pinball.Table);
                 if (curEffect is EffectEffectBase effectWithTarget) {
                     curEffect = effectWithTarget.TargetEffect;
                 } else {
@@ -101,6 +101,8 @@ namespace LedControlToolkit
             Effect = newEffect;
         }
 
+        public virtual TableElement GetTableElement() => TestTE;
+
         public override string ToString() => DofConfigCommand;
 
         public IEffect Effect { get; set; }
@@ -109,28 +111,5 @@ namespace LedControlToolkit
         public string DofConfigCommand;
         public TableElement TableTE = null;
         public TableElement TestTE = new TableElement(TableElementTestName, 0);
-    }
-
-    public class TableElementTreeNode : TreeNode
-    {
-        public TableElementTreeNode(TableElement tableElement, IEffect[] effects) : base()
-        {
-            Effects = effects;
-            TE = tableElement;
-            ImageIndex = TE.GetTableElementData().Value > 0 ? 1 : 0;
-            SelectedImageIndex = ImageIndex;
-            Text = ToString();
-        }
-
-        public override string ToString()
-        {
-            if (TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) {
-                return $"{(char)TE.TableElementType}{TE.Name} : {Effects.Length} effects";
-            }
-            return $"{TE.TableElementType} {(char)TE.TableElementType}{TE.Number} : {Effects.Length} effects";
-        }
-
-        public IEffect[] Effects { get; set; }
-        public TableElement TE = null;
     }
 }
