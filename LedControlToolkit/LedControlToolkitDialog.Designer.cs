@@ -36,8 +36,8 @@ namespace LedControlToolkit
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageEffectEditor = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonPulseEdition = new System.Windows.Forms.Button();
+            this.buttonActivationEdition = new System.Windows.Forms.Button();
             this.buttonPulseTable = new System.Windows.Forms.Button();
             this.buttonActivationTable = new System.Windows.Forms.Button();
             this.numericUpDownPulseDuration = new System.Windows.Forms.NumericUpDown();
@@ -48,7 +48,7 @@ namespace LedControlToolkit
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
             this.buttonSaveEffect = new System.Windows.Forms.Button();
             this.buttonLoadEffect = new System.Windows.Forms.Button();
-            this.buttonNewEffectList = new System.Windows.Forms.Button();
+            this.buttonNewEditionTable = new System.Windows.Forms.Button();
             this.treeViewEffect = new System.Windows.Forms.TreeView();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
             this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
@@ -113,8 +113,8 @@ namespace LedControlToolkit
             // tabPageEffectEditor
             // 
             this.tabPageEffectEditor.Controls.Add(this.label1);
-            this.tabPageEffectEditor.Controls.Add(this.button1);
-            this.tabPageEffectEditor.Controls.Add(this.button2);
+            this.tabPageEffectEditor.Controls.Add(this.buttonPulseEdition);
+            this.tabPageEffectEditor.Controls.Add(this.buttonActivationEdition);
             this.tabPageEffectEditor.Controls.Add(this.buttonPulseTable);
             this.tabPageEffectEditor.Controls.Add(this.buttonActivationTable);
             this.tabPageEffectEditor.Controls.Add(this.numericUpDownPulseDuration);
@@ -124,7 +124,7 @@ namespace LedControlToolkit
             this.tabPageEffectEditor.Controls.Add(this.RomNameComboBox);
             this.tabPageEffectEditor.Controls.Add(this.buttonSaveEffect);
             this.tabPageEffectEditor.Controls.Add(this.buttonLoadEffect);
-            this.tabPageEffectEditor.Controls.Add(this.buttonNewEffectList);
+            this.tabPageEffectEditor.Controls.Add(this.buttonNewEditionTable);
             this.tabPageEffectEditor.Controls.Add(this.treeViewEffect);
             this.tabPageEffectEditor.Location = new System.Drawing.Point(4, 22);
             this.tabPageEffectEditor.Name = "tabPageEffectEditor";
@@ -144,23 +144,25 @@ namespace LedControlToolkit
             this.label1.TabIndex = 23;
             this.label1.Text = "DofConfigTool Table Effects";
             // 
-            // button1
+            // buttonPulseEdition
             // 
-            this.button1.Location = new System.Drawing.Point(88, 443);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 22;
-            this.button1.Text = "Pulse";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonPulseEdition.Location = new System.Drawing.Point(88, 443);
+            this.buttonPulseEdition.Name = "buttonPulseEdition";
+            this.buttonPulseEdition.Size = new System.Drawing.Size(75, 23);
+            this.buttonPulseEdition.TabIndex = 22;
+            this.buttonPulseEdition.Text = "Pulse";
+            this.buttonPulseEdition.UseVisualStyleBackColor = true;
+            this.buttonPulseEdition.Click += new System.EventHandler(this.buttonPulseEdition_Click);
             // 
-            // button2
+            // buttonActivationEdition
             // 
-            this.button2.Location = new System.Drawing.Point(7, 443);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 21;
-            this.button2.Text = "Activate";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonActivationEdition.Location = new System.Drawing.Point(7, 443);
+            this.buttonActivationEdition.Name = "buttonActivationEdition";
+            this.buttonActivationEdition.Size = new System.Drawing.Size(75, 23);
+            this.buttonActivationEdition.TabIndex = 21;
+            this.buttonActivationEdition.Text = "Activate";
+            this.buttonActivationEdition.UseVisualStyleBackColor = true;
+            this.buttonActivationEdition.Click += new System.EventHandler(this.buttonActivationEdition_Click);
             // 
             // buttonPulseTable
             // 
@@ -275,14 +277,14 @@ namespace LedControlToolkit
             this.buttonLoadEffect.Text = "Load";
             this.buttonLoadEffect.UseVisualStyleBackColor = true;
             // 
-            // buttonNewEffectList
+            // buttonNewEditionTable
             // 
-            this.buttonNewEffectList.Location = new System.Drawing.Point(7, 6);
-            this.buttonNewEffectList.Name = "buttonNewEffectList";
-            this.buttonNewEffectList.Size = new System.Drawing.Size(98, 23);
-            this.buttonNewEffectList.TabIndex = 1;
-            this.buttonNewEffectList.Text = "New Effect List";
-            this.buttonNewEffectList.UseVisualStyleBackColor = true;
+            this.buttonNewEditionTable.Location = new System.Drawing.Point(7, 6);
+            this.buttonNewEditionTable.Name = "buttonNewEditionTable";
+            this.buttonNewEditionTable.Size = new System.Drawing.Size(98, 23);
+            this.buttonNewEditionTable.TabIndex = 1;
+            this.buttonNewEditionTable.Text = "New Table";
+            this.buttonNewEditionTable.UseVisualStyleBackColor = true;
             // 
             // treeViewEffect
             // 
@@ -442,7 +444,7 @@ namespace LedControlToolkit
         private TabPage tabPageEffectEditor;
         private Button buttonSaveEffect;
         private Button buttonLoadEffect;
-        private Button buttonNewEffectList;
+        private Button buttonNewEditionTable;
         private TreeView treeViewEffect;
         private Label labelRomName;
         private ComboBox RomNameComboBox;
@@ -461,8 +463,8 @@ namespace LedControlToolkit
         private TreeView treeViewTableLedEffects;
         private NumericUpDown numericUpDownPulseDuration;
         private Label labelPulseDelay;
-        private Button button1;
-        private Button button2;
+        private Button buttonPulseEdition;
+        private Button buttonActivationEdition;
         private Button buttonPulseTable;
         private Button buttonActivationTable;
         private Label label1;
