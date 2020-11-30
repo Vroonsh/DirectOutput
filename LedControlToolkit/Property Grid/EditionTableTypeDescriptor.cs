@@ -8,16 +8,25 @@ using System.Threading.Tasks;
 
 namespace LedControlToolkit
 {
-    class EditionTableTypeDescriptor : CustomTypeDescriptor
+    class EditionTableTypeDescriptor : BaseTypeDescriptor
     {
         public Table EditionTable {get; private set;}
 
-        private Dictionary<string, PropertyDescriptorHandler> PropertyDescriptors = new Dictionary<string, PropertyDescriptorHandler>();
-
-        public EditionTableTypeDescriptor(Table Table)
-            : base(TypeDescriptor.GetProvider(Table).GetTypeDescriptor(Table))
+        public EditionTableTypeDescriptor(Table Table, EditionMode editMode = EditionMode.Disabled)
+            : base(Table, editMode)
         {
             EditionTable = Table;
+
+            PropertyDescriptors["TableElements"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["Pinball"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["Bitmaps"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ShapeDefinitions"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["TableFilename"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["TableConfigurationFilename"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AddLedControlConfig"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ConfigurationSource"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["Effects"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AssignedStaticEffects"] = new PropertyDescriptorHandler() { Browsable = false };
         }
     }
 }
