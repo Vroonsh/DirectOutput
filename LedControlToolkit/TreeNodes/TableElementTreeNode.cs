@@ -18,15 +18,13 @@ namespace LedControlToolkit
         {
             Effects = effects;
             TE = tableElement;
-            ImageIndex = TE.GetTableElementData().Value > 0 ? 1 : 0;
-            SelectedImageIndex = ImageIndex;
-            Text = ToString();
+            Refresh();
         }
 
         public override string ToString()
         {
             if (TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) {
-                return $"{(char)TE.TableElementType}{TE.Name} : {Effects.Length} effects";
+                return $"{TE.Name} : {Effects.Length} effects";
             }
             return $"{TE.TableElementType} {(char)TE.TableElementType}{TE.Number} : {Effects.Length} effects";
         }
@@ -35,5 +33,23 @@ namespace LedControlToolkit
 
         public IEffect[] Effects { get; set; }
         public TableElement TE = null;
+
+        internal void Refresh()
+        {
+            ImageIndex = TE.GetTableElementData().Value > 0 ? 1 : 0;
+            SelectedImageIndex = ImageIndex;
+            Text = ToString();
+        }
+
+        internal void Rebuild(LedControlToolkitHandler handler)
+        {
+            Refresh();
+            foreach (var node in Nodes) {
+                var effectNode = node as EffectTreeNode;
+                if (effectNode.TCS.OutputControl == OutputControlEnum.Controlled) {
+                    effectNode.UpdateFromTableElement(TE);
+                }
+            }
+        }
     }
 }
