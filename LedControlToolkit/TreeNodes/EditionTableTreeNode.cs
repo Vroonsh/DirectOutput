@@ -22,9 +22,19 @@ namespace LedControlToolkit
 
         public override string ToString()
         {
-            return $"Edition Table [{EditionTable.RomName}]";
+            return $"{EditionTable?.TableName} [{EditionTable?.RomName}] [{Nodes.Count} table elements]";
         }
 
         public Table EditionTable { get; set; }
+
+        internal void Refresh()
+        {
+            Text = ToString();
+        }
+
+        internal void Rebuild(LedControlToolkitHandler Handler)
+        {
+            Refresh();
+        }
     }
 }
