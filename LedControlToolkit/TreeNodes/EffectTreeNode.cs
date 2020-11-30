@@ -26,10 +26,17 @@ namespace LedControlToolkit
             SelectedImageIndex = ImageIndex;
             TCS.FromEffect(Effect);
             TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOff;
-            TCS.TableElement = (TableTE != null) ? $"{(char)TableTE.TableElementType}{((TableTE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TableTE.Name : TableTE.Number.ToString())}" : string.Empty;
             LCC = ledControl;
-            DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
-            Text = DofConfigCommand;
+            UpdateFromTableElement(TableTE);
+        }
+
+        public void UpdateFromTableElement(TableElement TE)
+        {
+            if (TCS.OutputControl == OutputControlEnum.Controlled) {
+                TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
+                DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
+                Text = DofConfigCommand;
+            }
         }
 
         public void Rebuild(LedControlToolkitHandler Handler)

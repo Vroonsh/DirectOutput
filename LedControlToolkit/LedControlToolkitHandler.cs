@@ -1,5 +1,6 @@
 ﻿using DirectOutput;
 using DirectOutput.Cab.Toys.Hardware;
+using DirectOutput.FX;
 using DirectOutput.GlobalConfiguration;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.LedControl.Setup;
