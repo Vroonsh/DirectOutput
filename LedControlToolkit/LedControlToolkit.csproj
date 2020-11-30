@@ -67,8 +67,10 @@
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
+    <Compile Include="Property Grid\BaseTypeDescriptor.cs" />
     <Compile Include="Property Grid\EditionTableTypeDescriptor.cs" />
     <Compile Include="Property Grid\PropertyDescriptorHandler.cs" />
+    <Compile Include="Property Grid\TableElementTypeDescriptor.cs" />
     <Compile Include="TreeNodes\EditionTableTreeNode.cs" />
     <Compile Include="TreeNodes\ITableElementTreeNode.cs" />
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Property Grid\TableConfigSettingTypeDescriptor.cs" />
+    <Compile Include="TreeNodes\TreeNodeCommand.cs" />
     <EmbeddedResource Include="LedControlToolkitDialog.resx">
       <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
     </EmbeddedResource>
