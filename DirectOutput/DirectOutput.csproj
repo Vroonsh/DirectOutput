@@ -333,6 +333,7 @@
     <Compile Include="General\BitmapHandling\FastImageList.cs" />
     <Compile Include="General\BitmapHandling\FastBitmap.cs" />
     <Compile Include="General\BitmapHandling\PixelData.cs" />
+    <Compile Include="General\Generic\DictionaryHelpers.cs" />
     <Compile Include="General\ThreadInfo.cs" />
     <Compile Include="General\ThreadInfoList.cs" />
     <Compile Include="General\Kernel32Imports.cs" />
