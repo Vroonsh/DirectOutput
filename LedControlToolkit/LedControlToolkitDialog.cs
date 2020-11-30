@@ -255,23 +255,27 @@ namespace LedControlToolkit
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var effectNode = (command.Sender as EffectTreeNode);
-            var TENode = (command.Target as TableElementTreeNode);
-            var parentTE = TENode?.TE ?? null;
+            var SrcTENode = (command.Sender as TableElementTreeNode);
+            var TargetTENode = (command.Target as TableElementTreeNode);
+            var parentTE = TargetTENode?.TE ?? null;
 
-            if (TENode == null) {
+            if (TargetTENode == null) {
                 parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}" };
                 parentTE.AssignedEffects = new AssignedEffectList();
                 Handler.EditionTable.TableElements.Add(parentTE);
-                TENode = new TableElementTreeNode(parentTE, new IEffect[] { });
-                EditionTableNode.Nodes.Add(TENode);
+                TargetTENode = new TableElementTreeNode(parentTE, new IEffect[] { });
+                EditionTableNode.Nodes.Add(TargetTENode);
             }
 
-            var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
-            Handler.SetCurrentTableElement(newEffectNode, true);
-            newEffectNode.Rebuild(Handler);
-            TENode.Nodes.Add(newEffectNode);
-            treeViewEffect.SelectedNode = newEffectNode;
+            foreach(var node in SrcTENode.Nodes) {
+                var effectNode = node as EffectTreeNode;
+                var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
+                Handler.SetCurrentTableElement(newEffectNode, true);
+                newEffectNode.Rebuild(Handler);
+                TargetTENode.Nodes.Add(newEffectNode);
+            }
+            Handler.SetCurrentTableElement(TargetTENode, true);
+            treeViewEffect.SelectedNode = TargetTENode;
             treeViewEffect.Refresh();
         }
 
