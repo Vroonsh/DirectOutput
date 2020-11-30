@@ -375,6 +375,26 @@ namespace DirectOutput.Table
             return true;
         }
 
+        /// <summary>
+        /// Removes every occurence of a Table Element, including all dictionaries parsing
+        /// </summary>
+        /// <param name="TableElement">TableElement to remove.</param>
+        /// <returns>true if TableElement has been removed, otherwise false.</returns>
+        public bool RemoveAll(TableElement TableElement)
+        {
+            if (TableElement == null) return false;
+
+            if (!Contains(TableElement)) return false;
+
+            _NamedTableElementsDictionary.RemoveByValue(TableElement);
+            foreach (var itemDict in _NumberedTableElementsDictionary.Values) {
+                itemDict.RemoveByValue(TableElement);
+            }
+
+            return base.Remove(TableElement);
+        }
+
+
         #endregion
 
         /// <summary>

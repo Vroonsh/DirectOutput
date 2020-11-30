@@ -10,66 +10,22 @@ using System.Threading.Tasks;
 
 namespace LedControlToolkit
 {
-    class TableConfigSettingTypeDescriptor : CustomTypeDescriptor
+    class TableConfigSettingTypeDescriptor : BaseTypeDescriptor
     {
-        public bool EditableTrigger { get; set; } = false;
-
         public TableConfigSetting WrappedTCS { get; private set; }
 
-        public OutputControlEnum OutputControl { get; set; }
-
-        private Dictionary<string, PropertyDescriptorHandler> TCSPropertyDescriptors = new Dictionary<string, PropertyDescriptorHandler>();
-
-        public TableConfigSettingTypeDescriptor(TableConfigSetting TCS)
-            : base(TypeDescriptor.GetProvider(TCS).GetTypeDescriptor(TCS))
+        public TableConfigSettingTypeDescriptor(TableConfigSetting TCS, EditionMode editMode = EditionMode.Disabled)
+            : base(TCS, editMode)
         {
             WrappedTCS = TCS;
 
-            TCSPropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
-            TCSPropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
-            TCSPropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { ReadOnly = !EditableTrigger };
+            PropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
+            PropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
+            PropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
 
-            TCSPropertyDescriptors["OutputType"] = new PropertyDescriptorHandler() { Browsable = false };
-            TCSPropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { Browsable = false };
-            TCSPropertyDescriptors["ColorConfig2"] = new PropertyDescriptorHandler() { Browsable = false };
-        }
-
-        public override PropertyDescriptorCollection GetProperties()
-        {
-            return this.GetProperties(new Attribute[] { });
-        }
-
-        private PropertyDescriptor ToCustomProperty(PropertyDescriptor p)
-        {
-            if (!TCSPropertyDescriptors.Keys.Contains(p.Name)) {
-                return p;
-            }
-
-            var customDesc = TCSPropertyDescriptors[p.Name];
-
-            List<Attribute> customAttributes = new List<Attribute>();
-            customAttributes.Add(new BrowsableAttribute(customDesc.Browsable));
-            customAttributes.Add(new ReadOnlyAttribute(customDesc.ReadOnly));
-            if (customDesc.Category != string.Empty) {
-                customAttributes.Add(new CategoryAttribute(customDesc.Category));
-            }
-            if (customDesc.TypeConverter != null) {
-                customAttributes.Add(new TypeConverterAttribute(customDesc.TypeConverter));
-            }
-            if (customDesc.TypeEditor != null) {
-                customAttributes.Add(new EditorAttribute(customDesc.TypeEditor.GetType(), typeof(UITypeEditor)));
-            }
-            var attributes = AttributeCollection.FromExisting(p.Attributes, customAttributes.ToArray());
-            var customProp = TypeDescriptor.CreateProperty(WrappedTCS.GetType(), p, attributes.Cast<Attribute>().ToArray());
-            return customProp;
-        }
-
-        public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-        {
-            var properties = base.GetProperties(attributes).Cast<PropertyDescriptor>()
-                                 .Select(p => ToCustomProperty(p));
-
-            return new PropertyDescriptorCollection(properties.ToArray());
+            PropertyDescriptors["OutputType"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ColorConfig2"] = new PropertyDescriptorHandler() { Browsable = false };
         }
     }
 }
