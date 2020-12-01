@@ -111,7 +111,6 @@ namespace LedControlToolkit
         #region Effects Panel
         private void tabPageEffectEditor_Enter(object sender, EventArgs e)
         {
-            propertyGridEffect.SelectedObject = null;
         }
         #endregion
 
@@ -124,13 +123,13 @@ namespace LedControlToolkit
                 Handler.SetCurrentTableElement(e.Node, true);
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, BaseTypeDescriptor.EditionMode.Table);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, true);
                     value = Handler.GetCurrentTableElementValue();
                 } else if (e.Node is TableElementTreeNode tableElementNode) {
-                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, BaseTypeDescriptor.EditionMode.Full);
+                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, true);
                     value = Handler.GetCurrentTableElementValue();
                 } else if (e.Node is EditionTableTreeNode editionTableNode ){
-                    propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, BaseTypeDescriptor.EditionMode.Full);
+                    propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, true);
                 } else {
                     propertyGridEffect.SelectedObject = null;
                 }
@@ -184,7 +183,7 @@ namespace LedControlToolkit
 
             foreach (var tableElement in assignedeffects) {
                 var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
-                var listNode = new TableElementTreeNode(tableElement, tableElement.AssignedEffects.Select(A => A.Effect).ToArray());
+                var listNode = new TableElementTreeNode(tableElement);
 
                 foreach (var effect in tableElement.AssignedEffects) {
                     var effectTypeName = effect.Effect.GetType().ToString();
@@ -192,6 +191,7 @@ namespace LedControlToolkit
                     listNode.Nodes.Add(effectNode);
                 }
 
+                listNode.Refresh();
                 treeViewTableLedEffects.Nodes.Add(listNode);
             }
         }
@@ -239,14 +239,17 @@ namespace LedControlToolkit
                 parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}"};
                 parentTE.AssignedEffects = new AssignedEffectList();
                 Handler.EditionTable.TableElements.Add(parentTE);
-                TENode = new TableElementTreeNode(parentTE, new IEffect[] { });
+                TENode = new TableElementTreeNode(parentTE);
                 EditionTableNode.Nodes.Add(TENode);
             } 
 
             var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
             Handler.SetCurrentTableElement(newEffectNode, true);
             newEffectNode.Rebuild(Handler);
+            parentTE.AssignedEffects.Add(newEffectNode.Effect.Name);
+            parentTE.AssignedEffects.Init(Handler.EditionTable);
             TENode.Nodes.Add(newEffectNode);
+            TENode.Rebuild(Handler);
             treeViewEffect.SelectedNode = newEffectNode;
             treeViewEffect.Refresh();
         }
@@ -263,18 +266,49 @@ namespace LedControlToolkit
                 parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}" };
                 parentTE.AssignedEffects = new AssignedEffectList();
                 Handler.EditionTable.TableElements.Add(parentTE);
-                TargetTENode = new TableElementTreeNode(parentTE, new IEffect[] { });
+                TargetTENode = new TableElementTreeNode(parentTE);
                 EditionTableNode.Nodes.Add(TargetTENode);
             }
 
-            foreach(var node in SrcTENode.Nodes) {
+            foreach (var node in SrcTENode.Nodes) {
                 var effectNode = node as EffectTreeNode;
                 var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
                 Handler.SetCurrentTableElement(newEffectNode, true);
                 newEffectNode.Rebuild(Handler);
+                parentTE.AssignedEffects.Add(newEffectNode.Effect.Name);
                 TargetTENode.Nodes.Add(newEffectNode);
             }
+            parentTE.AssignedEffects.Init(Handler.EditionTable);
+            TargetTENode.Rebuild(Handler);
             Handler.SetCurrentTableElement(TargetTENode, true);
+            treeViewEffect.SelectedNode = TargetTENode;
+            treeViewEffect.Refresh();
+        }
+
+        private void OnInsertTableElementToEditor(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var SrcTENode = (command.Sender as TableElementTreeNode);
+            var TargetTENode = (command.Target as TableElementTreeNode);
+
+            var parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}" };
+            parentTE.AssignedEffects = new AssignedEffectList();
+            Handler.EditionTable.TableElements.Add(parentTE);
+            var index = EditionTableNode.Nodes.IndexOf(TargetTENode);
+            var newTENode = new TableElementTreeNode(parentTE);
+            EditionTableNode.Nodes.Insert(index, newTENode);
+
+            foreach (var node in SrcTENode.Nodes) {
+                var effectNode = node as EffectTreeNode;
+                var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
+                Handler.SetCurrentTableElement(newEffectNode, true);
+                newEffectNode.Rebuild(Handler);
+                newTENode.Nodes.Add(newEffectNode);
+            }
+            parentTE.AssignedEffects.Init(Handler.EditionTable);
+            newTENode.Rebuild(Handler);
+            Handler.SetCurrentTableElement(newTENode, true);
             treeViewEffect.SelectedNode = TargetTENode;
             treeViewEffect.Refresh();
         }
@@ -287,7 +321,7 @@ namespace LedControlToolkit
 
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, BaseTypeDescriptor.EditionMode.Table);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, false);
                     value = Handler.GetCurrentTableElementValue();
                     //Contextmenu to copy effect to edition
                     if (e.Button == MouseButtons.Right) {
@@ -303,7 +337,7 @@ namespace LedControlToolkit
                         effectMenu.Show(treeViewTableLedEffects, e.Location);
                     }
                 } else if (e.Node is TableElementTreeNode tableElementNode) {
-                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, BaseTypeDescriptor.EditionMode.Table);
+                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, false);
                     value = Handler.GetCurrentTableElementValue();
 
                     //Contextmenu to copy table element to edition
@@ -313,10 +347,16 @@ namespace LedControlToolkit
                         teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.EditionTable.TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
 
                         if (EditionTableNode.Nodes.Count > 0) {
-                            var insertMenu = new MenuItem($"Insert [{tableElementNode.ToString()}] before");
+                            var insertMenu = new MenuItem($"Copy [{tableElementNode.ToString()}] into");
                             teMenu.MenuItems.Add(insertMenu);
                             foreach (var node in EditionTableNode.Nodes) {
                                 insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                            }
+
+                            insertMenu = new MenuItem($"Insert [{tableElementNode.ToString()}] before");
+                            teMenu.MenuItems.Add(insertMenu);
+                            foreach (var node in EditionTableNode.Nodes) {
+                                insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                             }
                         }
 
@@ -471,26 +511,31 @@ namespace LedControlToolkit
             if (propertyGrid.SelectedObject is Settings.LedPreviewArea selectedArea) {
                 OnLedPreviewAreaChanged(selectedArea, e);
             } else if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
-                OnTableConfigSettingChanged(TCSDesc.WrappedTCS, e);
+                OnTableConfigSettingChanged(TCSDesc, e);
             } else if (propertyGrid.SelectedObject is TableElementTypeDescriptor TEDesc) {
-                OnTableElementChanged(TEDesc.WrappedTE, e);
+                OnTableElementChanged(TEDesc, e);
             } else if (propertyGrid.SelectedObject is EditionTableTypeDescriptor ETDesc) {
-                OnEditionTableChanged(ETDesc.EditionTable, e);
+                OnEditionTableChanged(ETDesc, e);
             }
         }
 
-        private void OnEditionTableChanged(Table EditionTable, PropertyValueChangedEventArgs e)
+        private void OnEditionTableChanged(EditionTableTypeDescriptor TD, PropertyValueChangedEventArgs e)
         {
+            TD.Refresh();
+            propertyGridEffect.Refresh();
             if (treeViewEffect.SelectedNode is EditionTableTreeNode editionTableNode) {
-                if (editionTableNode.EditionTable == EditionTable) {
+                if (editionTableNode.EditionTable == TD.EditionTable) {
                     editionTableNode.Rebuild(Handler);
                     treeViewEffect.Refresh();
                 }
             } 
         }
 
-        private void OnTableElementChanged(TableElement TE, PropertyValueChangedEventArgs e)
+        private void OnTableElementChanged(TableElementTypeDescriptor TD, PropertyValueChangedEventArgs e)
         {
+            var TE = TD.WrappedTE;
+            TD.Refresh();
+            propertyGridEffect.Refresh();
             if (treeViewEffect.SelectedNode is TableElementTreeNode editionTETreeNode) {
                 if (editionTETreeNode.TE == TE) {
                     Handler.EditionTable.TableElements.RemoveAll(TE);
@@ -501,8 +546,11 @@ namespace LedControlToolkit
             }
         }
 
-        private void OnTableConfigSettingChanged(TableConfigSetting TCS, PropertyValueChangedEventArgs e)
+        private void OnTableConfigSettingChanged(TableConfigSettingTypeDescriptor TD, PropertyValueChangedEventArgs e)
         {
+            var TCS = TD.WrappedTCS;
+            TD.Refresh();
+            propertyGridEffect.Refresh();
             if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
                 if (effectTreeNode.TCS == TCS) {
                     effectTreeNode.Rebuild(Handler);

@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
     <Compile Include="Property Grid\BaseTypeDescriptor.cs" />
+    <Compile Include="Property Grid\CustomField.cs" />
     <Compile Include="Property Grid\EditionTableTypeDescriptor.cs" />
     <Compile Include="Property Grid\PropertyDescriptorHandler.cs" />
     <Compile Include="Property Grid\TableElementTypeDescriptor.cs" />

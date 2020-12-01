@@ -12,8 +12,8 @@ namespace LedControlToolkit
     {
         public Table EditionTable {get; private set;}
 
-        public EditionTableTypeDescriptor(Table Table, EditionMode editMode = EditionMode.Disabled)
-            : base(Table, editMode)
+        public EditionTableTypeDescriptor(Table Table, bool editable = true)
+            : base(Table, editable)
         {
             EditionTable = Table;
 
@@ -27,6 +27,13 @@ namespace LedControlToolkit
             PropertyDescriptors["ConfigurationSource"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["Effects"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["AssignedStaticEffects"] = new PropertyDescriptorHandler() { Browsable = false };
+
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            
         }
     }
 }
