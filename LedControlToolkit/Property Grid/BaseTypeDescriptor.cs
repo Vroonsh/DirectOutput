@@ -51,17 +51,22 @@ namespace LedControlToolkit
 
             if (PropertyDescriptors.Keys.Contains(p.Name)) {
                 var customDesc = PropertyDescriptors[p.Name];
-
                 customAttributes.Add(new BrowsableAttribute(customDesc.Browsable));
                 customAttributes.Add(new ReadOnlyAttribute(customDesc.ReadOnly || !Editable));
-                if (customDesc.Category != string.Empty) {
+                if (!customDesc.DisplayName.IsNullOrEmpty()) {
+                    customAttributes.Add(new DisplayNameAttribute(customDesc.DisplayName));
+                }
+                if (!customDesc.Description.IsNullOrEmpty()) {
+                    customAttributes.Add(new DescriptionAttribute(customDesc.Description));
+                }
+                if (!customDesc.Category.IsNullOrEmpty()) {
                     customAttributes.Add(new CategoryAttribute(customDesc.Category));
                 }
                 if (customDesc.TypeConverter != null) {
                     customAttributes.Add(new TypeConverterAttribute(customDesc.TypeConverter));
                 }
                 if (customDesc.TypeEditor != null) {
-                    customAttributes.Add(new EditorAttribute(customDesc.TypeEditor.GetType(), typeof(UITypeEditor)));
+                    customAttributes.Add(new EditorAttribute(customDesc.TypeEditor, typeof(UITypeEditor)));
                 }
             } else {
                 customAttributes.Add(new ReadOnlyAttribute(!Editable));

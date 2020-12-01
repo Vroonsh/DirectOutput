@@ -69,7 +69,7 @@ namespace DirectOutput.LedControl.Setup
 
             if (Toy is IMatrixToy<RGBAColor> || Toy is IMatrixToy<AnalogAlpha>) {
 
-                if (!TCS.ShapeName.IsNullOrWhiteSpace()) {
+                if (!TCS.ShapeName.IsNullOrWhiteSpace() && TCS.IsShape) {
                     if (Toy is IMatrixToy<RGBAColor>) {
                         RGBAColor ActiveColor = null;
                         if (TCS.ColorConfig != null) {
@@ -195,14 +195,14 @@ namespace DirectOutput.LedControl.Setup
                         if (ActiveColor != null) {
                             RGBAColor InactiveColor = ActiveColor.Clone();
                             InactiveColor.Alpha = 0;
-                            if (TCS.AreaDirection != MatrixShiftDirectionEnum.Invalid) {
+                            if (TCS.AreaDirection != MatrixShiftDirectionEnum.Invalid && TCS.IsShift) {
                                 //shift effect
                                 Effect = new RGBAMatrixShiftEffect() { ShiftDirection = TCS.AreaDirection, ShiftAcceleration = TCS.AreaAcceleration, ActiveColor = ActiveColor, InactiveColor = InactiveColor, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                                 if (TCS.AreaSpeed > 0) {
                                     ((RGBAMatrixShiftEffect)Effect).ShiftSpeed = TCS.AreaSpeed;
                                 }
 
-                            } else if (TCS.AreaFlickerDensity > 0) {
+                            } else if (TCS.AreaFlickerDensity > 0 && TCS.IsFlicker) {
                                 //flicker effect
                                 Effect = new RGBAMatrixFlickerEffect() { Density = TCS.AreaFlickerDensity.Limit(1, 99), ActiveColor = ActiveColor, InactiveColor = InactiveColor, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                                 if (TCS.AreaFlickerMinDurationMs > 0) {
