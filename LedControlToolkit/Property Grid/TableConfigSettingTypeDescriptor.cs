@@ -1,4 +1,5 @@
 ﻿using DirectOutput.FX.MatrixFX;
+using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
 using System;
 using System.Collections.Generic;
@@ -13,40 +14,32 @@ namespace LedControlToolkit
     class TableConfigSettingTypeDescriptor : BaseTypeDescriptor
     {
         public TableConfigSetting WrappedTCS { get; private set; }
+        public LedControlToolkitHandler Handler;
 
-        public enum EffectType
-        {
-            None,
-            Flicker,
-            Shift,
-            Plasma,
-            Bitmap,
-            Shape
-        }
-
-        public EffectType EffType { get; private set; } = EffectType.None;
-
-        public TableConfigSettingTypeDescriptor(TableConfigSetting TCS, bool editable)
+        public TableConfigSettingTypeDescriptor(TableConfigSetting TCS, bool editable, LedControlToolkitHandler handler)
             : base(TCS, editable)
         {
             WrappedTCS = TCS;
+            Handler = handler;
 
             PropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["OutputType"] = new PropertyDescriptorHandler() { Browsable = false };
-            PropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ColorName"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ColorName2"] = new PropertyDescriptorHandler() { Browsable = false };
+
+            PropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { DisplayName = "Color", TypeConverter = typeof(ColorConfigTypeConverter), TypeEditor = typeof(ColorConfigEditor) };
 
             PropertyDescriptors["PlasmaSpeed"] = new PropertyDescriptorHandler();
             PropertyDescriptors["PlasmaDensity"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["ColorName2"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["ColorConfig2"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["ColorConfig2"] = new PropertyDescriptorHandler() { DisplayName = "Color 2", TypeConverter = typeof(ColorConfigTypeConverter), TypeEditor = typeof(ColorConfigEditor) };
 
             PropertyDescriptors["AreaDirection"] = new PropertyDescriptorHandler();
             PropertyDescriptors["AreaAcceleration"] = new PropertyDescriptorHandler();
             PropertyDescriptors["AreaSpeed"] = new PropertyDescriptorHandler();
 
-            PropertyDescriptors["ShapeName"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["ShapeName"] = new PropertyDescriptorHandler() { TypeEditor = typeof(ShapeNameEditor) };
 
             PropertyDescriptors["AreaFlickerDensity"] = new PropertyDescriptorHandler();
             PropertyDescriptors["AreaFlickerMinDurationMs"] = new PropertyDescriptorHandler();
@@ -67,52 +60,11 @@ namespace LedControlToolkit
             Refresh();
         }
 
-        protected override void GenerateCustomFields()
-        {
-//            CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, EffectType>(this, new CustomField<EffectType>("Effect Type", EffectType.None) { ReadOnly = !Editable }));
-        }
-
-        //private void InitEffectType()
-        //{
-        //    EffectType effectType;
-        //    if (!WrappedTCS.ShapeName.IsNullOrEmpty()) {
-        //        effectType = EffectType.Shape;
-        //    } else if (WrappedTCS.IsBitmap) {
-        //        effectType = EffectType.Bitmap;
-        //    } else if (WrappedTCS.IsPlasma) {
-        //        effectType = EffectType.Plasma;
-        //    } else if (WrappedTCS.AreaDirection != MatrixShiftDirectionEnum.Invalid) {
-        //        effectType = EffectType.Shift;
-        //    } else if (WrappedTCS.AreaFlickerDensity > 0) {
-        //        effectType = EffectType.Flicker;
-        //    } else {
-        //        effectType = EffectType.None;
-        //    }
-        //    CustomFieldValues["Effect Type"] = effectType;
-        //}
-
         public override void Refresh()
         {
-            //if (!Editable) {
-            //    InitEffectType();
-            //}
-            //EffectType effectType = (EffectType)CustomFieldValues["Effect Type"];
-            //if (Editable) {
-            //    WrappedTCS.IsPlasma = (effectType == EffectType.Plasma);
-            //    WrappedTCS.IsBitmap = (effectType == EffectType.Bitmap);
-            //    if (effectType != EffectType.Shift) {
-            //        WrappedTCS.AreaDirection = MatrixShiftDirectionEnum.Invalid;
-            //    }
-            //    if (effectType != EffectType.Shape) {
-            //        WrappedTCS.ShapeName = string.Empty;
-            //    }
-            //    if (effectType != EffectType.Flicker) {
-            //        WrappedTCS.AreaFlickerDensity = 0;
-            //    }
-            //} 
             var effectType = WrappedTCS.EffectType;
 
-            PropertyDescriptors["ColorName2"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
+            PropertyDescriptors["ColorConfig2"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
             PropertyDescriptors["PlasmaSpeed"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
             PropertyDescriptors["PlasmaDensity"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
 
