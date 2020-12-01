@@ -20,7 +20,16 @@ namespace DirectOutput.LedControl.Loader
     /// </summary>
     public class TableConfigSetting
     {
-
+        public enum EffectTypeMX
+        {
+            Invalid,
+            None,
+            Shape,
+            Bitmap,
+            Plasma,
+            Shift,
+            Flicker
+        }
 
         /// <summary>
         /// Defines the control mode for a output. It can be constantly on, off or it can be controlled by a element of a pinball table.
@@ -105,7 +114,8 @@ namespace DirectOutput.LedControl.Loader
         /// </value>
         [Category("Timers")]
         [DisplayName("Duration (ms)")]
-        [Description("The duration in milliseconds.")]
+        [Description("The duration in milliseconds.\n" +
+                     "-1, infinite")]
         [DefaultValue(0)]
         public int DurationMs { get; set; }
 
@@ -343,6 +353,26 @@ namespace DirectOutput.LedControl.Loader
 
 
         [Category("Area")]
+        [DisplayName("Effect Type")]
+        [Description("The matrix effect type of this effect.\n" +
+                     "If it's not a matrix effect, it's Invalid\n" +
+                     "It could be None if no specific effect is declared but an area was setup.")]
+        [DefaultValue(EffectTypeMX.Invalid)]
+        public EffectTypeMX EffectType { get; set; } = EffectTypeMX.Invalid;
+        [Browsable(false)]
+        public bool IsArea => EffectType != EffectTypeMX.Invalid;
+        [Browsable(false)]
+        public bool IsShape => EffectType == EffectTypeMX.Shape;
+        [Browsable(false)]
+        public bool IsBitmap => EffectType == EffectTypeMX.Bitmap;
+        [Browsable(false)]
+        public bool IsShift => EffectType == EffectTypeMX.Shift;
+        [Browsable(false)]
+        public bool IsFlicker => EffectType == EffectTypeMX.Flicker;
+        [Browsable(false)]
+        public bool IsPlasma => EffectType == EffectTypeMX.Plasma;
+
+        [Category("Area")]
         [DisplayName("Left (%)")]
         [Description("The left position of the area effect in percentage.")]
         [DefaultValue(0)]
@@ -362,6 +392,7 @@ namespace DirectOutput.LedControl.Loader
         [Description("The height of the area effect in percentage.")]
         [DefaultValue(100)]
         public int AreaHeight { get; set; } = 100;
+
         [Category("Shift")]
         [DisplayName("Speed")]
         [Description("The shift speed in percentage of the effect area per second.\n" +
@@ -378,6 +409,7 @@ namespace DirectOutput.LedControl.Loader
                      "Speed will be decreased down to a minimum speed of 1.")]
         [DefaultValue(0)]
         public int AreaAcceleration { get; set; } = 0;
+
         [Category("Flicker")]
         [DisplayName("Density (%)")]
         [Description("The density of the flickering in percent.\n" +
@@ -404,9 +436,7 @@ namespace DirectOutput.LedControl.Loader
         [Description("The shift direction resp. the direction in which the color moves (Left, Right, Up, Down).")]
         [DefaultValue(MatrixShiftDirectionEnum.Invalid)]
         public MatrixShiftDirectionEnum AreaDirection { get; set; } = MatrixShiftDirectionEnum.Invalid;
-        public bool IsArea = false;
 
-        public bool IsBitmap = false;
         [Category("Bitmap")]
         [DisplayName("Top (pixels)")]
         [Description("The top position in pixels of the bitmap area in the reference image.")]
@@ -470,7 +500,6 @@ namespace DirectOutput.LedControl.Loader
         public string ShapeName { get; set; } = string.Empty;
 
 
-        public bool IsPlasma = false;
         [Category("Plasma")]
         [DisplayName("Speed")]
         [Description("The plasma speed")]
@@ -672,20 +701,17 @@ namespace DirectOutput.LedControl.Loader
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     PlasmaSpeed = Parts[PartNr].Substring(3).ToInteger();
-                    IsPlasma = true;
-                    IsArea = true;
+                    EffectType = EffectTypeMX.Plasma;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APD" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     PlasmaDensity = Parts[PartNr].Substring(3).ToInteger();
-                    IsPlasma = true;
-                    IsArea = true;
+                    EffectType = EffectTypeMX.Plasma;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC")
                 {
                     ColorName2 = Parts[PartNr].Substring(3).ToUpper();
-                    IsPlasma = true;
-                    IsArea = true;
+                    EffectType = EffectTypeMX.Plasma;
                 }
                 //else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC" && Parts[PartNr].Substring(3).IsInteger())
                 //{
@@ -698,155 +724,123 @@ namespace DirectOutput.LedControl.Loader
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "SHP" )
                 {
                     ShapeName = Parts[PartNr].Substring(3).Trim().ToUpper();
-                    IsArea = true;
+                    EffectType = EffectTypeMX.Shape;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABT" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapTop = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
+                    EffectType = EffectTypeMX.Bitmap;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABL" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapLeft = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABW" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABW" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapWidth = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABH" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABH" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapHeight = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABF" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABF" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapFrame = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAS" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationStepSize = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAC" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAC" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationStepCount = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAF" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAF" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationFrameDuration = 1000 / Parts[PartNr].Substring(3).ToInteger().Limit(10, int.MaxValue);
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAD" && Enum.IsDefined(typeof(MatrixAnimationStepDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAD" && Enum.IsDefined(typeof(MatrixAnimationStepDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaBitmapAnimationDirection = (MatrixAnimationStepDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-                else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAB" && Enum.IsDefined(typeof(AnimationBehaviourEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAB" && Enum.IsDefined(typeof(AnimationBehaviourEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaBitmapAnimationBehaviour = (AnimationBehaviourEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    IsArea = true;
-                    IsBitmap = true;
-                }
-
-                else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFDEN" && Parts[PartNr].Substring(5).IsInteger())
+                    EffectType = EffectTypeMX.Bitmap;
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFDEN" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerDensity = Parts[PartNr].Substring(5).ToInteger();
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMIN" && Parts[PartNr].Substring(5).IsInteger())
+                    EffectType = EffectTypeMX.Flicker;
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMIN" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerMinDurationMs = Parts[PartNr].Substring(5).ToInteger();
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMAX" && Parts[PartNr].Substring(5).IsInteger())
+                    EffectType = EffectTypeMX.Flicker;
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMAX" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerMaxDurationMs = Parts[PartNr].Substring(5).ToInteger();
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 6 && Parts[PartNr].Substring(0, 6).ToUpper() == "AFFADE" && Parts[PartNr].Substring(6).IsInteger())
+                    EffectType = EffectTypeMX.Flicker;
+                } else if (Parts[PartNr].Length > 6 && Parts[PartNr].Substring(0, 6).ToUpper() == "AFFADE" && Parts[PartNr].Substring(6).IsInteger())
                 {
                     AreaFlickerFadeDurationMs = Parts[PartNr].Substring(6).ToInteger();
-
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AT" && Parts[PartNr].Substring(2).IsInteger())
+                    EffectType = EffectTypeMX.Flicker;
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AT" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaTop = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    IsArea = true;
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
                 }
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AL" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaLeft = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AW" && Parts[PartNr].Substring(2).IsInteger())
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AW" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaWidth = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AH" && Parts[PartNr].Substring(2).IsInteger())
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AH" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaHeight = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    IsArea = true;
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
                 }
                 //TODO: Remove parameter AA
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AA" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaAcceleration = Parts[PartNr].Substring(2).ToInteger();
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASA" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASA" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaAcceleration = Parts[PartNr].Substring(3).ToInteger();
-                    IsArea = true;
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
                 }
 
-                    //TODO:Remove AS para
+                //TODO:Remove AS para
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AS" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaSpeed = Parts[PartNr].Substring(2).ToInteger().Limit(1, 10000);
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Shift;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaSpeed = Parts[PartNr].Substring(3).ToInteger().Limit(1, 10000);
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].ToUpper().Right(2) == "MS" && Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).IsInteger())
+                    EffectType = EffectTypeMX.Shift;
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].ToUpper().Right(2) == "MS" && Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).IsInteger())
                 {
                     AreaSpeed = (int)((double)100000 / Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).ToInteger()).Limit(10, 100000);
-                    IsArea = true;
+                    EffectType = EffectTypeMX.Shift;
                 }
 
-                    //TODO:Remove AD para
+                //TODO:Remove AD para
                 else if (Parts[PartNr].Length == 3 && Parts[PartNr].Substring(0, 2).ToUpper() == "AD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(2, 1).ToUpper()[0]))
                 {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(2, 1).ToUpper()[0];
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
+                    EffectType = EffectTypeMX.Shift;
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    IsArea = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "MAX" && Parts[PartNr].Substring(3).IsInteger())
+                    EffectType = EffectTypeMX.Shift;
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "MAX" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     MaxDurationMs = Parts[PartNr].Substring(3).ToInteger().Limit(0, int.MaxValue);
                 }
@@ -1047,7 +1041,7 @@ namespace DirectOutput.LedControl.Loader
                     //TODO find the ColorConfig
                     ColorName = rgbaColorFX.ActiveColor.ToString();
                 } else if (currentFX is IMatrixEffect matrixFX) {
-                    IsArea = true;
+                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
 
                     if (matrixFX.FixedLayerNr) {
                         Layer = matrixFX.LayerNr;
@@ -1059,12 +1053,14 @@ namespace DirectOutput.LedControl.Loader
                     AreaHeight = (int)matrixFX.Height;
 
                     if (currentFX is IMatrixShiftEffect matrixShiftFX) {
+                        EffectType = EffectTypeMX.Shift;
                         AreaDirection = matrixShiftFX.ShiftDirection;
                         AreaAcceleration = (int)matrixShiftFX.ShiftAcceleration;
                         AreaSpeed = (int)matrixShiftFX.ShiftSpeed;
                     }
 
                     if (currentFX is IMatrixFlickerEffect matrixFlickerFX) {
+                        EffectType = EffectTypeMX.Flicker;
                         AreaFlickerDensity = matrixFlickerFX.Density;
                         AreaFlickerMinDurationMs = matrixFlickerFX.MinFlickerDurationMs;
                         AreaFlickerMaxDurationMs = matrixFlickerFX.MaxFlickerDurationMs;
@@ -1073,7 +1069,7 @@ namespace DirectOutput.LedControl.Loader
                     }
 
                     if (currentFX is IMatrixBitmapEffect matrixBitmapFX) {
-                        IsBitmap = true;
+                        EffectType = EffectTypeMX.Bitmap;
 
                         AreaBitmapTop = matrixBitmapFX.BitmapTop;
                         AreaBitmapLeft = matrixBitmapFX.BitmapLeft;
@@ -1102,14 +1098,16 @@ namespace DirectOutput.LedControl.Loader
                     }
 
                     if (currentFX is RGBAMatrixPlasmaEffect plasmaMatrixFX) {
-                        IsPlasma = true;
+                        EffectType = EffectTypeMX.Plasma;
                         PlasmaDensity = plasmaMatrixFX.PlasmaDensity;
                         PlasmaSpeed = plasmaMatrixFX.PlasmaSpeed;
                     } else if (currentFX is RGBAMatrixShapeEffect || currentFX is RGBAMatrixColorScaleShapeEffect) {
                         if (currentFX is RGBAMatrixColorScaleShapeEffect rgbaShapeFX) {
+                            EffectType = EffectTypeMX.Shape;
                             ShapeName = rgbaShapeFX.ShapeName;
                             ColorName = rgbaShapeFX.ActiveColor.ToString();
                         } else {
+                            EffectType = EffectTypeMX.Shape;
                             ShapeName = (currentFX as RGBAMatrixShapeEffect).ShapeName;
                         }
                     }
@@ -1217,7 +1215,9 @@ namespace DirectOutput.LedControl.Loader
                 configToolStr += GetConfigToolCommand(AreaWidth, 100, "AW");
                 configToolStr += GetConfigToolCommand(AreaHeight, 100, "AH");
 
-                configToolStr += GetConfigToolCommand(ShapeName, "SHP");
+                if (IsShape) {
+                    configToolStr += GetConfigToolCommand(ShapeName, "SHP");
+                }
 
                 if (IsPlasma) {
                     configToolStr += GetConfigToolCommand(PlasmaSpeed, 0,"APS");

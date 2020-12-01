@@ -12,17 +12,33 @@ namespace LedControlToolkit
     {
         public TableElement WrappedTE { get; private set; }
 
-        public TableElementTypeDescriptor(TableElement TE, EditionMode editMode = EditionMode.Disabled)
-            : base(TE, editMode)
+        public TableElementTypeDescriptor(TableElement TE, bool editable)
+            : base(TE, editable)
         {
             WrappedTE = TE;
 
-            PropertyDescriptors["Name"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
-            PropertyDescriptors["Number"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
-            PropertyDescriptors["TableElementType"] = new PropertyDescriptorHandler() { ReadOnly = (EditMode != EditionMode.Full) };
+            PropertyDescriptors["Name"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["Number"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["TableElementType"] = new PropertyDescriptorHandler();
 
             PropertyDescriptors["AssignedEffects"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["Value"] = new PropertyDescriptorHandler() { Browsable = false };
+
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            if (WrappedTE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) {
+                PropertyDescriptors["Name"].Browsable = true;
+                PropertyDescriptors["Number"].Browsable = false;
+            } else if (WrappedTE.TableElementType != DirectOutput.TableElementTypeEnum.Unknown) {
+                PropertyDescriptors["Name"].Browsable = false;
+                PropertyDescriptors["Number"].Browsable = true;
+            } else {
+                PropertyDescriptors["Name"].Browsable = false;
+                PropertyDescriptors["Number"].Browsable = false;
+            }
         }
     }
 }
