@@ -21,7 +21,7 @@ namespace LedControlToolkit
         private LedMatrixPreviewControl PreviewControl;
 
         public Pinball Pinball { get; private set; }
-        private Table PinballTable = null;
+        public Table PinballTable { get; private set; } = null;
         public Table EditionTable { get; private set; } = new Table() { TableName = "Edition Table", RomName = "romname" };
         public LedControlConfig LedControlConfigData { get; private set; }
 

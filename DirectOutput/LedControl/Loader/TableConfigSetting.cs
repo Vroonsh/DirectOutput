@@ -1038,7 +1038,6 @@ namespace DirectOutput.LedControl.Loader
                 } else if (currentFX is AnalogToyValueEffect analogToyValueFX) {
                     Intensity = analogToyValueFX.ActiveValue.Alpha;
                 } else if (currentFX is RGBAColorEffect rgbaColorFX) {
-                    //TODO find the ColorConfig
                     ColorName = rgbaColorFX.ActiveColor.ToString();
                 } else if (currentFX is IMatrixEffect matrixFX) {
                     EffectType = IsArea ? EffectType : EffectTypeMX.None;
@@ -1119,6 +1118,12 @@ namespace DirectOutput.LedControl.Loader
                     break;
                 }
             }
+        }
+
+        public void ResolveColorConfig(ColorConfigList CCL)
+        {
+            ColorConfig = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName, StringComparison.InvariantCultureIgnoreCase));
+            ColorConfig2 = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private string GetConfigToolCommand<T>(T value, T defaultValue, string command)
