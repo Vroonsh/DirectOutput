@@ -10,24 +10,34 @@ namespace LedControlToolkit
 {
     public abstract class BaseTypeDescriptor : CustomTypeDescriptor
     {
-        public enum EditionMode
-        {
-            Disabled,
-            Table,
-            Full
-        }
-
-        protected EditionMode EditMode { get; private set; } = EditionMode.Disabled;
+        protected bool Editable { get; private set; } = true;
 
         protected object WrappedObject;
 
         protected Dictionary<string, PropertyDescriptorHandler> PropertyDescriptors = new Dictionary<string, PropertyDescriptorHandler>();
 
-        public BaseTypeDescriptor(object wrappedObj, EditionMode editMode)
+        protected List<PropertyDescriptor> CustomFields = new List<PropertyDescriptor>();
+        protected Dictionary<String, Object> CustomFieldValues = new Dictionary<String, Object>();
+
+        public Object this[String fieldName]
+        {
+            get {
+                Object value = null;
+                CustomFieldValues.TryGetValue(fieldName, out value);
+                return value;
+            }
+
+            set {
+                CustomFieldValues[fieldName] = value;
+            }
+        }
+
+        public BaseTypeDescriptor(object wrappedObj, bool editable)
             : base(TypeDescriptor.GetProvider(wrappedObj).GetTypeDescriptor(wrappedObj))
         {
             WrappedObject = wrappedObj;
-            EditMode = editMode;
+            Editable = editable;
+            GenerateCustomFields();
         }
 
         public override PropertyDescriptorCollection GetProperties()
@@ -37,24 +47,26 @@ namespace LedControlToolkit
 
         private PropertyDescriptor ToCustomProperty(PropertyDescriptor p)
         {
-            if (!PropertyDescriptors.Keys.Contains(p.Name)) {
-                return p;
-            }
-
-            var customDesc = PropertyDescriptors[p.Name];
-
             List<Attribute> customAttributes = new List<Attribute>();
-            customAttributes.Add(new BrowsableAttribute(customDesc.Browsable));
-            customAttributes.Add(new ReadOnlyAttribute(customDesc.ReadOnly));
-            if (customDesc.Category != string.Empty) {
-                customAttributes.Add(new CategoryAttribute(customDesc.Category));
+
+            if (PropertyDescriptors.Keys.Contains(p.Name)) {
+                var customDesc = PropertyDescriptors[p.Name];
+
+                customAttributes.Add(new BrowsableAttribute(customDesc.Browsable));
+                customAttributes.Add(new ReadOnlyAttribute(customDesc.ReadOnly || !Editable));
+                if (customDesc.Category != string.Empty) {
+                    customAttributes.Add(new CategoryAttribute(customDesc.Category));
+                }
+                if (customDesc.TypeConverter != null) {
+                    customAttributes.Add(new TypeConverterAttribute(customDesc.TypeConverter));
+                }
+                if (customDesc.TypeEditor != null) {
+                    customAttributes.Add(new EditorAttribute(customDesc.TypeEditor.GetType(), typeof(UITypeEditor)));
+                }
+            } else {
+                customAttributes.Add(new ReadOnlyAttribute(!Editable));
             }
-            if (customDesc.TypeConverter != null) {
-                customAttributes.Add(new TypeConverterAttribute(customDesc.TypeConverter));
-            }
-            if (customDesc.TypeEditor != null) {
-                customAttributes.Add(new EditorAttribute(customDesc.TypeEditor.GetType(), typeof(UITypeEditor)));
-            }
+
             var attributes = AttributeCollection.FromExisting(p.Attributes, customAttributes.ToArray());
             var customProp = TypeDescriptor.CreateProperty(WrappedObject.GetType(), p, attributes.Cast<Attribute>().ToArray());
             return customProp;
@@ -63,9 +75,13 @@ namespace LedControlToolkit
         public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
             var properties = base.GetProperties(attributes).Cast<PropertyDescriptor>()
-                                 .Select(p => ToCustomProperty(p));
+                                 .Select(p => ToCustomProperty(p)).Union(CustomFields);
 
             return new PropertyDescriptorCollection(properties.ToArray());
         }
+
+        protected virtual void GenerateCustomFields() { }
+
+        public abstract void Refresh();
     }
 }
