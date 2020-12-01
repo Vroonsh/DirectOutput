@@ -14,9 +14,8 @@ namespace LedControlToolkit
 {
     public class TableElementTreeNode : TreeNode, ITableElementTreeNode
     {
-        public TableElementTreeNode(TableElement tableElement, IEffect[] effects) : base()
+        public TableElementTreeNode(TableElement tableElement) : base()
         {
-            Effects = effects;
             TE = tableElement;
             Refresh();
         }
@@ -24,14 +23,13 @@ namespace LedControlToolkit
         public override string ToString()
         {
             if (TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) {
-                return $"{TE.Name} : {Effects.Length} effects";
+                return $"{TE.Name} : {Nodes.Count} effects";
             }
-            return $"{TE.TableElementType} {(char)TE.TableElementType}{TE.Number} : {Effects.Length} effects";
+            return $"{TE.TableElementType} {(char)TE.TableElementType}{TE.Number} : {Nodes.Count} effects";
         }
 
         public virtual TableElement GetTableElement() => TE;
 
-        public IEffect[] Effects { get; set; }
         public TableElement TE = null;
 
         internal void Refresh()
