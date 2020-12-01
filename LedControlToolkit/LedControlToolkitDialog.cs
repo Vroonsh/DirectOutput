@@ -123,7 +123,7 @@ namespace LedControlToolkit
                 Handler.SetCurrentTableElement(e.Node, true);
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, true);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, true, Handler);
                     value = Handler.GetCurrentTableElementValue();
                 } else if (e.Node is TableElementTreeNode tableElementNode) {
                     propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, true);
@@ -321,7 +321,7 @@ namespace LedControlToolkit
 
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, false);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, false, Handler);
                     value = Handler.GetCurrentTableElementValue();
                     //Contextmenu to copy effect to edition
                     if (e.Button == MouseButtons.Right) {
@@ -551,13 +551,13 @@ namespace LedControlToolkit
             var TCS = TD.WrappedTCS;
             TD.Refresh();
             propertyGridEffect.Refresh();
-            if (treeViewTableLedEffects.SelectedNode is EffectTreeNode effectTreeNode) {
-                if (effectTreeNode.TCS == TCS) {
-                    effectTreeNode.Rebuild(Handler);
-                    treeViewTableLedEffects.Refresh();
-                }
-            } else if (treeViewEffect.SelectedNode is EffectTreeNode editionEffectTreeNode) {
+            if (treeViewEffect.SelectedNode is EffectTreeNode editionEffectTreeNode) {
                 if (editionEffectTreeNode.TCS == TCS) {
+                    if (e.ChangedItem.Value == TCS.ColorConfig) {
+                        TCS.ColorName = TCS.ColorConfig.Name;
+                    }else if (e.ChangedItem.Value == TCS.ColorConfig2) {
+                        TCS.ColorName2 = TCS.ColorConfig2.Name;
+                    }
                     editionEffectTreeNode.Rebuild(Handler);
                     treeViewEffect.Refresh();
                 }

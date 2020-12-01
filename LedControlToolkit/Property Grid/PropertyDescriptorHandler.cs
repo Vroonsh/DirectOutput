@@ -11,9 +11,11 @@ namespace LedControlToolkit
     public class PropertyDescriptorHandler
     {
         public bool Browsable = true;
+        public string DisplayName = string.Empty;
+        public string Description = string.Empty;
         public string Category = string.Empty;
         public bool ReadOnly = false;
         public Type TypeConverter = null;
-        public UITypeEditor TypeEditor = null;
+        public Type TypeEditor = null;
     }
 }
