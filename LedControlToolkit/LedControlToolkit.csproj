@@ -77,6 +77,7 @@
     <Compile Include="Property Grid\PropertyDescriptorHandler.cs" />
     <Compile Include="Property Grid\ShapeNameEditor.cs" />
     <Compile Include="Property Grid\TableElementTypeDescriptor.cs" />
+    <Compile Include="Property Grid\ToyNameEditor.cs" />
     <Compile Include="TreeNodes\EditionTableTreeNode.cs" />
     <Compile Include="TreeNodes\ITableElementTreeNode.cs" />
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
