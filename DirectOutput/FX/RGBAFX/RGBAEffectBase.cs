@@ -123,6 +123,24 @@ namespace DirectOutput.FX.RGBAFX
         }
 
         /// <summary>
+        /// Returns Toy impacted by this effect
+        /// </summary>
+        /// <returns>the assigned toy</returns>
+        public override IToy GetAssignedToy() => RGBAToy;
+
+        /// <summary>
+        /// Set the assigned toy to an effect
+        /// </summary>
+        /// <param name="toy">the assigned toy</param>
+        public override void SetAssignedToy(IToy toy)
+        {
+            if (toy is IRGBAToy) {
+                ToyName = toy.Name;
+                RGBAToy = (IRGBAToy)toy;
+            }
+        }
+
+        /// <summary>
         /// Will tell if this effect or any targeted effects have an action on the provided toys list
         /// </summary>
         /// <param name="ToyNames">a list of toy names</param>

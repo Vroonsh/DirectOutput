@@ -13,13 +13,15 @@ namespace LedControlToolkit
 {
     class TableConfigSettingTypeDescriptor : BaseTypeDescriptor
     {
+        public EffectTreeNode EffectNode { get; private set; }
         public TableConfigSetting WrappedTCS { get; private set; }
         public LedControlToolkitHandler Handler;
 
-        public TableConfigSettingTypeDescriptor(TableConfigSetting TCS, bool editable, LedControlToolkitHandler handler)
-            : base(TCS, editable)
+        public TableConfigSettingTypeDescriptor(EffectTreeNode node, bool editable, LedControlToolkitHandler handler)
+            : base(node.TCS, editable)
         {
-            WrappedTCS = TCS;
+            EffectNode = node;
+            WrappedTCS = EffectNode.TCS;
             Handler = handler;
 
             PropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { Browsable = false };
@@ -57,11 +59,29 @@ namespace LedControlToolkit
             PropertyDescriptors["AreaBitmapAnimationDirection"] = new PropertyDescriptorHandler();
             PropertyDescriptors["AreaBitmapAnimationBehaviour"] = new PropertyDescriptorHandler();
 
+            GenerateCustomFields();
             Refresh();
+        }
+
+        protected override void GenerateCustomFields()
+        {
+            CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this, 
+                new CustomField<string>("ToyName", EffectNode.Effect.GetAssignedToy()?.Name), 
+                new Attribute[] 
+                {
+                    new DisplayNameAttribute("Toy Name"),
+                    new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
+                }));
         }
 
         public override void Refresh()
         {
+            //Update Effect Toy if needed
+            var toyName = (CustomFieldValues["ToyName"] as string);
+            if (!toyName.Equals(EffectNode.Effect.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
+                EffectNode.Effect.SetAssignedToy(Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase)));
+            }
+
             var effectType = WrappedTCS.EffectType;
 
             PropertyDescriptors["ColorConfig2"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);

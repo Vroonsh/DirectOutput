@@ -31,9 +31,6 @@ namespace LedControlToolkit
             Refresh();
         }
 
-        public override void Refresh()
-        {
-            
-        }
+        public override void Refresh() {}
     }
 }
