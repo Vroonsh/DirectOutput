@@ -1,19 +1,20 @@
-﻿using System;
+﻿using DirectOutput.Cab.Toys;
+using DirectOutput.General.Analog;
+using DirectOutput.General.Color;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
 namespace LedControlToolkit
 {
-    public class ShapeNameEditor : UITypeEditor
+    public class ToyNameEditor : UITypeEditor
     {
-        public ShapeNameEditor()
+        public ToyNameEditor()
         {
         }
 
@@ -24,7 +25,7 @@ namespace LedControlToolkit
                 string shapeName = value as string;
                 if (edSvc != null) {
                     ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
-                    dropdown.Items.AddRange(TCSDesc.Handler.PinballTable.ShapeDefinitions.Shapes.Select(S=>S.Name).ToArray());
+                    dropdown.Items.AddRange(TCSDesc.Handler.Pinball.Cabinet.Toys.Where(T=> T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>).Select(T => T.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
                     return dropdown.Selection;
                 }
