@@ -17,12 +17,12 @@ namespace LedControlToolkit
         protected Dictionary<string, PropertyDescriptorHandler> PropertyDescriptors = new Dictionary<string, PropertyDescriptorHandler>();
 
         protected List<PropertyDescriptor> CustomFields = new List<PropertyDescriptor>();
-        protected Dictionary<String, Object> CustomFieldValues = new Dictionary<String, Object>();
+        protected Dictionary<string, object> CustomFieldValues = new Dictionary<string, object>();
 
-        public Object this[String fieldName]
+        public object this[string fieldName]
         {
             get {
-                Object value = null;
+                object value = null;
                 CustomFieldValues.TryGetValue(fieldName, out value);
                 return value;
             }
@@ -32,12 +32,14 @@ namespace LedControlToolkit
             }
         }
 
-        public BaseTypeDescriptor(object wrappedObj, bool editable)
+        public BaseTypeDescriptor(object wrappedObj, bool editable, bool generateCustomFields = false)
             : base(TypeDescriptor.GetProvider(wrappedObj).GetTypeDescriptor(wrappedObj))
         {
             WrappedObject = wrappedObj;
             Editable = editable;
-            GenerateCustomFields();
+            if (generateCustomFields) {
+                GenerateCustomFields();
+            }
         }
 
         public override PropertyDescriptorCollection GetProperties()

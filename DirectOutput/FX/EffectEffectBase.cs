@@ -2,6 +2,7 @@
 using DirectOutput.Table;
 using System;
 using System.Collections.Generic;
+using DirectOutput.Cab.Toys;
 
 namespace DirectOutput.FX
 {
@@ -119,6 +120,30 @@ namespace DirectOutput.FX
             Table = null;
             base.Finish();
         }
+
+        /// <summary>
+        /// Returns Toy impacted by this effect
+        /// </summary>
+        /// <returns>the assigned toy</returns>
+        public override IToy GetAssignedToy()
+        {
+            if (TargetEffect != null) {
+                return TargetEffect.GetAssignedToy();
+            }
+            return base.GetAssignedToy();
+        }
+
+        /// <summary>
+        /// Set the assigned toy to an effect
+        /// </summary>
+        /// <param name="toy">the assigned toy</param>
+        public override void SetAssignedToy(IToy toy)
+        {
+            if (TargetEffect != null) {
+                TargetEffect.SetAssignedToy(toy);
+            }
+        }
+
 
         /// <summary>
         /// Will tell if this effect or any targeted effects have an action on the provided toys list

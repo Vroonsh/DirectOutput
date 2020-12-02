@@ -31,7 +31,6 @@ namespace LedControlToolkit
         TreeNode CurrentTableSelectedNode = null;
 
         EditionTableTreeNode EditionTableNode;
-        TreeNode CurrentEditionSelectedNode = null;
 
         #region Main Dialog
         public LedControlToolkitDialog()
@@ -51,15 +50,19 @@ namespace LedControlToolkit
             Handler.Start();
         }
 
+        private void SaveSettings()
+        {
+            Settings.PulseDurationMs = (int)numericUpDownPulseDuration.Value;
+            Settings.ShowMatrixGrid = panelPreviewLedMatrix.ShowMatrixGrid;
+            Settings.ShowPreviewAreas = panelPreviewLedMatrix.ShowPreviewAreas;
+            Settings.SaveSettings();
+        }
+
         private void LedControlToolkit_FormClosing(object sender, FormClosingEventArgs e)
         {
             Handler.Finish();
 
-            Settings.PulseDurationMs = (int)numericUpDownPulseDuration.Value;
-            Settings.ShowMatrixGrid = panelPreviewLedMatrix.ShowMatrixGrid;
-            Settings.ShowPreviewAreas = panelPreviewLedMatrix.ShowPreviewAreas;
-
-            Settings.SaveSettings();
+            SaveSettings();
         }
 
         public bool LoadConfig()
@@ -123,7 +126,7 @@ namespace LedControlToolkit
                 Handler.SetCurrentTableElement(e.Node, true);
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, true, Handler);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, true, Handler);
                     value = Handler.GetCurrentTableElementValue();
                 } else if (e.Node is TableElementTreeNode tableElementNode) {
                     propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, true);
@@ -321,7 +324,7 @@ namespace LedControlToolkit
 
                 var value = 0;
                 if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode.TCS, false, Handler);
+                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, false, Handler);
                     value = Handler.GetCurrentTableElementValue();
                     //Contextmenu to copy effect to edition
                     if (e.Button == MouseButtons.Right) {
@@ -499,7 +502,7 @@ namespace LedControlToolkit
 
         private void buttonSaveSettings_Click(object sender, EventArgs e)
         {
-            Settings.SaveSettings();
+            SaveSettings();
         }
 
         #endregion

@@ -32,8 +32,8 @@ namespace LedControlToolkit
 
         private BaseTypeDescriptor Container;
 
-        public CustomFieldPropertyDescriptor(BaseTypeDescriptor container, CustomField<TField> customField)
-            : base(customField.Name, new Attribute[0])
+        public CustomFieldPropertyDescriptor(BaseTypeDescriptor container, CustomField<TField> customField, Attribute[] attrs)
+            : base(customField.Name, attrs)
         {
             Container = container;
             CustomField = customField;

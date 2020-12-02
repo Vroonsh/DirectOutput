@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DirectOutput.Cab.Toys;
 using DirectOutput.General.Generic;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
@@ -60,6 +61,18 @@ namespace DirectOutput.FX
         /// This event must be fired before the Name property of a IEffect object is changed.
         /// </summary>
         new event EventHandler<NameChangeEventArgs> BeforeNameChanged;
+
+        /// <summary>
+        /// Returns Toy impacted by this effect
+        /// </summary>
+        /// <returns>the assigned toy</returns>
+        IToy GetAssignedToy();
+
+        /// <summary>
+        /// Set the assigned toy to an effect
+        /// </summary>
+        /// <param name="toy">the assigned toy</param>
+        void SetAssignedToy(IToy toy);
 
         /// <summary>
         /// Will tell if this effect or any targeted effects have an action on the provided toys list
