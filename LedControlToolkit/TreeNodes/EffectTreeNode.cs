@@ -36,27 +36,18 @@ namespace LedControlToolkit
             if (TCS.OutputControl == OutputControlEnum.Controlled) {
                 TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
                 DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
-                Text = DofConfigCommand;
+                Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
             }
         }
 
         public void Rebuild(LedControlToolkitHandler Handler)
         {
-            //Update Name
-            DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
-            Text = DofConfigCommand;
+            //Retrieve Toy 
+            var Toy = Effect.GetAssignedToy();
 
             //rebuild Effect
             List<IEffect> allEffects = new List<IEffect>();
             Effect.GetAllEffects(allEffects);
-
-            //Retrieve Toy from any IMatrixEffect
-            var matrixEffect = allEffects.FirstOrDefault(E => E is IMatrixEffect) as IMatrixEffect;
-            var ToyName = string.Empty;
-            if (matrixEffect != null) {
-                ToyName = matrixEffect.ToyName;
-            }
-            var Toy = Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
 
             //Retrieve necessary data for the Configurator directly from the effect name
             var nameData = Effect.Name.Split(' ');
@@ -107,6 +98,10 @@ namespace LedControlToolkit
             TestTE.AssignedEffects.Clear();
             TestTE.AssignedEffects.Add(new AssignedEffect("TestEffect") { Effect = newEffect });
             Effect = newEffect;
+
+            //Update Name
+            DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
+            Text = $"[{Toy?.Name}] {DofConfigCommand}";
         }
 
         public virtual TableElement GetTableElement() => TestTE;
