@@ -14,8 +14,15 @@ namespace LedControlToolkit
 {
     public class TableElementTreeNode : TreeNode, ITableElementTreeNode
     {
-        public TableElementTreeNode(TableElement tableElement) : base()
+        public virtual TableElement GetTableElement() => TE;
+        private LedControlToolkitHandler.ETableType _TableType = LedControlToolkitHandler.ETableType.EditionTable;
+        public LedControlToolkitHandler.ETableType GetTableType() => _TableType;
+
+        public TableElement TE = null;
+
+        public TableElementTreeNode(TableElement tableElement, LedControlToolkitHandler.ETableType TableType) : base()
         {
+            _TableType = TableType;
             TE = tableElement;
             Refresh();
         }
@@ -28,10 +35,6 @@ namespace LedControlToolkit
             return $"{TE.TableElementType} {(char)TE.TableElementType}{TE.Number} : {Nodes.Count} effects";
         }
 
-        public virtual TableElement GetTableElement() => TE;
-
-        public TableElement TE = null;
-
         internal void Refresh()
         {
             ImageIndex = TE.GetTableElementData().Value > 0 ? 1 : 0;
@@ -41,13 +44,14 @@ namespace LedControlToolkit
 
         internal void Rebuild(LedControlToolkitHandler handler)
         {
-            Refresh();
-            foreach (var node in Nodes) {
-                var effectNode = node as EffectTreeNode;
-                if (effectNode.TCS.OutputControl == OutputControlEnum.Controlled) {
-                    effectNode.UpdateFromTableElement(TE);
-                }
+            Nodes.Clear();
+            foreach(var eff in TE.AssignedEffects) {
+                eff.Init(handler.GetTable(_TableType));
+                var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler.LedControlConfigData);
+                effNode.UpdateFromTableElement(TE);
+                Nodes.Add(effNode);
             }
+            Refresh();
         }
     }
 }

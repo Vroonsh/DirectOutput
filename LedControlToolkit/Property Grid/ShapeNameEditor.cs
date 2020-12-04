@@ -24,7 +24,7 @@ namespace LedControlToolkit
                 string shapeName = value as string;
                 if (edSvc != null) {
                     ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
-                    dropdown.Items.AddRange(TCSDesc.Handler.PinballTable.ShapeDefinitions.Shapes.Select(S=>S.Name).ToArray());
+                    dropdown.Items.AddRange(TCSDesc.Handler.GetTable(LedControlToolkitHandler.ETableType.ReferenceTable).ShapeDefinitions.Shapes.Select(S=>S.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
                     return dropdown.Selection;
                 }

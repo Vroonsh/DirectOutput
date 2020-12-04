@@ -374,24 +374,38 @@ namespace DirectOutput.Table
 
             return true;
         }
+    
+
+        /// <summary>
+        /// Removes every occurence of a Table Element, including all dictionaries
+        /// </summary>
+        /// <param name="Match">The predicate to test.</param>
+        /// <returns>The removeed items count</returns>
+        public override int RemoveAll(Predicate<TableElement> Match)
+        {
+            AfterRemove += TableElementList_AfterEachRemoveAll;
+            var ItemRemoved = base.RemoveAll(Match);
+            AfterRemove -= TableElementList_AfterEachRemoveAll;
+            return ItemRemoved;
+        }
+
+        private void TableElementList_AfterEachRemoveAll(object sender, RemoveEventArgs<TableElement> e)
+        {
+            _NamedTableElementsDictionary.RemoveByValue(e.Item);
+            foreach(var table in _NumberedTableElementsDictionary) {
+                table.Value.RemoveByValue(e.Item);
+            }
+        }
+
 
         /// <summary>
         /// Removes every occurence of a Table Element, including all dictionaries parsing
         /// </summary>
         /// <param name="TableElement">TableElement to remove.</param>
         /// <returns>true if TableElement has been removed, otherwise false.</returns>
-        public bool RemoveAll(TableElement TableElement)
+        public int RemoveAll(TableElement TableElement)
         {
-            if (TableElement == null) return false;
-
-            if (!Contains(TableElement)) return false;
-
-            _NamedTableElementsDictionary.RemoveByValue(TableElement);
-            foreach (var itemDict in _NumberedTableElementsDictionary.Values) {
-                itemDict.RemoveByValue(TableElement);
-            }
-
-            return base.Remove(TableElement);
+            return RemoveAll(TE => TE == TableElement);
         }
 
 
