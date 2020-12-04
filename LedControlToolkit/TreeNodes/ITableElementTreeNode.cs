@@ -10,5 +10,6 @@ namespace LedControlToolkit
     interface ITableElementTreeNode
     {
         TableElement GetTableElement();
+        LedControlToolkitHandler.ETableType GetTableType();
     }
 }

@@ -28,8 +28,6 @@ namespace LedControlToolkit
 
         private Settings Settings = new Settings();
 
-        TreeNode CurrentTableSelectedNode = null;
-
         EditionTableTreeNode EditionTableNode;
 
         #region Main Dialog
@@ -84,7 +82,7 @@ namespace LedControlToolkit
 
                 SetupPinball();
 
-                EditionTableNode = new EditionTableTreeNode(Handler.EditionTable);
+                EditionTableNode = new EditionTableTreeNode(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
 
                 treeViewEffect.Nodes.Add(EditionTableNode);
                 treeViewEffect.Refresh();
@@ -118,49 +116,100 @@ namespace LedControlToolkit
         #endregion
 
         #region Effect Editor
+        private void buttonNewEditionTable_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Do you really want to start a new Table ?\n" +
+                                $"The table {Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableName} will be deleted.",
+                                "Create New Table",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning) == DialogResult.Yes) {
+                Handler.ResetEditionTable();
+                EditionTableNode.EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
+                EditionTableNode.Rebuild(Handler);
+                ResetAllTableElements();
+                UpdateActivationButton(buttonActivationEdition, 0);
+                UpdateActivationButton(buttonActivationTable, 0);
+                UpdatePulseButton(buttonPulseEdition, 0);
+                UpdatePulseButton(buttonPulseTable, 0);
+                treeViewEffect.Refresh();
+            }
+        }
+
         private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Button == MouseButtons.Left) {
+            if (e.Button != MouseButtons.None) {
+                SetCurrentSelectedNode(e.Node);
 
-                CurrentTableSelectedNode = e.Node;
-                Handler.SetCurrentTableElement(e.Node, true);
-                var value = 0;
-                if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, true, Handler);
-                    value = Handler.GetCurrentTableElementValue();
-                } else if (e.Node is TableElementTreeNode tableElementNode) {
-                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, true);
-                    value = Handler.GetCurrentTableElementValue();
-                } else if (e.Node is EditionTableTreeNode editionTableNode ){
-                    propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, true);
-                } else {
-                    propertyGridEffect.SelectedObject = null;
-                }
-
-                UpdateActivationButton(buttonActivationEdition, value);
-                UpdatePulseButton(buttonPulseEdition, value);
+                //Right mouse
             }
+        }
+
+        private void treeViewEffect_AfterSelect(object sender, TreeViewEventArgs e)
+        {
         }
 
         private void buttonActivationEdition_Click(object sender, EventArgs e)
         {
-            if (CurrentTableSelectedNode != null) {
-                var value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+            if (treeViewEffect.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationEdition, value);
             }
         }
 
         private void buttonPulseEdition_Click(object sender, EventArgs e)
         {
-            if (CurrentTableSelectedNode != null) {
-                var value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+            if (treeViewEffect.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseEdition, value);
                 Thread.Sleep((int)numericUpDownPulseDuration.Value);
-                value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+                value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseEdition, value);
+            }
+        }
+
+        private void DeleteEffectNode(EffectTreeNode node, bool silent = false)
+        {
+            if (silent || MessageBox.Show($"Do you want to delete effect {node.Text} from {(node.Parent as TableElementTreeNode)?.TE.Name} ?", "Delete Effect", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                var TENode = (node.Parent as TableElementTreeNode);
+                if (TENode != null) {
+                    TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
+                    var Table = Handler.GetTable(node.GetTableType());
+                    Table.Effects.RemoveAll(E => E == node.Effect);
+                    if (!silent) {
+                        TENode.Rebuild(Handler);
+                        SetCurrentSelectedNode(TENode);
+                    }
+                }
+            }
+        }
+
+        private void DeleteTableElementNode(TableElementTreeNode node)
+        {
+            if (MessageBox.Show($"Do you want to delete {node.TE.Name} and all its effects ?", "Delete Table Element", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                foreach(var effNode in node.Nodes) {
+                    DeleteEffectNode(effNode as EffectTreeNode, true);
+                }
+                var Table = Handler.GetTable(node.GetTableType());
+                Table.TableElements.RemoveAll(TE => TE == node.TE);
+                EditionTableNode.Rebuild(Handler);
+                SetCurrentSelectedNode(EditionTableNode);
+            }
+        }
+
+        private void treeViewEffect_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete) {
+
+                if (treeViewEffect.SelectedNode is EffectTreeNode effectNode) {
+                    DeleteEffectNode(effectNode);
+                } else if (treeViewEffect.SelectedNode is TableElementTreeNode tableElementNode) {
+                    DeleteTableElementNode(tableElementNode);
+                }
+
+                e.Handled = true;
             }
         }
         #endregion
@@ -186,11 +235,10 @@ namespace LedControlToolkit
 
             foreach (var tableElement in assignedeffects) {
                 var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
-                var listNode = new TableElementTreeNode(tableElement);
+                var listNode = new TableElementTreeNode(tableElement, LedControlToolkitHandler.ETableType.ReferenceTable);
 
                 foreach (var effect in tableElement.AssignedEffects) {
-                    var effectTypeName = effect.Effect.GetType().ToString();
-                    var effectNode = new EffectTreeNode(tableElement, effect.Effect, Handler.LedControlConfigData);
+                    var effectNode = new EffectTreeNode(tableElement, LedControlToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler.LedControlConfigData);
                     listNode.Nodes.Add(effectNode);
                 }
 
@@ -210,22 +258,22 @@ namespace LedControlToolkit
 
         private void buttonActivationTable_Click(object sender, EventArgs e)
         {
-            if (CurrentTableSelectedNode != null) {
-                var value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+            if (treeViewTableLedEffects.SelectedNode is ITableElementTreeNode nodeWithTE) {
+                var value = Handler.SwitchTableElement(treeViewTableLedEffects.SelectedNode);
+                SetEffectTreeNodeActive(treeViewTableLedEffects.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationTable, value);
             }
         }
 
         private void buttonPulseTable_Click(object sender, EventArgs e)
         {
-            if (CurrentTableSelectedNode != null) {
-                var value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+            if (treeViewTableLedEffects.SelectedNode is ITableElementTreeNode nodeWithTE) {
+                var value = Handler.SwitchTableElement(treeViewTableLedEffects.SelectedNode);
+                SetEffectTreeNodeActive(treeViewTableLedEffects.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
                 Thread.Sleep((int)numericUpDownPulseDuration.Value);
-                value = Handler.SwitchTableElement(CurrentTableSelectedNode);
-                SetEffectTreeNodeActive(CurrentTableSelectedNode, value > 0 ? 1 : 0);
+                value = Handler.SwitchTableElement(treeViewTableLedEffects.SelectedNode);
+                SetEffectTreeNodeActive(treeViewTableLedEffects.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
             }
         }
@@ -234,27 +282,25 @@ namespace LedControlToolkit
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var effectNode = (command.Sender as EffectTreeNode);
+            var SrcEffectNode = (command.Sender as EffectTreeNode);
             var TENode = (command.Target as TableElementTreeNode);
             var parentTE = TENode?.TE ?? null;
+            var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
 
             if (TENode == null) {
-                parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}"};
+                parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{EditionTable.TableElements.Count}"};
                 parentTE.AssignedEffects = new AssignedEffectList();
-                Handler.EditionTable.TableElements.Add(parentTE);
-                TENode = new TableElementTreeNode(parentTE);
+                Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableElements.Add(parentTE);
+                TENode = new TableElementTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable);
                 EditionTableNode.Nodes.Add(TENode);
             } 
 
-            var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
-            Handler.SetCurrentTableElement(newEffectNode, true);
-            newEffectNode.Rebuild(Handler);
-            parentTE.AssignedEffects.Add(newEffectNode.Effect.Name);
-            parentTE.AssignedEffects.Init(Handler.EditionTable);
+            var newEffectNode = new EffectTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler.LedControlConfigData);
+            newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
+            parentTE.AssignedEffects.Init(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
             TENode.Nodes.Add(newEffectNode);
             TENode.Rebuild(Handler);
-            treeViewEffect.SelectedNode = newEffectNode;
-            treeViewEffect.Refresh();
+            SetCurrentSelectedNode(TENode);
         }
 
         private void OnCopyTableElementToEditor(object sender, EventArgs e)
@@ -264,28 +310,24 @@ namespace LedControlToolkit
             var SrcTENode = (command.Sender as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
             var parentTE = TargetTENode?.TE ?? null;
+            var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
 
             if (TargetTENode == null) {
-                parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}" };
+                parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{EditionTable.TableElements.Count}" };
                 parentTE.AssignedEffects = new AssignedEffectList();
-                Handler.EditionTable.TableElements.Add(parentTE);
-                TargetTENode = new TableElementTreeNode(parentTE);
+                EditionTable.TableElements.Add(parentTE);
+                TargetTENode = new TableElementTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable);
                 EditionTableNode.Nodes.Add(TargetTENode);
             }
 
             foreach (var node in SrcTENode.Nodes) {
                 var effectNode = node as EffectTreeNode;
-                var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
-                Handler.SetCurrentTableElement(newEffectNode, true);
-                newEffectNode.Rebuild(Handler);
-                parentTE.AssignedEffects.Add(newEffectNode.Effect.Name);
-                TargetTENode.Nodes.Add(newEffectNode);
+                var newEffectNode = new EffectTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler.LedControlConfigData);
+                newEffectNode.Rebuild(Handler, effectNode.Effect);
             }
-            parentTE.AssignedEffects.Init(Handler.EditionTable);
+            parentTE.AssignedEffects.Init(EditionTable);
             TargetTENode.Rebuild(Handler);
-            Handler.SetCurrentTableElement(TargetTENode, true);
-            treeViewEffect.SelectedNode = TargetTENode;
-            treeViewEffect.Refresh();
+            SetCurrentSelectedNode(TargetTENode);
         }
 
         private void OnInsertTableElementToEditor(object sender, EventArgs e)
@@ -295,39 +337,29 @@ namespace LedControlToolkit
             var SrcTENode = (command.Sender as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
 
-            var parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.EditionTable.TableElements.Count}" };
+            var parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"Table Element #{Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableElements.Count}" };
             parentTE.AssignedEffects = new AssignedEffectList();
-            Handler.EditionTable.TableElements.Add(parentTE);
+            Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableElements.Add(parentTE);
             var index = EditionTableNode.Nodes.IndexOf(TargetTENode);
-            var newTENode = new TableElementTreeNode(parentTE);
+            var newTENode = new TableElementTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable);
             EditionTableNode.Nodes.Insert(index, newTENode);
 
             foreach (var node in SrcTENode.Nodes) {
                 var effectNode = node as EffectTreeNode;
-                var newEffectNode = new EffectTreeNode(parentTE, effectNode.Effect, Handler.LedControlConfigData);
-                Handler.SetCurrentTableElement(newEffectNode, true);
-                newEffectNode.Rebuild(Handler);
-                newTENode.Nodes.Add(newEffectNode);
+                parentTE.AssignedEffects.Add(effectNode.Effect.Name);
             }
-            parentTE.AssignedEffects.Init(Handler.EditionTable);
+            parentTE.AssignedEffects.Init(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
             newTENode.Rebuild(Handler);
-            Handler.SetCurrentTableElement(newTENode, true);
-            treeViewEffect.SelectedNode = TargetTENode;
-            treeViewEffect.Refresh();
+            SetCurrentSelectedNode(newTENode);
         }
 
         private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                CurrentTableSelectedNode = e.Node;
-                Handler.SetCurrentTableElement(e.Node, false);
+                SetCurrentSelectedNode(e.Node);
 
-                var value = 0;
-                if (e.Node is EffectTreeNode effectNode) {
-                    propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, false, Handler);
-                    value = Handler.GetCurrentTableElementValue();
-                    //Contextmenu to copy effect to edition
-                    if (e.Button == MouseButtons.Right) {
+                if (e.Button == MouseButtons.Right) {
+                    if (e.Node is EffectTreeNode effectNode) {
                         ContextMenu effectMenu = new ContextMenu();
 
                         var addMenu = new MenuItem("Add effect to");
@@ -338,16 +370,10 @@ namespace LedControlToolkit
                             addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                         }
                         effectMenu.Show(treeViewTableLedEffects, e.Location);
-                    }
-                } else if (e.Node is TableElementTreeNode tableElementNode) {
-                    propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(tableElementNode.TE, false);
-                    value = Handler.GetCurrentTableElementValue();
-
-                    //Contextmenu to copy table element to edition
-                    if (e.Button == MouseButtons.Right) {
+                    } else if (e.Node is TableElementTreeNode tableElementNode) {
                         ContextMenu teMenu = new ContextMenu();
 
-                        teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.EditionTable.TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
+                        teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
 
                         if (EditionTableNode.Nodes.Count > 0) {
                             var insertMenu = new MenuItem($"Copy [{tableElementNode.ToString()}] into");
@@ -362,24 +388,8 @@ namespace LedControlToolkit
                                 insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                             }
                         }
-
                         teMenu.Show(treeViewTableLedEffects, e.Location);
-                    }
-
-                } else {
-                    propertyGridEffect.SelectedObject = null;
-                }
-
-                UpdateActivationButton(buttonActivationTable, value);
-                UpdatePulseButton(buttonPulseTable, value);
-
-                if (e.Button == MouseButtons.Right) {
-                    if (e.Node is EffectTreeNode) {
-                    } else if (e.Node is TableElementTreeNode) {
-                        ContextMenu effectMenu = new ContextMenu();
-                        effectMenu.MenuItems.Add(new MenuItem($"Add {CurrentTableSelectedNode.Nodes.Count} Effect(s) to new editin table element", new EventHandler(this.OnCopyTableElementToEditor)));
-                        effectMenu.Show(treeViewTableLedEffects, e.Location);
-                    }
+                    } 
                 }
             }
         }
@@ -541,9 +551,10 @@ namespace LedControlToolkit
             propertyGridEffect.Refresh();
             if (treeViewEffect.SelectedNode is TableElementTreeNode editionTETreeNode) {
                 if (editionTETreeNode.TE == TE) {
-                    Handler.EditionTable.TableElements.RemoveAll(TE);
+                    var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
+                    EditionTable.TableElements.RemoveAll(TE);
                     editionTETreeNode.Rebuild(Handler);
-                    Handler.EditionTable.TableElements.Add(TE);
+                    EditionTable.TableElements.Add(TE);
                     treeViewEffect.Refresh();
                 }
             }
@@ -561,7 +572,7 @@ namespace LedControlToolkit
                     }else if (e.ChangedItem.Value == TCS.ColorConfig2) {
                         TCS.ColorName2 = TCS.ColorConfig2.Name;
                     }
-                    editionEffectTreeNode.Rebuild(Handler);
+                    editionEffectTreeNode.Rebuild(Handler, null);
                     treeViewEffect.Refresh();
                 }
             }
@@ -596,6 +607,41 @@ namespace LedControlToolkit
         #endregion
 
         #region Helpers
+        private void SetCurrentSelectedNode(TreeNode node)
+        {
+            var value = 0;
+            if (node is ITableElementTreeNode tableElementNode) {
+                value = tableElementNode.GetTableElement().Value;
+                if (tableElementNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable) {
+                    UpdateActivationButton(buttonActivationEdition, value);
+                    UpdatePulseButton(buttonPulseEdition, value);
+                    treeViewEffect.SelectedNode = node;
+                    treeViewEffect.Refresh();
+                } else {
+                    UpdateActivationButton(buttonActivationTable, value);
+                    UpdatePulseButton(buttonPulseTable, value);
+                    treeViewTableLedEffects.SelectedNode = node;
+                    treeViewTableLedEffects.Refresh();
+                }
+            } else {
+                treeViewEffect.SelectedNode = node;
+                treeViewEffect.Refresh();
+            }
+
+            //Update property grid
+            if (node is EffectTreeNode effectNode) {
+                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, true, Handler);
+                value = effectNode.GetTableElement().GetTableElementData().Value;
+            } else if (node is TableElementTreeNode TENode) {
+                propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(TENode.TE, true);
+            } else if (node is EditionTableTreeNode editionTableNode) {
+                propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, true);
+            } else {
+                propertyGridEffect.SelectedObject = null;
+            }
+            propertyGridEffect.Refresh();
+        }
+
         private void SetEffectTreeNodeActive(TreeNode node, int active)
         {
             node.ImageIndex = active;
@@ -612,6 +658,26 @@ namespace LedControlToolkit
         {
             but.Text = value > 0 ? @"Pulse ¯\_/¯" : @"Pulse _/¯\_";
             but.Refresh();
+        }
+
+
+        private void ResetTreeNodeRecursive(TreeNode node)
+        {
+            SetEffectTreeNodeActive(node, 0);
+            if (node is ITableElementTreeNode tableElementNode) {
+                tableElementNode.GetTableElement().Value = 0;
+            }
+            foreach (var child in node.Nodes) {
+                ResetTreeNodeRecursive(child as TreeNode);
+            }
+        }
+
+        private void ResetAllTableElements()
+        {
+            foreach(var node in treeViewTableLedEffects.Nodes) {
+                ResetTreeNodeRecursive(node as TreeNode);
+            }
+            ResetTreeNodeRecursive(EditionTableNode);
         }
         #endregion
     }

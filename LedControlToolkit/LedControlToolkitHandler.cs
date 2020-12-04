@@ -21,18 +21,46 @@ namespace LedControlToolkit
         private LedMatrixPreviewControl PreviewControl;
 
         public Pinball Pinball { get; private set; }
-        public Table PinballTable { get; private set; } = null;
-        public Table EditionTable { get; private set; } = new Table() { TableName = "Edition Table", RomName = "romname" };
+
+        public class TableDescriptor
+        {
+            public Table Table;
+            public TableElement EffectTE;
+        }
+
+        public enum ETableType
+        {
+            EditionTable,
+            ReferenceTable
+        }
+
+        public Dictionary<ETableType, TableDescriptor> TableDescriptors { get; } = new Dictionary<ETableType, TableDescriptor>() {
+                {ETableType.EditionTable, new TableDescriptor()
+                                            {
+                                                Table = new Table() {TableName = "Edition Table", RomName = "romname"},
+                                                EffectTE = null
+                                            }
+                },
+                {ETableType.ReferenceTable, new TableDescriptor()
+                                            {
+                                                Table = null,
+                                                EffectTE = null
+                                            }
+                }
+            };
+
+        public Table GetTable(ETableType type) => TableDescriptors[type].Table;
+        public TableElement GetEffectTE(ETableType type) => TableDescriptors[type].EffectTE;
+
         public LedControlConfig LedControlConfigData { get; private set; }
 
         public Configurator RebuildConfigurator { get; private set; } = new Configurator();
-
-        private TableElement CurrentTableElement = null;
 
         internal LedControlToolkitHandler(Settings settings, LedMatrixPreviewControl previewControl)
         {
             Settings = settings;
             PreviewControl = previewControl;
+            ResetEditionTable();
         }
 
         internal void Start()
@@ -43,6 +71,19 @@ namespace LedControlToolkit
         {
             if (Pinball != null) {
                 Pinball.Finish();
+            }
+        }
+
+        internal void ResetEditionTable()
+        {
+            if (Pinball != null) {
+                Pinball.Finish();
+            }
+            TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = "Edition Table", RomName = "romname" };
+            if (Pinball != null) {
+                TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
+                TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
+                Pinball.Init();
             }
         }
 
@@ -69,9 +110,8 @@ namespace LedControlToolkit
                 Pinball.Cabinet.OutputControllers.Add(previewController);
             }
 
-            PinballTable = Pinball.Table;
-
-            EditionTable.Init(Pinball);
+            TableDescriptors[ETableType.ReferenceTable].Table = Pinball.Table;
+            TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
 
             PreviewControl.SetupPreviewParts(Pinball.Cabinet, Settings);
 
@@ -103,48 +143,27 @@ namespace LedControlToolkit
             }
         }
 
-        internal void SetCurrentTableElement(TreeNode TreeNode, bool isEditionTable)
-        {
-            CurrentTableElement = null;
-            Pinball.Table = isEditionTable ? EditionTable : PinballTable;
-            if (TreeNode is ITableElementTreeNode tableElementTreeNode) {
-                CurrentTableElement = tableElementTreeNode.GetTableElement();
-
-                //Remove old TableElementEffectTest from the Table if there is one
-                var te = Pinball.Table.TableElements.FirstOrDefault(T => T.Name.Equals(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
-                if (te != null) {
-                    Pinball.Table.TableElements.Remove(te);
-                }
-
-                if (TreeNode is EffectTreeNode effectNode) {
-                    //Put the new table element into the current table
-                    if (CurrentTableElement != null) {
-                        Pinball.Table.TableElements.Add(CurrentTableElement);
-                    }
-                }
-            }
-        }
+        internal bool CanSwitchTableElement(TreeNode TreeNode) => (TreeNode is ITableElementTreeNode);
 
         internal int SwitchTableElement(TreeNode TreeNode)
         {
-            if (TreeNode is ITableElementTreeNode tableElementTreeNode) {
-                if (CurrentTableElement == tableElementTreeNode.GetTableElement()) {
-                    TableElementData D = CurrentTableElement.GetTableElementData();
-                    D.Value = D.Value > 0 ? 0 : 255;
-                    Pinball.ReceiveData(D);
-                    return D.Value;
-                }
+            var tableElementTreeNode = (TreeNode as ITableElementTreeNode);
+            if (tableElementTreeNode == null) return 0;
+
+            var Table = TableDescriptors[tableElementTreeNode.GetTableType()].Table;
+
+            if (TreeNode is EffectTreeNode effectTreeNode) {
+                //Remove any present Test TableElement
+                Table.TableElements.RemoveAll(TE => TE.Name.Equals(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
+                //Inject the one from the EffectNode
+                Table.TableElements.Add(effectTreeNode.GetTableElement());
             }
 
-            return 0;
-        }
-
-        internal int GetCurrentTableElementValue()
-        {
-            if (CurrentTableElement != null) {
-                return CurrentTableElement.GetTableElementData().Value;
-            }
-            return 0;
+            TableElementData D = tableElementTreeNode.GetTableElement().GetTableElementData();
+            D.Value = D.Value > 0 ? 0 : 255;
+            Pinball.Table = TableDescriptors[tableElementTreeNode.GetTableType()].Table;
+            Pinball.ReceiveData(D);
+            return D.Value;
         }
 
         internal LedStrip[] GetLedstrips()
