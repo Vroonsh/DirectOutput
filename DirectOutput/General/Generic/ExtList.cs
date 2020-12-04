@@ -192,7 +192,7 @@ namespace DirectOutput.General.Generic
         /// </summary>
         /// <param name="Match">The predicate to test.</param>
         /// <returns>The removeed items count</returns>
-        public int RemoveAll(Predicate<T> Match)
+        public virtual int RemoveAll(Predicate<T> Match)
         {
             int ItemRemoved = 0;
 

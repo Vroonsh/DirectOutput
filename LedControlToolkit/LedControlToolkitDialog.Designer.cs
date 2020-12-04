@@ -285,6 +285,7 @@ namespace LedControlToolkit
             this.buttonNewEditionTable.TabIndex = 1;
             this.buttonNewEditionTable.Text = "New Table";
             this.buttonNewEditionTable.UseVisualStyleBackColor = true;
+            this.buttonNewEditionTable.Click += new System.EventHandler(this.buttonNewEditionTable_Click);
             // 
             // treeViewEffect
             // 
@@ -294,7 +295,9 @@ namespace LedControlToolkit
             this.treeViewEffect.Name = "treeViewEffect";
             this.treeViewEffect.Size = new System.Drawing.Size(714, 404);
             this.treeViewEffect.TabIndex = 0;
+            this.treeViewEffect.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEffect_AfterSelect);
             this.treeViewEffect.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
+            this.treeViewEffect.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEffect_KeyDown);
             // 
             // tabPageSettings
             // 
