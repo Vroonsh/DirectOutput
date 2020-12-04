@@ -16,9 +16,10 @@ namespace LedControlToolkit
     {
         public static readonly string TableElementTestName = "LedControlToolkit_EffectTreeNode_Test";
 
-        public EffectTreeNode(TableElement tableElement, IEffect effect, LedControlConfig ledControl) : base()
+        public EffectTreeNode(TableElement tableElement, LedControlToolkitHandler.ETableType TableType, IEffect effect, LedControlConfig ledControl) : base()
         {
             Effect = effect;
+            _TableType = TableType;
             TableTE = tableElement;
             TestTE.AssignedEffects.Clear();
             TestTE.AssignedEffects.Add(new AssignedEffect("TestEffect") { Effect = Effect });
@@ -28,7 +29,9 @@ namespace LedControlToolkit
             TCS.ResolveColorConfig(ledControl.ColorConfigurations);
             TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOff;
             LCC = ledControl;
-            UpdateFromTableElement(TableTE);
+            if (Effect != null) {
+                UpdateFromTableElement(TableTE);
+            }
         }
 
         public void UpdateFromTableElement(TableElement TE)
@@ -40,17 +43,19 @@ namespace LedControlToolkit
             }
         }
 
-        public void Rebuild(LedControlToolkitHandler Handler)
+        public void Rebuild(LedControlToolkitHandler Handler, IEffect SrcEffect)
         {
+            var RefEffect = SrcEffect != null ? SrcEffect : Effect;
+
             //Retrieve Toy 
-            var Toy = Effect.GetAssignedToy();
+            var Toy = RefEffect.GetAssignedToy();
 
             //rebuild Effect
             List<IEffect> allEffects = new List<IEffect>();
-            Effect.GetAllEffects(allEffects);
+            RefEffect.GetAllEffects(allEffects);
 
             //Retrieve necessary data for the Configurator directly from the effect name
-            var nameData = Effect.Name.Split(' ');
+            var nameData = RefEffect.Name.Split(' ');
             int LedWizNumber = 0;
             int TCCNumber = 0;
             int SettingNumber = 0;
@@ -64,29 +69,31 @@ namespace LedControlToolkit
                 }
             }
 
+            var Table = Handler.GetTable(_TableType);
+
             //Remove all effects from Table & AssignedEffects before rebuilding
             foreach (var eff in allEffects) {
-                Handler.Pinball.Table.Effects.Remove(eff);
-                foreach (var TE in Handler.Pinball.Table.TableElements) {
+                Table.Effects.Remove(eff);
+                foreach (var TE in Table.TableElements) {
                     TE.AssignedEffects.RemoveAll(AE => AE.Effect == eff);
                 }
             }
 
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
-            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, Handler.Pinball.Table, Toy, LedWizNumber, Handler.Pinball.GlobalConfig.IniFilesPath, Handler.Pinball.Table.RomName);
+            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, Table, Toy, LedWizNumber, Handler.Pinball.GlobalConfig.IniFilesPath, Table.RomName);
 
             //Reorder Assigned effects as they should be from the ini file & resolve effect from effectname
-            foreach (var TE in Handler.Pinball.Table.TableElements) {
+            foreach (var TE in Table.TableElements) {
                 TE.AssignedEffects.Sort((E1, E2) => E1.EffectName.CompareTo(E2.EffectName));
                 foreach (var assignEff in TE.AssignedEffects) {
-                    assignEff.Init(Handler.Pinball.Table);
+                    assignEff.Init(Table);
                 }
             }
 
             //cascade call Init on all effects (ahad to init one after each other because of the TargetEffect resolution)
             var curEffect = newEffect;
             while (curEffect != null) {
-                curEffect.Init(Handler.Pinball.Table);
+                curEffect.Init(Table);
                 if (curEffect is EffectEffectBase effectWithTarget) {
                     curEffect = effectWithTarget.TargetEffect;
                 } else {
@@ -105,6 +112,8 @@ namespace LedControlToolkit
         }
 
         public virtual TableElement GetTableElement() => TestTE;
+        private LedControlToolkitHandler.ETableType _TableType = LedControlToolkitHandler.ETableType.EditionTable;
+        public LedControlToolkitHandler.ETableType GetTableType() => _TableType;
 
         public override string ToString() => DofConfigCommand;
 
