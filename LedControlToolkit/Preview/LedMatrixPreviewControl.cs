@@ -291,5 +291,11 @@ namespace LedControlToolkit
                 }
             }
         }
+
+        internal void OnClose()
+        {
+            previewPanelFont.Dispose();
+            previewPanelBrush.Dispose();
+        }
     }
 }
