@@ -267,6 +267,7 @@ namespace LedControlToolkit
             this.buttonSaveEffect.TabIndex = 3;
             this.buttonSaveEffect.Text = "Save As...";
             this.buttonSaveEffect.UseVisualStyleBackColor = true;
+            this.buttonSaveEffect.Click += new System.EventHandler(this.buttonSaveEffect_Click);
             // 
             // buttonLoadEffect
             // 
@@ -276,6 +277,7 @@ namespace LedControlToolkit
             this.buttonLoadEffect.TabIndex = 2;
             this.buttonLoadEffect.Text = "Load";
             this.buttonLoadEffect.UseVisualStyleBackColor = true;
+            this.buttonLoadEffect.Click += new System.EventHandler(this.buttonLoadEffect_Click);
             // 
             // buttonNewEditionTable
             // 
@@ -295,7 +297,6 @@ namespace LedControlToolkit
             this.treeViewEffect.Name = "treeViewEffect";
             this.treeViewEffect.Size = new System.Drawing.Size(714, 404);
             this.treeViewEffect.TabIndex = 0;
-            this.treeViewEffect.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEffect_AfterSelect);
             this.treeViewEffect.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             this.treeViewEffect.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEffect_KeyDown);
             // 
@@ -409,6 +410,7 @@ namespace LedControlToolkit
             this.panelPreviewLedMatrix.Name = "panelPreviewLedMatrix";
             this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
             this.panelPreviewLedMatrix.TabIndex = 0;
+            this.panelPreviewLedMatrix.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.panelPreviewLedMatrix_ControlRemoved);
             // 
             // LedControlToolkitDialog
             // 
