@@ -66,7 +66,14 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="LedControlToolkitDOFCommandsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LedControlToolkitDOFCommandsDialog.Designer.cs">
+      <DependentUpon>LedControlToolkitDOFCommandsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
+    <Compile Include="LedControlToolkitSerializer.cs" />
     <Compile Include="Property Grid\BaseTypeDescriptor.cs" />
     <Compile Include="Property Grid\ColorConfigEditor.cs" />
     <Compile Include="Property Grid\CustomField.cs" />
@@ -105,6 +112,9 @@
     <Compile Include="TreeNodes\TreeNodeCommand.cs" />
     <EmbeddedResource Include="LedControlToolkitDialog.resx">
       <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LedControlToolkitDOFCommandsDialog.resx">
+      <DependentUpon>LedControlToolkitDOFCommandsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenConfigDialog.resx">
       <DependentUpon>OpenConfigDialog.cs</DependentUpon>
