@@ -1027,7 +1027,7 @@ namespace DirectOutput.LedControl.Loader
                     } else if (Blink == 0) {
                         //Not already set by previous DurationEffect
                         Blink = -1;
-                        DurationMs = 1000;
+                        DurationMs = 0;
                         BlinkLow = blinkFX.LowValue;
                         BlinkIntervalMs = blinkFX.DurationActiveMs + blinkFX.DurationInactiveMs;
                         BlinkPulseWidth = (int)(((double)blinkFX.DurationActiveMs * 100 / BlinkIntervalMs)+0.5f);
@@ -1120,10 +1120,12 @@ namespace DirectOutput.LedControl.Loader
             }
         }
 
-        public void ResolveColorConfig(ColorConfigList CCL)
+        public void ResolveColorConfigs(ColorConfigList CCL)
         {
             ColorConfig = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName, StringComparison.InvariantCultureIgnoreCase));
-            ColorConfig2 = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase));
+            if (IsPlasma) {
+                ColorConfig2 = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase));
+            }
         }
 
         private string GetConfigToolCommand<T>(T value, T defaultValue, string command)
@@ -1147,24 +1149,26 @@ namespace DirectOutput.LedControl.Loader
         /// 
         /// </summary>
         /// <returns></returns>
-        public string ToConfigToolCommand(ColorList colorList = null)
+        public string ToConfigToolCommand(ColorList colorList = null, bool exportTE = true)
         {
             string configToolStr = string.Empty;
 
-            switch (OutputControl) {
-                case OutputControlEnum.FixedOn:
-                    configToolStr += "ON ";
-                    break;
-                case OutputControlEnum.FixedOff:
-                    configToolStr += "OFF ";
-                    break;
-                case OutputControlEnum.Controlled: {
-                    configToolStr += $"{TableElement} ";
-                    break;
+            if (exportTE) {
+                switch (OutputControl) {
+                    case OutputControlEnum.FixedOn:
+                        configToolStr += "ON ";
+                        break;
+                    case OutputControlEnum.FixedOff:
+                        configToolStr += "OFF ";
+                        break;
+                    case OutputControlEnum.Controlled: {
+                        configToolStr += $"{TableElement} ";
+                        break;
+                    }
+                    case OutputControlEnum.Condition:
+                        configToolStr += $"{Condition} ";
+                        break;
                 }
-                case OutputControlEnum.Condition:
-                    configToolStr += $"{Condition} ";
-                    break;
             }
 
             //Main Color

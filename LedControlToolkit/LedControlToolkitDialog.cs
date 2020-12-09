@@ -42,9 +42,9 @@ namespace LedControlToolkit
             treeViewTableLedEffects.ImageList = imageListIcons;
             treeViewTableLedEffects.FullRowSelect = true;
             treeViewTableLedEffects.HideSelection = false;
-            treeViewEffect.ImageList = imageListIcons;
-            treeViewEffect.FullRowSelect = true;
-            treeViewEffect.HideSelection = false;
+            treeViewEditionTable.ImageList = imageListIcons;
+            treeViewEditionTable.FullRowSelect = true;
+            treeViewEditionTable.HideSelection = false;
 
             Handler.Start();
             UpdateToyOutputMappings();
@@ -86,8 +86,8 @@ namespace LedControlToolkit
 
                 EditionTableNode = new EditionTableTreeNode(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
 
-                treeViewEffect.Nodes.Add(EditionTableNode);
-                treeViewEffect.Refresh();
+                treeViewEditionTable.Nodes.Add(EditionTableNode);
+                treeViewEditionTable.Refresh();
 
                 CheckPreviewAreaMissmatch();
                 return true;
@@ -156,22 +156,22 @@ namespace LedControlToolkit
 
         private void buttonActivationEdition_Click(object sender, EventArgs e)
         {
-            if (treeViewEffect.SelectedNode is ITableElementTreeNode) {
-                var value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
-                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
+            if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationEdition, value);
             }
         }
 
         private void buttonPulseEdition_Click(object sender, EventArgs e)
         {
-            if (treeViewEffect.SelectedNode is ITableElementTreeNode) {
-                var value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
-                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
+            if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseEdition, value);
                 Thread.Sleep((int)numericUpDownPulseDuration.Value);
-                value = Handler.SwitchTableElement(treeViewEffect.SelectedNode);
-                SetEffectTreeNodeActive(treeViewEffect.SelectedNode, value > 0 ? 1 : 0);
+                value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseEdition, value);
             }
         }
@@ -209,14 +209,19 @@ namespace LedControlToolkit
         {
             if (e.KeyCode == Keys.Delete) {
 
-                if (treeViewEffect.SelectedNode is EffectTreeNode effectNode) {
+                if (treeViewEditionTable.SelectedNode is EffectTreeNode effectNode) {
                     DeleteEffectNode(effectNode);
-                } else if (treeViewEffect.SelectedNode is TableElementTreeNode tableElementNode) {
+                } else if (treeViewEditionTable.SelectedNode is TableElementTreeNode tableElementNode) {
                     DeleteTableElementNode(tableElementNode);
                 }
 
                 e.Handled = true;
             }
+        }
+
+        private void treeViewEditionTable_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SetCurrentSelectedNode(treeViewEditionTable.SelectedNode);
         }
 
         private void buttonLoadEffect_Click(object sender, EventArgs e)
@@ -233,7 +238,7 @@ namespace LedControlToolkit
                 var serializer = new LedControlToolkitSerializer();
                 if (serializer.Deserialize(EditionTableNode, fd.FileName, Handler, ToyOuputMappings)) {
                     SetCurrentSelectedNode(EditionTableNode);
-                    MessageBox.Show($"Table [{EditionTableNode.EditionTable.TableName}] loaded", "Load Table Effects", MessageBoxButtons.OK);
+                    //MessageBox.Show($"Table [{EditionTableNode.EditionTable.TableName}] loaded", "Load Table Effects", MessageBoxButtons.OK);
                 }
             }
         }
@@ -256,6 +261,28 @@ namespace LedControlToolkit
                                     $"is saved in {fd.FileName}.", "Save Table Effects", MessageBoxButtons.OK);
                 }
             }
+        }
+
+        private void buttonImportDOF_Click(object sender, EventArgs e)
+        {
+            LedControlToolkitDOFCommandsDialog dlg = new LedControlToolkitDOFCommandsDialog() { AvailableToys = ToyOuputMappings.Select(M => M.Key).ToArray() };
+            dlg.ShowDialog(this);
+
+            if (dlg.CommandLines != null) {
+
+                Dictionary<TableElement, List<TableConfigSetting>> TableConfigSettings = new Dictionary<TableElement, List<TableConfigSetting>>();
+
+                foreach (var line in dlg.CommandLines) {
+                    CreateEffectsFromDofCommand(EditionTableNode, line, dlg.ToyName, Handler);
+                }
+            }
+            EditionTableNode.Refresh();
+        }
+
+        private void buttonExportDOF_Click(object sender, EventArgs e)
+        {
+            LedControlToolkitDOFOutputs dlg = new LedControlToolkitDOFOutputs() { TableNode = EditionTableNode, OutputMappings = ToyOuputMappings, Handler = Handler };
+            dlg.ShowDialog(this);
         }
 
         #endregion
@@ -333,6 +360,11 @@ namespace LedControlToolkit
                     ShowContextMenu(e);
                 }
             }
+        }
+
+        private void treeViewTableLedEffects_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SetCurrentSelectedNode(treeViewTableLedEffects.SelectedNode);
         }
 
         #endregion
@@ -489,10 +521,10 @@ namespace LedControlToolkit
         {
             TD.Refresh();
             propertyGridEffect.Refresh();
-            if (treeViewEffect.SelectedNode is EditionTableTreeNode editionTableNode) {
+            if (treeViewEditionTable.SelectedNode is EditionTableTreeNode editionTableNode) {
                 if (editionTableNode.EditionTable == TD.EditionTable) {
                     editionTableNode.Rebuild(Handler);
-                    treeViewEffect.Refresh();
+                    treeViewEditionTable.Refresh();
                 }
             } 
         }
@@ -514,13 +546,13 @@ namespace LedControlToolkit
             TE.Name = TE.Name.Replace(" ", "_");
             TD.Refresh();
             propertyGridEffect.Refresh();
-            if (treeViewEffect.SelectedNode is TableElementTreeNode editionTETreeNode) {
+            if (treeViewEditionTable.SelectedNode is TableElementTreeNode editionTETreeNode) {
                 if (editionTETreeNode.TE == TE) {
                     var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
                     EditionTable.TableElements.RemoveAll(TE);
                     editionTETreeNode.Rebuild(Handler);
                     EditionTable.TableElements.Add(TE);
-                    treeViewEffect.Refresh();
+                    treeViewEditionTable.Refresh();
                 }
             }
         }
@@ -530,7 +562,7 @@ namespace LedControlToolkit
             var TCS = TD.WrappedTCS;
             TD.Refresh();
             propertyGridEffect.Refresh();
-            if (treeViewEffect.SelectedNode is EffectTreeNode editionEffectTreeNode) {
+            if (treeViewEditionTable.SelectedNode is EffectTreeNode editionEffectTreeNode) {
                 if (editionEffectTreeNode.TCS == TCS) {
                     if (e.ChangedItem.Value == TCS.ColorConfig) {
                         TCS.ColorName = TCS.ColorConfig.Name;
@@ -538,7 +570,7 @@ namespace LedControlToolkit
                         TCS.ColorName2 = TCS.ColorConfig2.Name;
                     }
                     editionEffectTreeNode.Rebuild(Handler, null);
-                    treeViewEffect.Refresh();
+                    treeViewEditionTable.Refresh();
                 }
             }
         }
@@ -588,8 +620,8 @@ namespace LedControlToolkit
                 if (tableElementNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable) {
                     UpdateActivationButton(buttonActivationEdition, value);
                     UpdatePulseButton(buttonPulseEdition, value);
-                    treeViewEffect.SelectedNode = node;
-                    treeViewEffect.Refresh();
+                    treeViewEditionTable.SelectedNode = node;
+                    treeViewEditionTable.Refresh();
                 } else {
                     UpdateActivationButton(buttonActivationTable, value);
                     UpdatePulseButton(buttonPulseTable, value);
@@ -597,8 +629,8 @@ namespace LedControlToolkit
                     treeViewTableLedEffects.Refresh();
                 }
             } else {
-                treeViewEffect.SelectedNode = node;
-                treeViewEffect.Refresh();
+                treeViewEditionTable.SelectedNode = node;
+                treeViewEditionTable.Refresh();
             }
 
             //Update property grid
@@ -733,11 +765,37 @@ namespace LedControlToolkit
             SetCurrentSelectedNode(newTENode);
         }
 
-        private void OnCreateFromDofConfigToolCommands(object sender, EventArgs e)
+        public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, string DofCommand, string ToyName, LedControlToolkitHandler Handler)
         {
-            LedControlToolkitDOFCommandsDialog dlg = new LedControlToolkitDOFCommandsDialog();
-            dlg.ShowDialog(this);
+            TableConfigSetting TCS = new TableConfigSetting();
+            TCS.ParseSettingData(DofCommand);
+            TCS.ResolveColorConfigs(Handler.LedControlConfigData.ColorConfigurations);
+
+            int LastEffectsCount = EditionTableNode.EditionTable.Effects.Count;
+
+            var TCCNumber = TableNode.EditionTable.TableElements.Count;
+            var Toy = Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+
+            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, 0, TableNode.EditionTable
+                                                                        , Toy
+                                                                        , Handler.LedControlConfigData.LedWizNumber
+                                                                        , Handler.LedControlConfigData.LedControlIniFile.DirectoryName, TableNode.EditionTable.RomName);
+
+            for (var num = LastEffectsCount; num < EditionTableNode.EditionTable.Effects.Count; ++num) {
+                EditionTableNode.EditionTable.Effects[num].Init(EditionTableNode.EditionTable);
+            }
+
+            foreach (var te in TableNode.EditionTable.TableElements) {
+                te.AssignedEffects.Init(TableNode.EditionTable);
+                var teNode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
+                if (teNode == null) {
+                    teNode = new TableElementTreeNode(te, LedControlToolkitHandler.ETableType.EditionTable);
+                    TableNode.Nodes.Add(teNode);
+                }
+                teNode.Rebuild(Handler);
+            }
         }
+
 
         private void ShowContextMenu(TreeNodeMouseClickEventArgs e)
         {
@@ -751,7 +809,7 @@ namespace LedControlToolkit
                 foreach (var node in EditionTableNode.Nodes) {
                     addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                 }
-                effectMenu.Show(effectNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable ? treeViewEffect:  treeViewTableLedEffects, e.Location);
+                effectMenu.Show(effectNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable ? treeViewEditionTable:  treeViewTableLedEffects, e.Location);
             } else if (e.Node is TableElementTreeNode tableElementNode) {
                 ContextMenu teMenu = new ContextMenu();
 
@@ -770,17 +828,9 @@ namespace LedControlToolkit
                         insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                     }
                 }
-                teMenu.Show(tableElementNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable ? treeViewEffect : treeViewTableLedEffects, e.Location);
-            } else if (e.Node is EditionTableTreeNode tableNode) {
-                ContextMenu tableMenu = new ContextMenu();
-
-                tableMenu.MenuItems.Add(new MenuItem($"Create effects from DofConfigTool Commands", new EventHandler(this.OnCreateFromDofConfigToolCommands)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
-
-                tableMenu.Show(treeViewEffect, e.Location);
-            }
-
+                teMenu.Show(tableElementNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewTableLedEffects, e.Location);
+            } 
         }
         #endregion
-
     }
 }
