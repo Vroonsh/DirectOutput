@@ -70,15 +70,15 @@ namespace LedControlToolkit
         internal void Finish()
         {
             if (Pinball != null) {
+                TableDescriptors[ETableType.EditionTable].Table.Finish();
+                Pinball.Table = TableDescriptors[ETableType.ReferenceTable].Table;
                 Pinball.Finish();
             }
         }
 
         internal void ResetEditionTable()
         {
-            if (Pinball != null) {
-                Pinball.Finish();
-            }
+            Finish();
             TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = "Edition Table", RomName = "romname" };
             if (Pinball != null) {
                 TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);

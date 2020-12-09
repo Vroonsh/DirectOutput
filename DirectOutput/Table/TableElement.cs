@@ -201,6 +201,14 @@ namespace DirectOutput.Table
             return new TableElementData(this);
         }
 
+        /// <summary>
+        /// Write TableELement as string
+        /// </summary>
+        /// <returns>a TableElement formatted string</returns>
+        public override string ToString()
+        {
+            return $"{(char)TableElementType}{(TableElementType == TableElementTypeEnum.NamedElement ? Name : Number.ToString())}";
+        }
 
         #region Constructor
         /// <summary>

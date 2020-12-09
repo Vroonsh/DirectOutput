@@ -114,9 +114,11 @@ namespace LedControlToolkit
                     TableNode.Nodes.Add(newTENode);
 
                     var SettingNumber = 0;
+                    var lastEffectsCount = TableNode.EditionTable.Effects.Count;
                     foreach (var eff in te.Effects) {
                         TableConfigSetting TCS = new TableConfigSetting();
                         TCS.ParseSettingData(eff.TCS);
+                        TCS.ResolveColorConfigs(Handler.LedControlConfigData.ColorConfigurations);
 
                         var ToyName = ToyOutputMappings.FirstOrDefault(kv => kv.Value.Equals(eff.ToyOutput, StringComparison.InvariantCultureIgnoreCase)).Key;
                         var Toy = Handler.Pinball.Cabinet.Toys.FirstOrDefault(T=>T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
@@ -128,8 +130,8 @@ namespace LedControlToolkit
                         SettingNumber++;
                     }
 
-                    foreach (var eff in TableNode.EditionTable.Effects) {
-                        eff.Init(TableNode.EditionTable);
+                    for (var num = lastEffectsCount; num < TableNode.EditionTable.Effects.Count; ++num) {
+                        TableNode.EditionTable.Effects[num].Init(TableNode.EditionTable);
                     }
                     TCCNumber++;
                     newTE.AssignedEffects.Init(TableNode.EditionTable);
