@@ -66,11 +66,17 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="LedControlToolkitDOFCommandsDialog.cs">
+    <Compile Include="Dialogs\LedControlToolkitDOFCommandsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LedControlToolkitDOFCommandsDialog.Designer.cs">
+    <Compile Include="Dialogs\LedControlToolkitDOFCommandsDialog.Designer.cs">
       <DependentUpon>LedControlToolkitDOFCommandsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\LedControlToolkitDOFOutputs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\LedControlToolkitDOFOutputs.Designer.cs">
+      <DependentUpon>LedControlToolkitDOFOutputs.cs</DependentUpon>
     </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
     <Compile Include="LedControlToolkitSerializer.cs" />
@@ -99,10 +105,10 @@
       <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Preview\LedMatrixToolkitController.cs" />
-    <Compile Include="OpenConfigDialog.cs">
+    <Compile Include="Dialogs\OpenConfigDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenConfigDialog.Designer.cs">
+    <Compile Include="Dialogs\OpenConfigDialog.Designer.cs">
       <DependentUpon>OpenConfigDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -110,13 +116,16 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Property Grid\TableConfigSettingTypeDescriptor.cs" />
     <Compile Include="TreeNodes\TreeNodeCommand.cs" />
+    <EmbeddedResource Include="Dialogs\LedControlToolkitDOFOutputs.resx">
+      <DependentUpon>LedControlToolkitDOFOutputs.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LedControlToolkitDialog.resx">
       <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LedControlToolkitDOFCommandsDialog.resx">
+    <EmbeddedResource Include="Dialogs\LedControlToolkitDOFCommandsDialog.resx">
       <DependentUpon>LedControlToolkitDOFCommandsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenConfigDialog.resx">
+    <EmbeddedResource Include="Dialogs\OpenConfigDialog.resx">
       <DependentUpon>OpenConfigDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

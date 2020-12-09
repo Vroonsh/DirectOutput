@@ -49,7 +49,7 @@ namespace LedControlToolkit
             this.buttonSaveEffect = new System.Windows.Forms.Button();
             this.buttonLoadEffect = new System.Windows.Forms.Button();
             this.buttonNewEditionTable = new System.Windows.Forms.Button();
-            this.treeViewEffect = new System.Windows.Forms.TreeView();
+            this.treeViewEditionTable = new System.Windows.Forms.TreeView();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
             this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
             this.buttonSaveSettings = new System.Windows.Forms.Button();
@@ -60,6 +60,8 @@ namespace LedControlToolkit
             this.checkBoxPreviewArea = new System.Windows.Forms.CheckBox();
             this.checkBoxPreviewGrid = new System.Windows.Forms.CheckBox();
             this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
+            this.buttonImportDOF = new System.Windows.Forms.Button();
+            this.buttonExportDOF = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -112,6 +114,8 @@ namespace LedControlToolkit
             // 
             // tabPageEffectEditor
             // 
+            this.tabPageEffectEditor.Controls.Add(this.buttonExportDOF);
+            this.tabPageEffectEditor.Controls.Add(this.buttonImportDOF);
             this.tabPageEffectEditor.Controls.Add(this.label1);
             this.tabPageEffectEditor.Controls.Add(this.buttonPulseEdition);
             this.tabPageEffectEditor.Controls.Add(this.buttonActivationEdition);
@@ -125,7 +129,7 @@ namespace LedControlToolkit
             this.tabPageEffectEditor.Controls.Add(this.buttonSaveEffect);
             this.tabPageEffectEditor.Controls.Add(this.buttonLoadEffect);
             this.tabPageEffectEditor.Controls.Add(this.buttonNewEditionTable);
-            this.tabPageEffectEditor.Controls.Add(this.treeViewEffect);
+            this.tabPageEffectEditor.Controls.Add(this.treeViewEditionTable);
             this.tabPageEffectEditor.Location = new System.Drawing.Point(4, 22);
             this.tabPageEffectEditor.Name = "tabPageEffectEditor";
             this.tabPageEffectEditor.Padding = new System.Windows.Forms.Padding(3);
@@ -228,6 +232,7 @@ namespace LedControlToolkit
             this.treeViewTableLedEffects.SelectedImageIndex = 0;
             this.treeViewTableLedEffects.Size = new System.Drawing.Size(711, 409);
             this.treeViewTableLedEffects.TabIndex = 16;
+            this.treeViewTableLedEffects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTableLedEffects_AfterSelect);
             this.treeViewTableLedEffects.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
             // 
             // imageListIcons
@@ -289,16 +294,17 @@ namespace LedControlToolkit
             this.buttonNewEditionTable.UseVisualStyleBackColor = true;
             this.buttonNewEditionTable.Click += new System.EventHandler(this.buttonNewEditionTable_Click);
             // 
-            // treeViewEffect
+            // treeViewEditionTable
             // 
-            this.treeViewEffect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.treeViewEditionTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewEffect.Location = new System.Drawing.Point(7, 35);
-            this.treeViewEffect.Name = "treeViewEffect";
-            this.treeViewEffect.Size = new System.Drawing.Size(714, 404);
-            this.treeViewEffect.TabIndex = 0;
-            this.treeViewEffect.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
-            this.treeViewEffect.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEffect_KeyDown);
+            this.treeViewEditionTable.Location = new System.Drawing.Point(7, 35);
+            this.treeViewEditionTable.Name = "treeViewEditionTable";
+            this.treeViewEditionTable.Size = new System.Drawing.Size(714, 404);
+            this.treeViewEditionTable.TabIndex = 0;
+            this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
+            this.treeViewEditionTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
+            this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEffect_KeyDown);
             // 
             // tabPageSettings
             // 
@@ -412,6 +418,26 @@ namespace LedControlToolkit
             this.panelPreviewLedMatrix.TabIndex = 0;
             this.panelPreviewLedMatrix.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.panelPreviewLedMatrix_ControlRemoved);
             // 
+            // buttonImportDOF
+            // 
+            this.buttonImportDOF.Location = new System.Drawing.Point(273, 6);
+            this.buttonImportDOF.Name = "buttonImportDOF";
+            this.buttonImportDOF.Size = new System.Drawing.Size(75, 23);
+            this.buttonImportDOF.TabIndex = 24;
+            this.buttonImportDOF.Text = "Import DOF";
+            this.buttonImportDOF.UseVisualStyleBackColor = true;
+            this.buttonImportDOF.Click += new System.EventHandler(this.buttonImportDOF_Click);
+            // 
+            // buttonExportDOF
+            // 
+            this.buttonExportDOF.Location = new System.Drawing.Point(354, 6);
+            this.buttonExportDOF.Name = "buttonExportDOF";
+            this.buttonExportDOF.Size = new System.Drawing.Size(75, 23);
+            this.buttonExportDOF.TabIndex = 25;
+            this.buttonExportDOF.Text = "Export DOF";
+            this.buttonExportDOF.UseVisualStyleBackColor = true;
+            this.buttonExportDOF.Click += new System.EventHandler(this.buttonExportDOF_Click);
+            // 
             // LedControlToolkitDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -450,7 +476,7 @@ namespace LedControlToolkit
         private Button buttonSaveEffect;
         private Button buttonLoadEffect;
         private Button buttonNewEditionTable;
-        private TreeView treeViewEffect;
+        private TreeView treeViewEditionTable;
         private Label labelRomName;
         private ComboBox RomNameComboBox;
         #endregion
@@ -475,6 +501,8 @@ namespace LedControlToolkit
         private Label label1;
         private ImageList imageListIcons;
         private Button buttonCreateMissingAreas;
+        private Button buttonExportDOF;
+        private Button buttonImportDOF;
     }
 }
 
