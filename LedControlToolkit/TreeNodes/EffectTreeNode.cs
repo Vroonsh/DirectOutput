@@ -26,7 +26,7 @@ namespace LedControlToolkit
             ImageIndex = TestTE.GetTableElementData().Value > 0 ? 1 : 0;
             SelectedImageIndex = ImageIndex;
             TCS.FromEffect(Effect);
-            TCS.ResolveColorConfig(ledControl.ColorConfigurations);
+            TCS.ResolveColorConfigs(ledControl.ColorConfigurations);
             TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOff;
             LCC = ledControl;
             if (Effect != null) {

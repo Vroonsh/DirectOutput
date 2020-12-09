@@ -27,10 +27,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LedControlToolkitDOFCommandsDialog));
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.buttonParse = new System.Windows.Forms.Button();
+            this.comboBoxOutput = new System.Windows.Forms.ComboBox();
+            this.textBoxDofCommands = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.listBoxCommandLines = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -42,33 +42,25 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(243, 13);
+            this.label1.Size = new System.Drawing.Size(239, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Paste or write here a DofConfigTool command line";
+            this.label1.Text = "Paste or write here DofConfigTool command lines";
             // 
-            // comboBox1
+            // comboBoxOutput
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(262, 56);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(279, 21);
-            this.comboBox1.TabIndex = 1;
+            this.comboBoxOutput.FormattingEnabled = true;
+            this.comboBoxOutput.Location = new System.Drawing.Point(262, 56);
+            this.comboBoxOutput.Name = "comboBoxOutput";
+            this.comboBoxOutput.Size = new System.Drawing.Size(350, 21);
+            this.comboBoxOutput.TabIndex = 1;
             // 
-            // textBox1
+            // textBoxDofCommands
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 30);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(525, 20);
-            this.textBox1.TabIndex = 2;
-            // 
-            // buttonParse
-            // 
-            this.buttonParse.Location = new System.Drawing.Point(548, 54);
-            this.buttonParse.Name = "buttonParse";
-            this.buttonParse.Size = new System.Drawing.Size(64, 23);
-            this.buttonParse.TabIndex = 3;
-            this.buttonParse.Text = "Parse";
-            this.buttonParse.UseVisualStyleBackColor = true;
+            this.textBoxDofCommands.Location = new System.Drawing.Point(16, 30);
+            this.textBoxDofCommands.Name = "textBoxDofCommands";
+            this.textBoxDofCommands.Size = new System.Drawing.Size(596, 20);
+            this.textBoxDofCommands.TabIndex = 2;
+            this.textBoxDofCommands.TextChanged += new System.EventHandler(this.textBoxDofCommands_TextChanged);
             // 
             // label2
             // 
@@ -105,6 +97,7 @@
             this.buttonGenerate.TabIndex = 7;
             this.buttonGenerate.Text = "Generate effects";
             this.buttonGenerate.UseVisualStyleBackColor = true;
+            this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
             // 
             // LedControlToolkitDOFCommandsDialog
             // 
@@ -115,12 +108,13 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.listBoxCommandLines);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.buttonParse);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.textBoxDofCommands);
+            this.Controls.Add(this.comboBoxOutput);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LedControlToolkitDOFCommandsDialog";
             this.Text = "LedControlToolkitDOFCommandsDialog";
+            this.Load += new System.EventHandler(this.LedControlToolkitDOFCommandsDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,9 +123,8 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button buttonParse;
+        private System.Windows.Forms.ComboBox comboBoxOutput;
+        private System.Windows.Forms.TextBox textBoxDofCommands;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox listBoxCommandLines;
         private System.Windows.Forms.Label label3;
