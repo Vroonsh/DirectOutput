@@ -76,18 +76,19 @@
             this.listBoxCommandLines.FormattingEnabled = true;
             this.listBoxCommandLines.Location = new System.Drawing.Point(19, 114);
             this.listBoxCommandLines.Name = "listBoxCommandLines";
-            this.listBoxCommandLines.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listBoxCommandLines.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBoxCommandLines.Size = new System.Drawing.Size(593, 290);
             this.listBoxCommandLines.TabIndex = 5;
+            this.listBoxCommandLines.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCommandLines_KeyDown);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(19, 95);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.Size = new System.Drawing.Size(271, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Commands list";
+            this.label3.Text = "Commands list (use Delete key to remove selected lines)";
             // 
             // buttonGenerate
             // 

@@ -98,6 +98,9 @@ namespace LedControlToolkit
             set { _PulseDurationMs = value.Limit(10, 5000); }
         }
 
+        public int EffectMinDurationMs { get; set; } = 60;
+        public int EffectRGBMinDurationMs { get; set; } = 120;
+
         private bool _ShowMatrixGrid = true;
 
         public bool ShowMatrixGrid

@@ -59,6 +59,8 @@ namespace LedControlToolkit
         internal LedControlToolkitHandler(Settings settings, LedMatrixPreviewControl previewControl)
         {
             Settings = settings;
+            RebuildConfigurator.EffectMinDurationMs = Settings.EffectMinDurationMs;
+            RebuildConfigurator.EffectRGBMinDurationMs = Settings.EffectRGBMinDurationMs;
             PreviewControl = previewControl;
             ResetEditionTable();
         }
