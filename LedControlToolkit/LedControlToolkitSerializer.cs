@@ -107,11 +107,15 @@ namespace LedControlToolkit
 
                 var TCCNumber = 0;
                 foreach(var te in tableDescriptor.TableElements) {
-                    var newTE = new TableElement() { TableElementType = te.Type, Name = te.Name, Number = te.Number };
-                    newTE.AssignedEffects = new AssignedEffectList();
-                    TableNode.EditionTable.TableElements.Add(newTE);
-                    var newTENode = new TableElementTreeNode(newTE, LedControlToolkitHandler.ETableType.EditionTable);
-                    TableNode.Nodes.Add(newTENode);
+                    var newTENode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N=>N.TE.TableElementType == te.Type &&
+                                                                                                (te.Type == TableElementTypeEnum.NamedElement ? N.TE.Name.Equals(te.Name, StringComparison.InvariantCultureIgnoreCase) : N.TE.Number == te.Number));
+                    if (newTENode == null) {
+                        var newTE = new TableElement() { TableElementType = te.Type, Name = te.Name, Number = te.Number };
+                        newTE.AssignedEffects = new AssignedEffectList();
+                        TableNode.EditionTable.TableElements.Add(newTE);
+                        newTENode = new TableElementTreeNode(newTE, LedControlToolkitHandler.ETableType.EditionTable);
+                        TableNode.Nodes.Add(newTENode);
+                    } 
 
                     var SettingNumber = 0;
                     var lastEffectsCount = TableNode.EditionTable.Effects.Count;
@@ -126,7 +130,7 @@ namespace LedControlToolkit
                                                                                 , Toy
                                                                                 , Handler.LedControlConfigData.LedWizNumber
                                                                                 , Handler.LedControlConfigData.LedControlIniFile.DirectoryName, TableNode.EditionTable.RomName);
-                        var newEffectNode = new EffectTreeNode(newTE, LedControlToolkitHandler.ETableType.EditionTable, newEffect, Handler.LedControlConfigData);
+                        var newEffectNode = new EffectTreeNode(newTENode.TE, LedControlToolkitHandler.ETableType.EditionTable, newEffect, Handler.LedControlConfigData);
                         SettingNumber++;
                     }
 
@@ -134,7 +138,7 @@ namespace LedControlToolkit
                         TableNode.EditionTable.Effects[num].Init(TableNode.EditionTable);
                     }
                     TCCNumber++;
-                    newTE.AssignedEffects.Init(TableNode.EditionTable);
+                    newTENode.TE.AssignedEffects.Init(TableNode.EditionTable);
                     newTENode.Rebuild(Handler);
                 }
 
