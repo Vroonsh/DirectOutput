@@ -31,6 +31,8 @@ namespace LedControlToolkit
 
         EditionTableTreeNode EditionTableNode;
 
+        LedControlToolkitEffectsDebugger EffectsDebuggerDialog;
+
         #region Main Dialog
         public LedControlToolkitDialog()
         {
@@ -38,6 +40,7 @@ namespace LedControlToolkit
 
             Settings = Settings.LoadSettings();
             Handler = new LedControlToolkitHandler(Settings, panelPreviewLedMatrix);
+            EffectsDebuggerDialog = new LedControlToolkitEffectsDebugger() { Handler = Handler };
 
             treeViewTableLedEffects.ImageList = imageListIcons;
             treeViewTableLedEffects.FullRowSelect = true;
@@ -53,6 +56,8 @@ namespace LedControlToolkit
         private void SaveSettings()
         {
             Settings.PulseDurationMs = (int)numericUpDownPulseDuration.Value;
+            Settings.EffectMinDurationMs = (int)numericUpDownMinDuration.Value;
+            Settings.EffectRGBMinDurationMs = (int)numericUpDownMatrixMinDuration.Value;
             Settings.ShowMatrixGrid = panelPreviewLedMatrix.ShowMatrixGrid;
             Settings.ShowPreviewAreas = panelPreviewLedMatrix.ShowPreviewAreas;
             Settings.SaveSettings();
@@ -60,6 +65,8 @@ namespace LedControlToolkit
 
         private void LedControlToolkit_FormClosing(object sender, FormClosingEventArgs e)
         {
+            EffectsDebuggerDialog.Close();
+
             Handler.Finish();
 
             SaveSettings();
@@ -72,6 +79,8 @@ namespace LedControlToolkit
 
                 RomNameComboBox.Text = Settings.LastRomName;
                 numericUpDownPulseDuration.Value = Settings.PulseDurationMs;
+                numericUpDownMinDuration.Value = Settings.EffectMinDurationMs;
+                numericUpDownMatrixMinDuration.Value = Settings.EffectRGBMinDurationMs;
                 checkBoxPreviewArea.Checked = Settings.ShowPreviewAreas;
                 checkBoxPreviewGrid.Checked = Settings.ShowMatrixGrid;
 
@@ -145,8 +154,6 @@ namespace LedControlToolkit
         private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                SetCurrentSelectedNode(e.Node);
-
                 //Right mouse
                 if (e.Button == MouseButtons.Right) {
                     ShowContextMenu(e);
@@ -272,8 +279,10 @@ namespace LedControlToolkit
 
                 Dictionary<TableElement, List<TableConfigSetting>> TableConfigSettings = new Dictionary<TableElement, List<TableConfigSetting>>();
 
+                int TCCNumber = EditionTableNode.EditionTable.TableElements.Count;
                 foreach (var line in dlg.CommandLines) {
-                    CreateEffectsFromDofCommand(EditionTableNode, line, dlg.ToyName, Handler);
+                    CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, dlg.ToyName, Handler);
+                    TCCNumber++;
                 }
             }
             EditionTableNode.Refresh();
@@ -354,8 +363,6 @@ namespace LedControlToolkit
         private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                SetCurrentSelectedNode(e.Node);
-
                 if (e.Button == MouseButtons.Right) {
                     ShowContextMenu(e);
                 }
@@ -369,6 +376,18 @@ namespace LedControlToolkit
 
         #endregion
 
+        #region Effect Debug
+        private void checkBoxDebugEffects_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxDebugEffects.Checked) {
+                EffectsDebuggerDialog.StartPosition = FormStartPosition.Manual;
+                EffectsDebuggerDialog.DesktopLocation = new Point(this.Bounds.Right, this.Bounds.Top);
+                EffectsDebuggerDialog.Show();
+            } else {
+                EffectsDebuggerDialog.Hide();
+            }
+        }
+        #endregion
 
         #region Settings Editor
         private void UpdateToyOutputMappings()
@@ -515,6 +534,7 @@ namespace LedControlToolkit
             } else if (propertyGrid.SelectedObject is EditionTableTypeDescriptor ETDesc) {
                 OnEditionTableChanged(ETDesc, e);
             }
+            EffectsDebuggerDialog.RebuildTreeView();
         }
 
         private void OnEditionTableChanged(EditionTableTypeDescriptor TD, PropertyValueChangedEventArgs e)
@@ -711,6 +731,7 @@ namespace LedControlToolkit
             TENode.Nodes.Add(newEffectNode);
             TENode.Rebuild(Handler);
             SetCurrentSelectedNode(TENode);
+            EffectsDebuggerDialog.RebuildTreeView();
         }
 
         private void OnCopyTableElementToEditor(object sender, EventArgs e)
@@ -739,6 +760,7 @@ namespace LedControlToolkit
             parentTE.AssignedEffects.Init(EditionTable);
             TargetTENode.Rebuild(Handler);
             SetCurrentSelectedNode(TargetTENode);
+            EffectsDebuggerDialog.RebuildTreeView();
         }
 
         private void OnInsertTableElementToEditor(object sender, EventArgs e)
@@ -763,9 +785,10 @@ namespace LedControlToolkit
             parentTE.AssignedEffects.Init(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
             newTENode.Rebuild(Handler);
             SetCurrentSelectedNode(newTENode);
+            EffectsDebuggerDialog.RebuildTreeView();
         }
 
-        public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, string DofCommand, string ToyName, LedControlToolkitHandler Handler)
+        public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, int TCCNumber, string DofCommand, string ToyName, LedControlToolkitHandler Handler)
         {
             TableConfigSetting TCS = new TableConfigSetting();
             TCS.ParseSettingData(DofCommand);
@@ -773,10 +796,9 @@ namespace LedControlToolkit
 
             int LastEffectsCount = EditionTableNode.EditionTable.Effects.Count;
 
-            var TCCNumber = TableNode.EditionTable.TableElements.Count;
             var Toy = Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
 
-            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, 0, TableNode.EditionTable
+            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, TCCNumber, TableNode.EditionTable
                                                                         , Toy
                                                                         , Handler.LedControlConfigData.LedWizNumber
                                                                         , Handler.LedControlConfigData.LedControlIniFile.DirectoryName, TableNode.EditionTable.RomName);
@@ -792,8 +814,12 @@ namespace LedControlToolkit
                     teNode = new TableElementTreeNode(te, LedControlToolkitHandler.ETableType.EditionTable);
                     TableNode.Nodes.Add(teNode);
                 }
-                teNode.Rebuild(Handler);
+                if (teNode.TE.AssignedEffects.Any(AE=>AE.Effect == newEffect)) {
+                    teNode.Rebuild(Handler);
+                }
             }
+
+            EffectsDebuggerDialog.RebuildTreeView();
         }
 
 
@@ -809,6 +835,7 @@ namespace LedControlToolkit
                 foreach (var node in EditionTableNode.Nodes) {
                     addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                 }
+
                 effectMenu.Show(effectNode.GetTableType() == LedControlToolkitHandler.ETableType.EditionTable ? treeViewEditionTable:  treeViewTableLedEffects, e.Location);
             } else if (e.Node is TableElementTreeNode tableElementNode) {
                 ContextMenu teMenu = new ContextMenu();

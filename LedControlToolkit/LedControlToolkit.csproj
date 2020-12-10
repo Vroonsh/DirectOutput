@@ -78,6 +78,12 @@
     <Compile Include="Dialogs\LedControlToolkitDOFOutputs.Designer.cs">
       <DependentUpon>LedControlToolkitDOFOutputs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\LedControlToolkitEffectsDebugger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\LedControlToolkitEffectsDebugger.Designer.cs">
+      <DependentUpon>LedControlToolkitEffectsDebugger.cs</DependentUpon>
+    </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
     <Compile Include="LedControlToolkitSerializer.cs" />
     <Compile Include="Property Grid\BaseTypeDescriptor.cs" />
@@ -118,6 +124,9 @@
     <Compile Include="TreeNodes\TreeNodeCommand.cs" />
     <EmbeddedResource Include="Dialogs\LedControlToolkitDOFOutputs.resx">
       <DependentUpon>LedControlToolkitDOFOutputs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\LedControlToolkitEffectsDebugger.resx">
+      <DependentUpon>LedControlToolkitEffectsDebugger.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LedControlToolkitDialog.resx">
       <DependentUpon>LedControlToolkitDialog.cs</DependentUpon>

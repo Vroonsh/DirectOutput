@@ -48,5 +48,13 @@ namespace LedControlToolkit
             listBoxCommandLines.Refresh();
         }
 
+        private void listBoxCommandLines_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete) {
+                for (var i = listBoxCommandLines.SelectedIndices.Count - 1; i >= 0; i--) {
+                    listBoxCommandLines.Items.RemoveAt(listBoxCommandLines.SelectedIndices[i]);
+                }
+            }
+        }
     }
 }
