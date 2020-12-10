@@ -35,6 +35,8 @@ namespace LedControlToolkit
             this.propertyGridEffect = new System.Windows.Forms.PropertyGrid();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageEffectEditor = new System.Windows.Forms.TabPage();
+            this.buttonExportDOF = new System.Windows.Forms.Button();
+            this.buttonImportDOF = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonPulseEdition = new System.Windows.Forms.Button();
             this.buttonActivationEdition = new System.Windows.Forms.Button();
@@ -51,6 +53,10 @@ namespace LedControlToolkit
             this.buttonNewEditionTable = new System.Windows.Forms.Button();
             this.treeViewEditionTable = new System.Windows.Forms.TreeView();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownMatrixMinDuration = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericUpDownMinDuration = new System.Windows.Forms.NumericUpDown();
             this.buttonCreateMissingAreas = new System.Windows.Forms.Button();
             this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.buttonDeleteArea = new System.Windows.Forms.Button();
@@ -59,9 +65,8 @@ namespace LedControlToolkit
             this.listBoxPreviewAreas = new System.Windows.Forms.ListBox();
             this.checkBoxPreviewArea = new System.Windows.Forms.CheckBox();
             this.checkBoxPreviewGrid = new System.Windows.Forms.CheckBox();
+            this.checkBoxDebugEffects = new System.Windows.Forms.CheckBox();
             this.panelPreviewLedMatrix = new LedControlToolkit.LedMatrixPreviewControl();
-            this.buttonImportDOF = new System.Windows.Forms.Button();
-            this.buttonExportDOF = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -70,6 +75,8 @@ namespace LedControlToolkit
             this.tabPageEffectEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).BeginInit();
             this.tabPageSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatrixMinDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -86,6 +93,7 @@ namespace LedControlToolkit
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.checkBoxDebugEffects);
             this.splitContainer1.Panel2.Controls.Add(this.panelPreviewLedMatrix);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
             this.splitContainer1.Size = new System.Drawing.Size(1698, 1000);
@@ -138,6 +146,26 @@ namespace LedControlToolkit
             this.tabPageEffectEditor.Text = "Effect Editor";
             this.tabPageEffectEditor.UseVisualStyleBackColor = true;
             this.tabPageEffectEditor.Enter += new System.EventHandler(this.tabPageEffectEditor_Enter);
+            // 
+            // buttonExportDOF
+            // 
+            this.buttonExportDOF.Location = new System.Drawing.Point(354, 6);
+            this.buttonExportDOF.Name = "buttonExportDOF";
+            this.buttonExportDOF.Size = new System.Drawing.Size(75, 23);
+            this.buttonExportDOF.TabIndex = 25;
+            this.buttonExportDOF.Text = "Export DOF";
+            this.buttonExportDOF.UseVisualStyleBackColor = true;
+            this.buttonExportDOF.Click += new System.EventHandler(this.buttonExportDOF_Click);
+            // 
+            // buttonImportDOF
+            // 
+            this.buttonImportDOF.Location = new System.Drawing.Point(273, 6);
+            this.buttonImportDOF.Name = "buttonImportDOF";
+            this.buttonImportDOF.Size = new System.Drawing.Size(75, 23);
+            this.buttonImportDOF.TabIndex = 24;
+            this.buttonImportDOF.Text = "Import DOF";
+            this.buttonImportDOF.UseVisualStyleBackColor = true;
+            this.buttonImportDOF.Click += new System.EventHandler(this.buttonImportDOF_Click);
             // 
             // label1
             // 
@@ -308,6 +336,10 @@ namespace LedControlToolkit
             // 
             // tabPageSettings
             // 
+            this.tabPageSettings.Controls.Add(this.label3);
+            this.tabPageSettings.Controls.Add(this.numericUpDownMatrixMinDuration);
+            this.tabPageSettings.Controls.Add(this.label2);
+            this.tabPageSettings.Controls.Add(this.numericUpDownMinDuration);
             this.tabPageSettings.Controls.Add(this.buttonCreateMissingAreas);
             this.tabPageSettings.Controls.Add(this.buttonSaveSettings);
             this.tabPageSettings.Controls.Add(this.buttonDeleteArea);
@@ -325,9 +357,51 @@ namespace LedControlToolkit
             this.tabPageSettings.UseVisualStyleBackColor = true;
             this.tabPageSettings.Enter += new System.EventHandler(this.tabPageSettings_Enter);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(270, 81);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(147, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Minimal Matrix Effect Duration";
+            // 
+            // numericUpDownMatrixMinDuration
+            // 
+            this.numericUpDownMatrixMinDuration.Location = new System.Drawing.Point(423, 79);
+            this.numericUpDownMatrixMinDuration.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMatrixMinDuration.Name = "numericUpDownMatrixMinDuration";
+            this.numericUpDownMatrixMinDuration.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownMatrixMinDuration.TabIndex = 12;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 79);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(116, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Minimal Effect Duration";
+            // 
+            // numericUpDownMinDuration
+            // 
+            this.numericUpDownMinDuration.Location = new System.Drawing.Point(131, 77);
+            this.numericUpDownMinDuration.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMinDuration.Name = "numericUpDownMinDuration";
+            this.numericUpDownMinDuration.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownMinDuration.TabIndex = 10;
+            // 
             // buttonCreateMissingAreas
             // 
-            this.buttonCreateMissingAreas.Location = new System.Drawing.Point(9, 301);
+            this.buttonCreateMissingAreas.Location = new System.Drawing.Point(9, 322);
             this.buttonCreateMissingAreas.Name = "buttonCreateMissingAreas";
             this.buttonCreateMissingAreas.Size = new System.Drawing.Size(121, 23);
             this.buttonCreateMissingAreas.TabIndex = 9;
@@ -348,7 +422,7 @@ namespace LedControlToolkit
             // 
             // buttonDeleteArea
             // 
-            this.buttonDeleteArea.Location = new System.Drawing.Point(360, 302);
+            this.buttonDeleteArea.Location = new System.Drawing.Point(360, 323);
             this.buttonDeleteArea.Name = "buttonDeleteArea";
             this.buttonDeleteArea.Size = new System.Drawing.Size(137, 23);
             this.buttonDeleteArea.TabIndex = 7;
@@ -358,7 +432,7 @@ namespace LedControlToolkit
             // 
             // buttonDuplicateArea
             // 
-            this.buttonDuplicateArea.Location = new System.Drawing.Point(217, 301);
+            this.buttonDuplicateArea.Location = new System.Drawing.Point(217, 322);
             this.buttonDuplicateArea.Name = "buttonDuplicateArea";
             this.buttonDuplicateArea.Size = new System.Drawing.Size(137, 23);
             this.buttonDuplicateArea.TabIndex = 6;
@@ -368,7 +442,7 @@ namespace LedControlToolkit
             // 
             // buttonNewArea
             // 
-            this.buttonNewArea.Location = new System.Drawing.Point(136, 301);
+            this.buttonNewArea.Location = new System.Drawing.Point(136, 322);
             this.buttonNewArea.Name = "buttonNewArea";
             this.buttonNewArea.Size = new System.Drawing.Size(75, 23);
             this.buttonNewArea.TabIndex = 5;
@@ -381,7 +455,7 @@ namespace LedControlToolkit
             this.listBoxPreviewAreas.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxPreviewAreas.FormattingEnabled = true;
-            this.listBoxPreviewAreas.Location = new System.Drawing.Point(9, 84);
+            this.listBoxPreviewAreas.Location = new System.Drawing.Point(9, 105);
             this.listBoxPreviewAreas.Name = "listBoxPreviewAreas";
             this.listBoxPreviewAreas.Size = new System.Drawing.Size(711, 212);
             this.listBoxPreviewAreas.TabIndex = 4;
@@ -409,34 +483,28 @@ namespace LedControlToolkit
             this.checkBoxPreviewGrid.UseVisualStyleBackColor = true;
             this.checkBoxPreviewGrid.CheckedChanged += new System.EventHandler(this.checkBoxPreviewGrid_CheckedChanged);
             // 
+            // checkBoxDebugEffects
+            // 
+            this.checkBoxDebugEffects.AutoSize = true;
+            this.checkBoxDebugEffects.Enabled = false;
+            this.checkBoxDebugEffects.Location = new System.Drawing.Point(7, 968);
+            this.checkBoxDebugEffects.Name = "checkBoxDebugEffects";
+            this.checkBoxDebugEffects.Size = new System.Drawing.Size(161, 17);
+            this.checkBoxDebugEffects.TabIndex = 1;
+            this.checkBoxDebugEffects.Text = "Show pinball && effects status";
+            this.checkBoxDebugEffects.UseVisualStyleBackColor = true;
+            this.checkBoxDebugEffects.CheckedChanged += new System.EventHandler(this.checkBoxDebugEffects_CheckedChanged);
+            // 
             // panelPreviewLedMatrix
             // 
-            this.panelPreviewLedMatrix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPreviewLedMatrix.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelPreviewLedMatrix.Location = new System.Drawing.Point(3, 3);
             this.panelPreviewLedMatrix.Name = "panelPreviewLedMatrix";
-            this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 994);
+            this.panelPreviewLedMatrix.Size = new System.Drawing.Size(552, 958);
             this.panelPreviewLedMatrix.TabIndex = 0;
             this.panelPreviewLedMatrix.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.panelPreviewLedMatrix_ControlRemoved);
-            // 
-            // buttonImportDOF
-            // 
-            this.buttonImportDOF.Location = new System.Drawing.Point(273, 6);
-            this.buttonImportDOF.Name = "buttonImportDOF";
-            this.buttonImportDOF.Size = new System.Drawing.Size(75, 23);
-            this.buttonImportDOF.TabIndex = 24;
-            this.buttonImportDOF.Text = "Import DOF";
-            this.buttonImportDOF.UseVisualStyleBackColor = true;
-            this.buttonImportDOF.Click += new System.EventHandler(this.buttonImportDOF_Click);
-            // 
-            // buttonExportDOF
-            // 
-            this.buttonExportDOF.Location = new System.Drawing.Point(354, 6);
-            this.buttonExportDOF.Name = "buttonExportDOF";
-            this.buttonExportDOF.Size = new System.Drawing.Size(75, 23);
-            this.buttonExportDOF.TabIndex = 25;
-            this.buttonExportDOF.Text = "Export DOF";
-            this.buttonExportDOF.UseVisualStyleBackColor = true;
-            this.buttonExportDOF.Click += new System.EventHandler(this.buttonExportDOF_Click);
             // 
             // LedControlToolkitDialog
             // 
@@ -444,6 +512,7 @@ namespace LedControlToolkit
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1698, 1000);
             this.Controls.Add(this.splitContainer1);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LedControlToolkitDialog";
             this.Text = "LedControl Toolkit";
@@ -451,6 +520,7 @@ namespace LedControlToolkit
             this.Load += new System.EventHandler(this.LedControlToolkit_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControlMain.ResumeLayout(false);
@@ -459,6 +529,8 @@ namespace LedControlToolkit
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).EndInit();
             this.tabPageSettings.ResumeLayout(false);
             this.tabPageSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatrixMinDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinDuration)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -503,6 +575,11 @@ namespace LedControlToolkit
         private Button buttonCreateMissingAreas;
         private Button buttonExportDOF;
         private Button buttonImportDOF;
+        private CheckBox checkBoxDebugEffects;
+        private Label label3;
+        private NumericUpDown numericUpDownMatrixMinDuration;
+        private Label label2;
+        private NumericUpDown numericUpDownMinDuration;
     }
 }
 
