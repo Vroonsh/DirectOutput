@@ -44,6 +44,8 @@
             // 
             // comboBoxOutput
             // 
+            this.comboBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxOutput.FormattingEnabled = true;
             this.comboBoxOutput.Location = new System.Drawing.Point(129, 4);
             this.comboBoxOutput.Name = "comboBoxOutput";

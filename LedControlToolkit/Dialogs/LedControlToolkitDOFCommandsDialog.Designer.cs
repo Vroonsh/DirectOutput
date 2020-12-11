@@ -48,6 +48,8 @@
             // 
             // comboBoxOutput
             // 
+            this.comboBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxOutput.FormattingEnabled = true;
             this.comboBoxOutput.Location = new System.Drawing.Point(262, 56);
             this.comboBoxOutput.Name = "comboBoxOutput";
@@ -56,6 +58,8 @@
             // 
             // textBoxDofCommands
             // 
+            this.textBoxDofCommands.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDofCommands.Location = new System.Drawing.Point(16, 30);
             this.textBoxDofCommands.Name = "textBoxDofCommands";
             this.textBoxDofCommands.Size = new System.Drawing.Size(596, 20);
@@ -73,6 +77,9 @@
             // 
             // listBoxCommandLines
             // 
+            this.listBoxCommandLines.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxCommandLines.FormattingEnabled = true;
             this.listBoxCommandLines.Location = new System.Drawing.Point(19, 114);
             this.listBoxCommandLines.Name = "listBoxCommandLines";
@@ -92,6 +99,7 @@
             // 
             // buttonGenerate
             // 
+            this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.Location = new System.Drawing.Point(482, 410);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(130, 23);
