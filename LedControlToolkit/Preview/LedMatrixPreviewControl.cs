@@ -274,15 +274,14 @@ namespace LedControlToolkit
 
         private void DisplayRing(PaintEventArgs e, PreviewPartDescriptor pDesc)
         {
-            if (pDesc.Type != PreviewType.Ring || pDesc.LedStrip.Height != 1) return;
-            
+            if (pDesc.Type != PreviewType.Ring || (pDesc.LedStrip.Height != 1 && pDesc.LedStrip.Width != 1)) return;
+
+            var maxDim = Math.Max(pDesc.LedStrip.Width, pDesc.LedStrip.Height);
             var center = new Point(pDesc.Rect.X + pDesc.Rect.Width / 2, pDesc.Rect.Y + pDesc.Rect.Height / 2);
             var radius = (int)(Math.Min(pDesc.Rect.Width, pDesc.Rect.Height) / 2 * 0.9f);
-            _LedRectangle.Width = _LedRectangle.Height = radius / (pDesc.LedStrip.Width/ 4);
-            previewPanelBrush.Color = Color.Black;
-            e.Graphics.FillRectangle(previewPanelBrush, pDesc.Rect);
-            for (int i = 0; i < pDesc.LedStrip.Width; ++i) {
-                var angle = (float)i / Math.PI * 2;
+            _LedRectangle.Width = _LedRectangle.Height = radius / (maxDim / 4);
+            for (int i = 0; i < maxDim; ++i) {
+                var angle = (float)i * (2 * Math.PI) / maxDim;
                 _LedRectangle.X = center.X + (int)((Math.Cos(angle) * radius) + 0.5f);
                 _LedRectangle.Y = center.Y + (int)((Math.Sin(angle) * radius) + 0.5f);
                 previewPanelBrush.Color = Color.FromArgb(pDesc.Values[i*3], pDesc.Values[(i*3) + 1], pDesc.Values[(i*3) + 2]);
