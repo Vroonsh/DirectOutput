@@ -39,6 +39,12 @@ namespace LedControlToolkit
             InitializeComponent();
 
             Settings = Settings.LoadSettings();
+            numericUpDownPulseDuration.Value = Settings.PulseDurationMs;
+            numericUpDownMinDuration.Value = Settings.EffectMinDurationMs;
+            numericUpDownMatrixMinDuration.Value = Settings.EffectRGBMinDurationMs;
+            checkBoxPreviewArea.Checked = Settings.ShowPreviewAreas;
+            checkBoxPreviewGrid.Checked = Settings.ShowMatrixGrid;
+
             Handler = new LedControlToolkitHandler(Settings, panelPreviewLedMatrix);
             EffectsDebuggerDialog = new LedControlToolkitEffectsDebugger() { Handler = Handler };
 
@@ -78,11 +84,6 @@ namespace LedControlToolkit
             if (OCD.ShowDialog() == DialogResult.OK) {
 
                 RomNameComboBox.Text = Settings.LastRomName;
-                numericUpDownPulseDuration.Value = Settings.PulseDurationMs;
-                numericUpDownMinDuration.Value = Settings.EffectMinDurationMs;
-                numericUpDownMatrixMinDuration.Value = Settings.EffectRGBMinDurationMs;
-                checkBoxPreviewArea.Checked = Settings.ShowPreviewAreas;
-                checkBoxPreviewGrid.Checked = Settings.ShowMatrixGrid;
 
                 RomNameComboBox.Items.Clear();
                 RomNameComboBox.Items.Add("");
