@@ -73,7 +73,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LedControlToolkitEffectsDebugger";
-            this.Text = "LedControlToolkitEffectsDebugger";
+            this.Text = "Pinball & effects debugger";
             this.Activated += new System.EventHandler(this.LedControlToolkitEffectsDebugger_Activated);
             this.Deactivate += new System.EventHandler(this.LedControlToolkitEffectsDebugger_Deactivate);
             this.ResumeLayout(false);
