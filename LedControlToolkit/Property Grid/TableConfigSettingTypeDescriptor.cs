@@ -70,6 +70,7 @@ namespace LedControlToolkit
                 new Attribute[] 
                 {
                     new DisplayNameAttribute("Toy Name"),
+                    new ReadOnlyAttribute(!Editable),
                     new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
                 }));
         }
