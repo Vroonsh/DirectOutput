@@ -656,12 +656,12 @@ namespace LedControlToolkit
 
             //Update property grid
             if (node is EffectTreeNode effectNode) {
-                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, true, Handler);
+                propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, node.TreeView == treeViewEditionTable, Handler);
                 value = effectNode.GetTableElement().GetTableElementData().Value;
             } else if (node is TableElementTreeNode TENode) {
-                propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(TENode.TE, true);
+                propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(TENode.TE, node.TreeView == treeViewEditionTable);
             } else if (node is EditionTableTreeNode editionTableNode) {
-                propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, true);
+                propertyGridEffect.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, node.TreeView == treeViewEditionTable);
             } else {
                 propertyGridEffect.SelectedObject = null;
             }
