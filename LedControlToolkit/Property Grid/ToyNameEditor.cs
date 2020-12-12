@@ -21,13 +21,15 @@ namespace LedControlToolkit
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             if (context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
-                IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-                string shapeName = value as string;
-                if (edSvc != null) {
-                    ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
-                    dropdown.Items.AddRange(TCSDesc.Handler.Pinball.Cabinet.Toys.Where(T=> T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>).Select(T => T.Name).ToArray());
-                    edSvc.DropDownControl(dropdown);
-                    return dropdown.Selection;
+                if (TCSDesc.Editable) {
+                    IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+                    string shapeName = value as string;
+                    if (edSvc != null) {
+                        ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
+                        dropdown.Items.AddRange(TCSDesc.Handler.Pinball.Cabinet.Toys.Where(T => T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>).Select(T => T.Name).ToArray());
+                        edSvc.DropDownControl(dropdown);
+                        return dropdown.Selection;
+                    }
                 }
             }
 
@@ -35,7 +37,10 @@ namespace LedControlToolkit
         }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            return UITypeEditorEditStyle.DropDown;
+            if (context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
+                return TCSDesc.Editable ? UITypeEditorEditStyle.DropDown : UITypeEditorEditStyle.None;
+            }
+            return UITypeEditorEditStyle.None;
         }
         public override bool GetPaintValueSupported(ITypeDescriptorContext context)
         {
