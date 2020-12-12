@@ -10,7 +10,7 @@ namespace LedControlToolkit
 {
     public abstract class BaseTypeDescriptor : CustomTypeDescriptor
     {
-        protected bool Editable { get; private set; } = true;
+        public bool Editable { get; private set; } = true;
 
         protected object WrappedObject;
 
