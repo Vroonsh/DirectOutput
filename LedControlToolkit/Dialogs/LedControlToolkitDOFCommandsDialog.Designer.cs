@@ -122,7 +122,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LedControlToolkitDOFCommandsDialog";
-            this.Text = "LedControlToolkitDOFCommandsDialog";
+            this.Text = "Import DofConfigTool commands";
             this.Load += new System.EventHandler(this.LedControlToolkitDOFCommandsDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
