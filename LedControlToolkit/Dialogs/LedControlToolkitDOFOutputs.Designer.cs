@@ -36,7 +36,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 4);
+            this.label1.Location = new System.Drawing.Point(13, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 13);
             this.label1.TabIndex = 0;
@@ -74,7 +74,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LedControlToolkitDOFOutputs";
-            this.Text = "LedControlToolkitDOFOutputs";
+            this.Text = "Export DofConfigTool commands";
             this.Load += new System.EventHandler(this.LedControlToolkitDOFOutputs_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
