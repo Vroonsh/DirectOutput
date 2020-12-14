@@ -18,12 +18,23 @@ namespace LedControlToolkit
         private LedControlToolkitHandler.ETableType _TableType = LedControlToolkitHandler.ETableType.EditionTable;
         public LedControlToolkitHandler.ETableType GetTableType() => _TableType;
 
-        public TableElement TE = null;
+        public TableElement TE { get; private set; } = null;
 
         public TableElementTreeNode(TableElement tableElement, LedControlToolkitHandler.ETableType TableType) : base()
         {
             _TableType = TableType;
             TE = tableElement;
+            TE.ValueChanged += TE_ValueChanged;
+            Refresh();
+        }
+
+        ~TableElementTreeNode()
+        {
+            TE.ValueChanged -= TE_ValueChanged;
+        }
+
+        private void TE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
+        {
             Refresh();
         }
 
@@ -37,7 +48,7 @@ namespace LedControlToolkit
 
         internal void Refresh()
         {
-            ImageIndex = TE.GetTableElementData().Value > 0 ? 1 : 0;
+            ImageIndex = TE.Value > 0 ? 1 : 0;
             SelectedImageIndex = ImageIndex;
             Text = ToString();
         }
@@ -46,7 +57,7 @@ namespace LedControlToolkit
         {
             Nodes.Clear();
             foreach(var eff in TE.AssignedEffects) {
-                eff.Init(handler.GetTable(_TableType));
+                handler.InitEffect(eff, _TableType);
                 var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler.LedControlConfigData);
                 effNode.UpdateFromTableElement(TE);
                 Nodes.Add(effNode);
