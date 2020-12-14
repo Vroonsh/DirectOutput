@@ -56,7 +56,7 @@ namespace LedControlToolkit
                 if (!richTextBoxDOFCommand.Text.IsNullOrEmpty()) {
                     richTextBoxDOFCommand.Text += "/";
                 }
-                richTextBoxDOFCommand.Text += string.Join("|", pair.Value.Select(TE => TE.ToString()).ToArray());
+                richTextBoxDOFCommand.Text += string.Join("|", pair.Value.Where(TE => !TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)).Select(TE => TE.ToString()).ToArray());
                 richTextBoxDOFCommand.Text += $" {pair.Key}";
             }
 
