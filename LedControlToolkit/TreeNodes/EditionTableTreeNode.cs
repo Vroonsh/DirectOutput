@@ -36,9 +36,11 @@ namespace LedControlToolkit
         {
             Nodes.Clear();
             foreach(var te in EditionTable.TableElements) {
-                var teNode = new TableElementTreeNode(te, LedControlToolkitHandler.ETableType.EditionTable);
-                teNode.Rebuild(Handler);
-                Nodes.Add(teNode);
+                if (!te.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
+                    var teNode = new TableElementTreeNode(te, LedControlToolkitHandler.ETableType.EditionTable);
+                    teNode.Rebuild(Handler);
+                    Nodes.Add(teNode);
+                }
             }
             Refresh();
         }
