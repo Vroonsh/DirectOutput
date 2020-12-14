@@ -43,7 +43,7 @@ namespace LedControlToolkit
         {
             RefreshTreeView = new Action(DoRefreshTreeView);
 
-            comboBoxTable.DataSource = Handler.TableDescriptors.Select(TD => $"{TD.Value.Table.TableName}").ToArray();
+            comboBoxTable.DataSource = Handler.GetTableNames();
             LastSelectedIndex = LastSelectedIndex.Limit(0, comboBoxTable.Items.Count-1);
             comboBoxTable.SelectedIndex = LastSelectedIndex;
 
@@ -130,7 +130,7 @@ namespace LedControlToolkit
 
         private void comboBoxTable_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedTable = Handler.TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(comboBoxTable.Text, StringComparison.InvariantCultureIgnoreCase));
+            SelectedTable = Handler.GetTableByName(comboBoxTable.Text);
             LastSelectedIndex = comboBoxTable.SelectedIndex;
             RebuildTreeView();
         }
