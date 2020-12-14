@@ -37,7 +37,7 @@ namespace LedControlToolkit
         }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            if (context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
+            if (context != null && context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
                 return TCSDesc.Editable ? UITypeEditorEditStyle.DropDown : UITypeEditorEditStyle.None;
             }
             return UITypeEditorEditStyle.None;

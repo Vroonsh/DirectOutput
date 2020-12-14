@@ -14,16 +14,18 @@ namespace LedControlToolkit
 {
     public class EffectTreeNode : TreeNode, ITableElementTreeNode
     {
-        public static readonly string TableElementTestName = "LedControlToolkit_EffectTreeNode_Test";
+        public static readonly string TableElementTestName = "LCTK Effect Test";
 
         public EffectTreeNode(TableElement tableElement, LedControlToolkitHandler.ETableType TableType, IEffect effect, LedControlConfig ledControl) : base()
         {
             Effect = effect;
             _TableType = TableType;
             TableTE = tableElement;
+            TestTE.Name = $"{TableElementTestName} [{Effect?.Name}]";
             TestTE.AssignedEffects.Clear();
             TestTE.AssignedEffects.Add(new AssignedEffect("TestEffect") { Effect = Effect });
-            ImageIndex = TestTE.GetTableElementData().Value > 0 ? 1 : 0;
+            TestTE.ValueChanged += TestTE_ValueChanged;
+            ImageIndex = TestTE.Value > 0 ? 1 : 0;
             SelectedImageIndex = ImageIndex;
             TCS.FromEffect(Effect);
             TCS.ResolveColorConfigs(ledControl.ColorConfigurations);
@@ -32,6 +34,16 @@ namespace LedControlToolkit
             if (Effect != null) {
                 UpdateFromTableElement(TableTE);
             }
+        }
+
+        ~EffectTreeNode()
+        {
+            TestTE.ValueChanged -= TestTE_ValueChanged;
+        }
+
+        private void TestTE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
+        {
+            Refresh();
         }
 
         public void UpdateFromTableElement(TableElement TE)
@@ -69,46 +81,28 @@ namespace LedControlToolkit
                 }
             }
 
-            var Table = Handler.GetTable(_TableType);
-
             //Remove all effects from Table & AssignedEffects before rebuilding
-            foreach (var eff in allEffects) {
-                Table.Effects.Remove(eff);
-                foreach (var TE in Table.TableElements) {
-                    TE.AssignedEffects.RemoveAll(AE => AE.Effect == eff);
-                }
-            }
+            Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
 
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
-            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, Table, Toy, LedWizNumber, Handler.Pinball.GlobalConfig.IniFilesPath, Table.RomName);
-
-            //Reorder Assigned effects as they should be from the ini file & resolve effect from effectname
-            foreach (var TE in Table.TableElements) {
-                TE.AssignedEffects.Sort((E1, E2) => E1.EffectName.CompareTo(E2.EffectName));
-                foreach (var assignEff in TE.AssignedEffects) {
-                    assignEff.Init(Table);
-                }
-            }
-
-            //cascade call Init on all effects (ahad to init one after each other because of the TargetEffect resolution)
-            var curEffect = newEffect;
-            while (curEffect != null) {
-                curEffect.Init(Table);
-                if (curEffect is EffectEffectBase effectWithTarget) {
-                    curEffect = effectWithTarget.TargetEffect;
-                } else {
-                    curEffect = null;
-                }
-            }
+            var newEffect = Handler.CreateEffect(TCS, TCCNumber, SettingNumber, _TableType, Toy, LedWizNumber);
 
             //Reassign new effect to the TreeNode
+            TestTE.Name = $"{TableElementTestName} [{newEffect.Name}]";
             TestTE.AssignedEffects.Clear();
             TestTE.AssignedEffects.Add(new AssignedEffect("TestEffect") { Effect = newEffect });
             Effect = newEffect;
 
             //Update Name
             DofConfigCommand = TCS.ToConfigToolCommand(LCC.ColorConfigurations.GetCabinetColorList());
-            Text = $"[{Toy?.Name}] {DofConfigCommand}";
+
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
+            ImageIndex = TestTE.Value > 0 ? 1 : 0;
         }
 
         public virtual TableElement GetTableElement() => TestTE;
@@ -117,11 +111,11 @@ namespace LedControlToolkit
 
         public override string ToString() => DofConfigCommand;
 
-        public IEffect Effect { get; set; }
-        public TableConfigSetting TCS = new TableConfigSetting();
-        public LedControlConfig LCC;
-        public string DofConfigCommand;
-        public TableElement TableTE = null;
-        public TableElement TestTE = new TableElement(TableElementTestName, 0);
+        public IEffect Effect { get; private set; }
+        public TableConfigSetting TCS { get; private set; } = new TableConfigSetting();
+        public LedControlConfig LCC { get; private set; }
+        public string DofConfigCommand { get; private set; }
+        public TableElement TableTE { get; private set; } = null;
+        public TableElement TestTE { get; private set; } = new TableElement(TableElementTestName, 0);
     }
 }
