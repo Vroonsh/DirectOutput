@@ -190,8 +190,7 @@ namespace LedControlToolkit
                 var TENode = (node.Parent as TableElementTreeNode);
                 if (TENode != null) {
                     TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
-                    var Table = Handler.GetTable(node.GetTableType());
-                    Table.Effects.RemoveAll(E => E == node.Effect);
+                    Handler.RemoveEffects(new List<IEffect>{ node.Effect }, (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
                     if (!silent) {
                         TENode.Rebuild(Handler);
                         SetCurrentSelectedNode(TENode);
@@ -206,8 +205,7 @@ namespace LedControlToolkit
                 foreach(var effNode in node.Nodes) {
                     DeleteEffectNode(effNode as EffectTreeNode, true);
                 }
-                var Table = Handler.GetTable(node.GetTableType());
-                Table.TableElements.RemoveAll(TE => TE == node.TE);
+                Handler.RemoveTableElement(node.GetTableElement(), node.GetTableType());
                 EditionTableNode.Rebuild(Handler);
                 SetCurrentSelectedNode(EditionTableNode);
             }
@@ -286,7 +284,7 @@ namespace LedControlToolkit
                     TCCNumber++;
                 }
             }
-            EditionTableNode.Refresh();
+            EditionTableNode.Rebuild(Handler);
         }
 
         private void buttonExportDOF_Click(object sender, EventArgs e)
@@ -569,10 +567,9 @@ namespace LedControlToolkit
             propertyGridEffect.Refresh();
             if (treeViewEditionTable.SelectedNode is TableElementTreeNode editionTETreeNode) {
                 if (editionTETreeNode.TE == TE) {
-                    var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
-                    EditionTable.TableElements.RemoveAll(TE);
+                    Handler.RemoveTableElement(TE, LedControlToolkitHandler.ETableType.EditionTable);
                     editionTETreeNode.Rebuild(Handler);
-                    EditionTable.TableElements.Add(TE);
+                    Handler.AddTableElement(TE, LedControlToolkitHandler.ETableType.EditionTable);
                     treeViewEditionTable.Refresh();
                 }
             }
@@ -657,7 +654,6 @@ namespace LedControlToolkit
             //Update property grid
             if (node is EffectTreeNode effectNode) {
                 propertyGridEffect.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, node.TreeView == treeViewEditionTable, Handler);
-                value = effectNode.GetTableElement().GetTableElementData().Value;
             } else if (node is TableElementTreeNode TENode) {
                 propertyGridEffect.SelectedObject = new TableElementTypeDescriptor(TENode.TE, node.TreeView == treeViewEditionTable);
             } else if (node is EditionTableTreeNode editionTableNode) {
@@ -770,10 +766,11 @@ namespace LedControlToolkit
             var command = (item.Tag as TreeNodeCommand);
             var SrcTENode = (command.Sender as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
+            var EditionTable = Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable);
 
-            var parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"{NewTableElementName}{Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableElements.Count}" };
+            var parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"{NewTableElementName}{EditionTable.TableElements.Count}" };
             parentTE.AssignedEffects = new AssignedEffectList();
-            Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable).TableElements.Add(parentTE);
+            EditionTable.TableElements.Add(parentTE);
             var index = EditionTableNode.Nodes.IndexOf(TargetTENode);
             var newTENode = new TableElementTreeNode(parentTE, LedControlToolkitHandler.ETableType.EditionTable);
             EditionTableNode.Nodes.Insert(index, newTENode);
@@ -783,7 +780,7 @@ namespace LedControlToolkit
                 var effectNode = node as EffectTreeNode;
                 parentTE.AssignedEffects.Add(effectNode.Effect.Name);
             }
-            parentTE.AssignedEffects.Init(Handler.GetTable(LedControlToolkitHandler.ETableType.EditionTable));
+            parentTE.AssignedEffects.Init(EditionTable);
             newTENode.Rebuild(Handler);
             SetCurrentSelectedNode(newTENode);
             EffectsDebuggerDialog.RebuildTreeView();
