@@ -27,7 +27,7 @@ namespace DirectOutput.LedControl.Loader
 
         public Version MinDOFVersion { get; set; }
 
-
+        public int Version { get; set; } = 0;
 
         private TableConfigList _TableConfigurations;
 
@@ -191,6 +191,16 @@ namespace DirectOutput.LedControl.Loader
 
             if (VersionData != null && VersionData.Count > 0)
             {
+                Version = 0;
+
+                var FileVersionLine = VersionData.FirstOrDefault(S => S.ToLowerInvariant().StartsWith("version="));
+                if (!FileVersionLine.IsNullOrEmpty()) {
+                    string VersionString = FileVersionLine.Substring("version=".Length);
+                    if (VersionString.IsInteger()) {
+                        Version = Int32.Parse(VersionString);
+                    }
+                }
+
                 MinDOFVersion = null;
 
                 string MinDofVersionLine = VersionData.FirstOrDefault(S => S.ToLowerInvariant().StartsWith("mindofversion="));
