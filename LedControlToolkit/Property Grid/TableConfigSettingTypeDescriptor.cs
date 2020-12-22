@@ -1,6 +1,7 @@
 ﻿using DirectOutput.FX.MatrixFX;
 using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
+using DirectOutputControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

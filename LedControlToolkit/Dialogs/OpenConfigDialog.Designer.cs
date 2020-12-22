@@ -38,6 +38,10 @@
             this.OpenLedControlIniFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.GlobalConfigFilenameComboBox = new System.Windows.Forms.ComboBox();
             this.LedControlIniFilenameComboBox = new System.Windows.Forms.ComboBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.dofConfigToolSetupControl1 = new DofConfigToolWrapper.DofConfigToolSetupControl();
+            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
+            this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
             this.SuspendLayout();
             // 
             // OKButton
@@ -55,7 +59,7 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(535, 65);
+            this.CancelButton.Location = new System.Drawing.Point(1136, 65);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(150, 23);
             this.CancelButton.TabIndex = 1;
@@ -80,7 +84,7 @@
             // GlobalConfigFileSelectButton
             // 
             this.GlobalConfigFileSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GlobalConfigFileSelectButton.Location = new System.Drawing.Point(640, 5);
+            this.GlobalConfigFileSelectButton.Location = new System.Drawing.Point(1241, 5);
             this.GlobalConfigFileSelectButton.Name = "GlobalConfigFileSelectButton";
             this.GlobalConfigFileSelectButton.Size = new System.Drawing.Size(45, 23);
             this.GlobalConfigFileSelectButton.TabIndex = 4;
@@ -100,7 +104,7 @@
             // LedControlFileSelectButton
             // 
             this.LedControlFileSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LedControlFileSelectButton.Location = new System.Drawing.Point(640, 36);
+            this.LedControlFileSelectButton.Location = new System.Drawing.Point(1241, 36);
             this.LedControlFileSelectButton.Name = "LedControlFileSelectButton";
             this.LedControlFileSelectButton.Size = new System.Drawing.Size(45, 23);
             this.LedControlFileSelectButton.TabIndex = 8;
@@ -135,12 +139,35 @@
             this.LedControlIniFilenameComboBox.Size = new System.Drawing.Size(520, 21);
             this.LedControlIniFilenameComboBox.TabIndex = 13;
             // 
+            // dofConfigToolSetupControl1
+            // 
+            this.dofConfigToolSetupControl1.Location = new System.Drawing.Point(15, 103);
+            this.dofConfigToolSetupControl1.Name = "dofConfigToolSetupControl1";
+            this.dofConfigToolSetupControl1.Size = new System.Drawing.Size(719, 560);
+            this.dofConfigToolSetupControl1.TabIndex = 14;
+            // 
+            // directOutputPreviewControl1
+            // 
+            this.directOutputPreviewControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
+            this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
+            this.directOutputPreviewControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.directOutputPreviewControl1.DirectOutputViewSetup = null;
+            this.directOutputPreviewControl1.Location = new System.Drawing.Point(740, 103);
+            this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
+            this.directOutputPreviewControl1.Size = new System.Drawing.Size(595, 838);
+            this.directOutputPreviewControl1.TabIndex = 15;
+            // 
             // OpenConfigDialog
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(746, 94);
+            this.ClientSize = new System.Drawing.Size(1347, 953);
+            this.Controls.Add(this.directOutputPreviewControl1);
+            this.Controls.Add(this.dofConfigToolSetupControl1);
             this.Controls.Add(this.LedControlIniFilenameComboBox);
             this.Controls.Add(this.GlobalConfigFilenameComboBox);
             this.Controls.Add(this.LedControlFileSelectButton);
@@ -171,5 +198,9 @@
         private System.Windows.Forms.OpenFileDialog OpenLedControlIniFileDialog;
         private System.Windows.Forms.ComboBox GlobalConfigFilenameComboBox;
         private System.Windows.Forms.ComboBox LedControlIniFilenameComboBox;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private DofConfigToolWrapper.DofConfigToolSetupControl dofConfigToolSetupControl1;
+        private System.DirectoryServices.DirectoryEntry directoryEntry1;
+        private DirectOutputControls.DirectOutputPreviewControl directOutputPreviewControl1;
     }
 }

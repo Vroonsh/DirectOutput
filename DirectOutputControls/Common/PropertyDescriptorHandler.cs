@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Drawing.Design;
 
-namespace LedControlToolkit
+namespace DirectOutputControls
 {
     public class PropertyDescriptorHandler
     {
