@@ -53,6 +53,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,14 +87,8 @@
     </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
     <Compile Include="LedControlToolkitSerializer.cs" />
-    <Compile Include="Property Grid\BaseTypeDescriptor.cs" />
     <Compile Include="Property Grid\ColorConfigEditor.cs" />
-    <Compile Include="Property Grid\CustomField.cs" />
     <Compile Include="Property Grid\EditionTableTypeDescriptor.cs" />
-    <Compile Include="Property Grid\ListBoxEditor.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Property Grid\PropertyDescriptorHandler.cs" />
     <Compile Include="Property Grid\ShapeNameEditor.cs" />
     <Compile Include="Property Grid\TableElementTypeDescriptor.cs" />
     <Compile Include="Property Grid\ToyNameEditor.cs" />
@@ -102,7 +97,7 @@
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
     <Compile Include="TreeNodes\EffectTreeNode.cs" />
     <Compile Include="Preview\LedMatrixPreviewControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="LedControlToolkitDialog.cs">
       <SubType>Form</SubType>
@@ -137,6 +132,9 @@
     <EmbeddedResource Include="Dialogs\OpenConfigDialog.resx">
       <DependentUpon>OpenConfigDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Preview\LedMatrixPreviewControl.resx">
+      <DependentUpon>LedMatrixPreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -167,9 +165,17 @@
     <None Include="Properties\green_gears.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectOutputControls\DirectOutputControls.csproj">
+      <Project>{4a068f60-ec8f-41a1-951a-2afd448e4ba6}</Project>
+      <Name>DirectOutputControls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DirectOutput\DirectOutput.csproj">
       <Project>{da43acdd-8241-4a28-8eb2-dae80d91faa8}</Project>
       <Name>DirectOutput</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DofConfigToolWrapper\DofConfigToolWrapper.csproj">
+      <Project>{108d1a08-4828-455c-bbf0-3c4bc2f79fec}</Project>
+      <Name>DofConfigToolWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\Extensions\Extensions.csproj">
       <Project>{3ba9c263-d8c3-4511-bd2f-4c7b55d82a1a}</Project>

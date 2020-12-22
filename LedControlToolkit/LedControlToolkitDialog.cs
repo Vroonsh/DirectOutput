@@ -6,6 +6,7 @@ using DirectOutput.General.Color;
 using DirectOutput.GlobalConfiguration;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
