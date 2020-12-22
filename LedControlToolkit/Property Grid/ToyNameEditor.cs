@@ -1,6 +1,7 @@
 ﻿using DirectOutput.Cab.Toys;
 using DirectOutput.General.Analog;
 using DirectOutput.General.Color;
+using DirectOutputControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
