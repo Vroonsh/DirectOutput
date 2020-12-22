@@ -1,4 +1,5 @@
 ﻿using DirectOutput.Table;
+using DirectOutputControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
