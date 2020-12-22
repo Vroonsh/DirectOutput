@@ -7,10 +7,12 @@ using System.Xml.Serialization;
 using System.Reflection;
 using System.Drawing;
 using System.ComponentModel;
+using DirectOutput.General;
+using DofConfigToolWrapper;
 
 namespace LedControlToolkit
 {
-    public class Settings
+    public class Settings : XmlSerializable<Settings>
     {
         public class LedPreviewArea
         {
@@ -127,48 +129,14 @@ namespace LedControlToolkit
 
         public void SaveSettings()
         {
-            try
-            {
-                string Xml = "";
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    new XmlSerializer(typeof(Settings)).Serialize(ms, this);
-                    ms.Position = 0;
-
-                    using (StreamReader sr = new StreamReader(ms, Encoding.Default))
-                    {
-                        Xml = sr.ReadToEnd();
-
-                    }
-
-                }
-                new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"config")).CreateDirectoryPath();
-                Xml.WriteToFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"config","LedControlToolkitSettings.xml"));
-            }
-            catch
-            {
-
-            }
+            new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config")).CreateDirectoryPath();
+            WriteToXml(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config", "LedControlToolkitSettings.xml"));
         }
 
 
         public static Settings LoadSettings()
         {
-            try
-            {
-                string SettingsXML = DirectOutput.General.FileReader.ReadFileToString(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config", "LedControlToolkitSettings.xml"));
-                
-                using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(SettingsXML)))
-                {
-                    Settings S = (Settings)new XmlSerializer(typeof(Settings)).Deserialize(ms);
-                    
-                    return S;
-                }
-            }
-            catch 
-            {
-                return new Settings();
-            }
+            return ReadFromXml(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config", "LedControlToolkitSettings.xml"));
         }
 
     }

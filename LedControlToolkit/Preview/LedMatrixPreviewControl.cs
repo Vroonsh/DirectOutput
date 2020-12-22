@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace LedControlToolkit
 {
-    public class LedMatrixPreviewControl : Panel
+    public class LedMatrixPreviewControl : UserControl
     {
         public enum PreviewType
         {
@@ -51,7 +51,6 @@ namespace LedControlToolkit
         private List<string> MissingAreas = new List<string>();
 
         private SolidBrush previewPanelBrush = new SolidBrush(Color.Red);
-        private Font previewPanelFont = new Font(FontFamily.GenericSansSerif, 10.0f);
 
         private bool _Inited = false;
 
@@ -119,20 +118,20 @@ namespace LedControlToolkit
             previewPanelBrush.Color = Color.Red;
             var y = 10;
             if (MissingLedstrips.Count > 0) {
-                e.Graphics.DrawString("Ledstrips w/o area", previewPanelFont, previewPanelBrush, new Point(10, y));
-                y += previewPanelFont.Height;
+                e.Graphics.DrawString("Ledstrips w/o area", Font, previewPanelBrush, new Point(10, y));
+                y += Font.Height;
                 foreach (var ls in MissingLedstrips) {
-                    e.Graphics.DrawString(ls, previewPanelFont, previewPanelBrush, new Point(20, y));
-                    y += previewPanelFont.Height;
+                    e.Graphics.DrawString(ls, Font, previewPanelBrush, new Point(20, y));
+                    y += Font.Height;
                 }
             }
 
             if (MissingAreas.Count > 0) {
-                e.Graphics.DrawString("Areas w/o ledstrip", previewPanelFont, previewPanelBrush, new Point(10, y));
-                y += previewPanelFont.Height;
+                e.Graphics.DrawString("Areas w/o ledstrip", Font, previewPanelBrush, new Point(10, y));
+                y += Font.Height;
                 foreach (var area in MissingAreas) {
-                    e.Graphics.DrawString(area, previewPanelFont, previewPanelBrush, new Point(20, y));
-                    y += previewPanelFont.Height;
+                    e.Graphics.DrawString(area, Font, previewPanelBrush, new Point(20, y));
+                    y += Font.Height;
                 }
             }
         }
@@ -143,8 +142,8 @@ namespace LedControlToolkit
 
             previewPanelBrush.Color = Color.Green;
             foreach (var dim in PreviewParts.Values) {
-                var sizeName = e.Graphics.MeasureString(dim.LedStrip.Name, previewPanelFont);
-                e.Graphics.DrawString(dim.LedStrip.Name, previewPanelFont, previewPanelBrush, new Point(Math.Min(dim.Rect.X, Width - (int)sizeName.Width), Math.Max(0, dim.Rect.Y - (int)(previewPanelFont.Height * 1.05f))));
+                var sizeName = e.Graphics.MeasureString(dim.LedStrip.Name, Font);
+                e.Graphics.DrawString(dim.LedStrip.Name, Font, previewPanelBrush, new Point(Math.Min(dim.Rect.X, Width - (int)sizeName.Width), Math.Max(0, dim.Rect.Y - (int)(Font.Height * 1.05f))));
                 e.Graphics.DrawRectangle(new Pen(previewPanelBrush), dim.Rect);
             }
         }
@@ -293,8 +292,19 @@ namespace LedControlToolkit
 
         internal void OnClose()
         {
-            previewPanelFont.Dispose();
             previewPanelBrush.Dispose();
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // LedMatrixPreviewControl
+            // 
+            this.Name = "LedMatrixPreviewControl";
+            this.Size = new System.Drawing.Size(505, 682);
+            this.ResumeLayout(false);
+
         }
     }
 }
