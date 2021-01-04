@@ -7,8 +7,8 @@
     <ProjectGuid>{4A068F60-EC8F-41A1-951A-2AFD448E4BA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DirectOutputViewControl</RootNamespace>
-    <AssemblyName>DirectOutputViewControl</AssemblyName>
+    <RootNamespace>DirectOutputControls</RootNamespace>
+    <AssemblyName>DirectOutputControls</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Common\BaseTypeDescriptor.cs" />
     <Compile Include="Common\CustomField.cs" />
+    <Compile Include="Common\DofConfigToolResources.cs" />
     <Compile Include="Common\PropertyDescriptorHandler.cs" />
     <Compile Include="Editors\ListBoxEditor.cs">
       <SubType>Component</SubType>
@@ -56,6 +57,14 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Preview\DirectOutputPreviewController.cs" />
+    <Compile Include="Preview\ViewAreas\SetupControl\DirectOutputViewSetupControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Preview\ViewAreas\SetupControl\DirectOutputViewSetupControl.Designer.cs">
+      <DependentUpon>DirectOutputViewSetupControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Preview\ViewAreas\SetupControl\TreeNodeArea.cs" />
+    <Compile Include="Preview\ViewAreas\SetupControl\ViewAreaRGBTypeDescriptor.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -63,9 +72,10 @@
     </Compile>
     <Compile Include="Preview\ViewAreas\DirectOutputViewArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Preview\ViewAreas\DirectOutputViewAreaIcon.cs" />
+    <Compile Include="Preview\ViewAreas\DirectOutputViewAreaAnalog.cs" />
     <Compile Include="Preview\ViewAreas\DirectOutputViewAreaRGB.cs" />
     <Compile Include="Preview\ViewAreas\DirectOutputViewSetup.cs" />
+    <Compile Include="TreeView\TreeNodeCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectOutput\DirectOutput.csproj">
@@ -84,6 +94,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Preview\DirectOutputPreviewControl.resx">
       <DependentUpon>DirectOutputPreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preview\ViewAreas\SetupControl\DirectOutputViewSetupControl.resx">
+      <DependentUpon>DirectOutputViewSetupControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
