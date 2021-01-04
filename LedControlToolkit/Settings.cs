@@ -38,13 +38,13 @@ namespace LedControlToolkit
             }
 
             [Category("Dimensions")]
-            public float Left { get { return _Left; } set { _Left = value.Limit(0.0f, 1.0f); } }
+            public float Left { get { return _Left; } set { _Left = value.Limit(0.0f, 1.0f - _Width); } }
             [Category("Dimensions")]
-            public float Top { get { return _Top; } set { _Top = value.Limit(0.0f, 1.0f); } }
+            public float Top { get { return _Top; } set { _Top = value.Limit(0.0f, 1.0f - _Height); } }
             [Category("Dimensions")]
-            public float Width { get { return _Width; } set { _Width = value.Limit(0.0f, 1.0f); } }
+            public float Width { get { return _Width; } set { _Width = value.Limit(0.0f, 1.0f - _Left); } }
             [Category("Dimensions")]
-            public float Height { get { return _Height; } set { _Height = value.Limit(0.0f, 1.0f); } }
+            public float Height { get { return _Height; } set { _Height = value.Limit(0.0f, 1.0f - _Top); } }
             [Description("Preview Area Type")]
             public LedMatrixPreviewControl.PreviewType PreviewType { get; set; } = LedMatrixPreviewControl.PreviewType.Matrix;
             [Description("ConfigTool Output")]

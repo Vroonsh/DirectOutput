@@ -15,6 +15,7 @@ namespace LedControlToolkit
     public partial class OpenConfigDialog : Form
     {
         private Settings Settings = new Settings();
+        private DirectOutputViewSetup ViewSetup = new DirectOutputViewSetup();
 
         public OpenConfigDialog(Settings Settings = null)
         {
@@ -26,14 +27,9 @@ namespace LedControlToolkit
 
             LoadData();
 
-            var viewsetup = new DirectOutputViewSetup();
-            viewsetup.ViewAreas.Add(new DirectOutputViewArea() { Name = "Area1", DofOutputs = { DofConfigToolOutputEnum.Invalid } });
-            viewsetup.ViewAreas[0].Children.Add(new DirectOutputViewAreaIcon() { Name = "Icon1", DofOutputs = { DofConfigToolOutputEnum.StartButton, DofConfigToolOutputEnum.Beacon }, Dimensions = RectangleF.FromLTRB(0.1f, 0.2f, 0.5f, 0.5f) });
-            viewsetup.ViewAreas[0].Children[0].Children.Add(new DirectOutputViewAreaIcon() { Name = "Icon2", DofOutputs = { DofConfigToolOutputEnum.Strobe, DofConfigToolOutputEnum.Coin }, Dimensions = RectangleF.FromLTRB(0.5f, 0.5f, 1.0f, 1.0f) });
-            viewsetup.ViewAreas.Add(new DirectOutputViewAreaRGB() { Name = "RGB1", DofOutputs = { DofConfigToolOutputEnum.PFBackEffectsMX, DofConfigToolOutputEnum.PFBackFlashersMX }, Dimensions = RectangleF.FromLTRB(0.5f, 0.5f, 1.0f, 1.0f) });
-            viewsetup.ViewAreas[1].Children.Add(new DirectOutputViewArea() { Name = "Area2", DofOutputs = { DofConfigToolOutputEnum.Invalid }, Dimensions = RectangleF.FromLTRB(0.25f, 0.25f, 0.5f, 0.5f) });
-            this.directOutputPreviewControl1.DirectOutputViewSetup = viewsetup;
-
+            this.directOutputPreviewControl1.DirectOutputViewSetup = ViewSetup;
+            this.directOutputViewSetupControl1.DirectOutputViewSetup = ViewSetup;
+            this.directOutputViewSetupControl1.SetupChanged += this.directOutputPreviewControl1.OnSetupChanged;
         }
 
         private void LoadData()
@@ -111,8 +107,8 @@ namespace LedControlToolkit
             p.Setup(GlobalConfigFilename);
 
             var setup = DofConfigToolSetup.ReadFromXml("./DofToolkit/DofConfigSetup_DofToolkit.dofsetup");
-            var handler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups", DofSetup = setup };
-            handler.UpdateConfigFiles(true);
+            //var handler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups", DofSetup = setup };
+            //handler.UpdateConfigFiles(true);
 
             DirectOutputPreviewController controller = new DirectOutputPreviewController();
             controller.DofSetup = setup;
