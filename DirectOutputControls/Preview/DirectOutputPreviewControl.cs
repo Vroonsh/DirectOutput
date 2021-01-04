@@ -33,6 +33,11 @@ namespace DirectOutputControls
             Invalidate();
         }
 
+        public void OnSetupChanged()
+        {
+            Refresh();
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
