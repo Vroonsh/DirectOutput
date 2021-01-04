@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -7,29 +8,38 @@ using System.Threading.Tasks;
 
 namespace DirectOutputControls
 {
+    [Serializable]
     public class DirectOutputViewAreaRGB : DirectOutputViewArea
     {
+        public override bool IsVirtual() => false;
+
         public enum ValueTypeEnum
         {
-            Single,
+            SingleValue,
             Adressable,
         }
 
         public enum RenderTypeEnum
         {
             Invalid,
+            Simple,
             Matrix,
             Ring,
             Frame
         }
 
-        public ValueTypeEnum ValueType { get; set; } = ValueTypeEnum.Single;
+        [Category("RGB")]
+        public ValueTypeEnum ValueType { get; set; } = ValueTypeEnum.SingleValue;
 
-        public int Width { get; set; } = 0;
-        public int Height { get; set; } = 0;
+        [Category("RGB")]
+        public int MxWidth { get; set; } = 0;
+        [Category("RGB")]
+        public int MxHeight { get; set; } = 0;
 
-        public RenderTypeEnum RenderType { get; set; } = RenderTypeEnum.Invalid;
+        [Category("RGB")]
+        public RenderTypeEnum RenderType { get; set; } = RenderTypeEnum.Simple;
 
+        [Category("RGB")]
         public int StartAngle { get; set; } = 90;
 
         public override bool SetValues(byte[] values)

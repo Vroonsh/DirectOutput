@@ -1,27 +1,48 @@
-﻿using DofConfigToolWrapper;
+﻿using DirectOutput.General.Generic;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace DirectOutputControls
 {
-    public class DirectOutputViewArea
+    [XmlInclude(typeof(DirectOutputViewAreaVirtual))]
+    [XmlInclude(typeof(DirectOutputViewAreaAnalog))]
+    [XmlInclude(typeof(DirectOutputViewAreaRGB))]
+    [Serializable]
+    public abstract class DirectOutputViewArea
     {
+        public abstract bool IsVirtual();
+
         public string Name { get; set; } = string.Empty;
 
         public bool Enabled { get; set; } = true;
 
         public bool Visible { get; set; } = true;
 
-        public List<DofConfigToolOutputEnum> DofOutputs { get; private set; } = new List<DofConfigToolOutputEnum>();
+        public virtual DofConfigToolOutputEnum DofOutput { get; set; } = DofConfigToolOutputEnum.Invalid;
 
-        public RectangleF Dimensions { get; set; } = RectangleF.FromLTRB(0.0f, 0.0f, 1.0f, 1.0f);
+        //        public virtual List<DofConfigToolOutputEnum> ComboDofOutputs { get; private set; } = new List<DofConfigToolOutputEnum>();
 
-        public List<DirectOutputViewArea> Children { get; private set; } = new List<DirectOutputViewArea>();
+        protected RectangleF _Dimensions = RectangleF.FromLTRB(0.0f, 0.0f, 1.0f, 1.0f);
+
+        [Category("Dimensions")]
+        public float Left { get { return _Dimensions.X; } set { _Dimensions.X = value.Limit(0.0f, 1.0f); _Dimensions.Width = Math.Min(1.0f - _Dimensions.X, _Dimensions.Width); } }
+        [Category("Dimensions")]
+        public float Top { get { return _Dimensions.Y; } set { _Dimensions.Y = value.Limit(0.0f, 1.0f); _Dimensions.Height = Math.Min(1.0f - _Dimensions.Y, _Dimensions.Height); } }
+        [Category("Dimensions")]
+        public float Width { get { return _Dimensions.Width; } set { _Dimensions.Width = value.Limit(0.0f, 1.0f - _Dimensions.X); } }
+        [Category("Dimensions")]
+        public float Height { get { return _Dimensions.Height; } set { _Dimensions.Height = value.Limit(0.0f, 1.0f - _Dimensions.Y); } }
+
+        [Browsable(false)]
+        public ExtList<DirectOutputViewArea> Children = new ExtList<DirectOutputViewArea>();
 
         protected byte[] Values;
         protected RectangleF GlobalDimensions;
@@ -29,26 +50,25 @@ namespace DirectOutputControls
 
         public void ComputeGlobalDimensions(RectangleF ParentDimensions)
         {
-            GlobalDimensions.X = ParentDimensions.X + (Dimensions.X * ParentDimensions.Width);
-            GlobalDimensions.Y = ParentDimensions.Y + (Dimensions.Y * ParentDimensions.Height);
-            GlobalDimensions.Width = ParentDimensions.Width * Dimensions.Width;
-            GlobalDimensions.Height = ParentDimensions.Height * Dimensions.Height;
-            foreach(var area in Children) {
+            GlobalDimensions.X = ParentDimensions.X + (_Dimensions.X * ParentDimensions.Width);
+            GlobalDimensions.Y = ParentDimensions.Y + (_Dimensions.Y * ParentDimensions.Height);
+            GlobalDimensions.Width = ParentDimensions.Width * _Dimensions.Width;
+            GlobalDimensions.Height = ParentDimensions.Height * _Dimensions.Height;
+            foreach (var area in Children) {
                 area.ComputeGlobalDimensions(GlobalDimensions);
             }
         }
 
-        public void AssignToDictionary(Dictionary<DofConfigToolOutputEnum, List<DirectOutputViewArea>> Dict)
+        public IEnumerable<DirectOutputViewArea> GetAllAreas()
         {
-            foreach (var output in DofOutputs) {
-                if (!Dict.Keys.Contains(output)) {
-                    Dict[output] = new List<DirectOutputViewArea>();
-                }
-                Dict[output].Add(this);
+            yield return this;
+
+            if (Children.Count == 0) {
+                yield break;
             }
 
-            foreach (var area in Children) {
-                area.AssignToDictionary(Dict);
+            foreach (var child in Children.SelectMany(C => C.GetAllAreas())) {
+                yield return child;
             }
         }
 
@@ -59,7 +79,7 @@ namespace DirectOutputControls
             DisplayRect.Width = (int)(GlobalDimensions.Width * RefDimensions.Width);
             DisplayRect.Height = (int)(GlobalDimensions.Height * RefDimensions.Height);
 
-            foreach(var area in Children) {
+            foreach (var area in Children) {
                 area.Resize(RefDimensions);
             }
         }
@@ -67,7 +87,11 @@ namespace DirectOutputControls
         public void DisplayArea(Graphics gr, Font f, SolidBrush br, Pen p)
         {
             if (!Enabled) return;
-            var dispName = $"{Name} [{string.Join(",", DofOutputs)}]";
+            var outputs = DofOutput.ToString();
+            //if (ComboDofOutputs.Count > 0) {
+            //    outputs += "," + string.Join(",", ComboDofOutputs);
+            //}
+            var dispName = IsVirtual() ? "" : $"{Name} [{outputs}]";
             var sizeName = gr.MeasureString(dispName, f);
             gr.DrawString(dispName, f, br, new Point(Math.Min(DisplayRect.X, (int)(gr.ClipBounds.Width - sizeName.Width)), Math.Max(0, DisplayRect.Y - (int)(f.Height * 1.05f))));
             gr.DrawRectangle(p, DisplayRect);
@@ -80,9 +104,30 @@ namespace DirectOutputControls
         public virtual bool SetValues(byte[] values) => false;
         public virtual void Display(Graphics gr, Font f, SolidBrush br, Pen p)
         {
-            foreach(var area in Children) {
+            foreach (var area in Children) {
                 area.Display(gr, f, br, p);
             }
         }
+
+        internal void RemoveArea(DirectOutputViewArea area)
+        {
+            if (Children.Contains(area)) {
+                Children.Remove(area);
+            } else {
+                foreach (var child in Children) {
+                    child.RemoveArea(area);
+                }
+            }
+        }
     }
+
+    [Serializable]
+    public class DirectOutputViewAreaVirtual : DirectOutputViewArea
+    {
+        [Browsable(false)]
+        public override DofConfigToolOutputEnum DofOutput => DofConfigToolOutputEnum.Invalid;
+
+        public override bool IsVirtual() => true;
+    }
+
 }
