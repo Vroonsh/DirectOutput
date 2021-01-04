@@ -53,9 +53,9 @@ namespace DirectOutputControls
 
                     //It's an MX output, find MX Area attached and create a ledstrip
                     if (o.Output > DofConfigToolOutputEnum.RGBMXOutputs_Start && o.Output < DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                        var areas = PreviewControl.DirectOutputViewSetup.GetViewAreas(o.Output, typeof(DirectOutputViewAreaRGB));
+                        var areas = PreviewControl.DirectOutputViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output);
                         if (areas != null && areas.Length == 1) {
-                            var area = areas[0] as DirectOutputViewAreaRGB;
+                            var area = areas[0];
                             if (area.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable) {
                                 var ledstrip = new LedStrip() {
                                     ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RBG,
@@ -63,17 +63,17 @@ namespace DirectOutputControls
                                     Name = $"Ledstrip {p.Cabinet.Toys.Where(T => T is LedStrip).Count()}",
                                     OutputControllerName = this.Name,
                                     LedStripArrangement = DirectOutput.Cab.Toys.Layer.LedStripArrangementEnum.LeftRightTopDown,
-                                    Width = area.Width,
-                                    Height = area.Height,
+                                    Width = area.MxWidth,
+                                    Height = area.MxHeight,
                                     FirstLedNumber = firstAdressableLedNumber
                                 };
 
-                                firstAdressableLedNumber += area.Width * area.Height;
+                                firstAdressableLedNumber += area.MxWidth * area.MxHeight;
                                 p.Cabinet.Toys.Add(ledstrip);
 
                                 //Replace nb outputs for this toy by the real matrix size * 3
                                 NbOutputs -= o.PortRange;
-                                NbOutputs += area.Width * area.Height * o.PortRange;
+                                NbOutputs += area.MxWidth * area.MxHeight * o.PortRange;
                             }
                         }
                     } 
