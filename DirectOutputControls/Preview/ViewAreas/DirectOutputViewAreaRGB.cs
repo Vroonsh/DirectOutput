@@ -52,7 +52,7 @@ namespace DirectOutputControls
             return false;
         }
 
-        public override void Display(Graphics gr, Font f, SolidBrush br, Pen p)
+        public override void Display(Graphics gr, Font f, SolidBrush br)
         {
 
         }

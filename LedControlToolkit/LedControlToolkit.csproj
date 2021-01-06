@@ -87,11 +87,8 @@
     </Compile>
     <Compile Include="LedControlToolkitHandler.cs" />
     <Compile Include="LedControlToolkitSerializer.cs" />
-    <Compile Include="Property Grid\ColorConfigEditor.cs" />
     <Compile Include="Property Grid\EditionTableTypeDescriptor.cs" />
-    <Compile Include="Property Grid\ShapeNameEditor.cs" />
     <Compile Include="Property Grid\TableElementTypeDescriptor.cs" />
-    <Compile Include="Property Grid\ToyNameEditor.cs" />
     <Compile Include="TreeNodes\EditionTableTreeNode.cs" />
     <Compile Include="TreeNodes\ITableElementTreeNode.cs" />
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
