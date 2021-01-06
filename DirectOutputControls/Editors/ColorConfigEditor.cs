@@ -1,21 +1,23 @@
 ﻿using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
-using DirectOutputControls;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace LedControlToolkit
+namespace DirectOutputControls
 {
-    class ColorConfigTypeConverter : TypeConverter
+    public interface IColorListProvider
+    {
+        ColorConfig GetColorConfig(string colorName);
+        ColorList GetColorList();
+    }
+
+    public class ColorConfigTypeConverter : TypeConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
         {
@@ -63,18 +65,24 @@ namespace LedControlToolkit
 
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            if (context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
+            if (context.Instance is IEditableInstance editable) {
+                if (!editable.IsEditable()) {
+                    return value;
+                }
+            }
+
+            if (context.Instance is IColorListProvider colorListProvider) {
                 IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
                 var colorConfig = value as ColorConfig;
                 if (colorConfig == null) {
-                    colorConfig = TCSDesc.Handler.LedControlConfigData.ColorConfigurations[0];
+                    colorConfig = colorListProvider.GetColorConfig(null);
                 }
                 if (edSvc != null) {
-                    var colorList = TCSDesc.Handler.LedControlConfigData.ColorConfigurations.GetCabinetColorList();
+                    var colorList = colorListProvider.GetColorList();
                     ColorConfigListBoxEditor dropdown = new ColorConfigListBoxEditor(colorConfig.Name, colorList, edSvc);
                     dropdown.Items.AddRange(colorList.Select(CN => CN.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
-                    return TCSDesc.Handler.LedControlConfigData.ColorConfigurations.FirstOrDefault(CC=>CC.Name.Equals(dropdown.Selection as string, StringComparison.InvariantCultureIgnoreCase));
+                    return colorListProvider.GetColorConfig(dropdown.Selection as string);
                 }
             }
 
@@ -82,15 +90,23 @@ namespace LedControlToolkit
         }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            return UITypeEditorEditStyle.DropDown;
+            if (context != null) {
+                if (context.Instance is IEditableInstance editable) {
+                    return editable.IsEditable() ? UITypeEditorEditStyle.DropDown : UITypeEditorEditStyle.None;
+                }
+                return UITypeEditorEditStyle.DropDown;
+            }
+            return UITypeEditorEditStyle.None;
         }
+
         public override bool GetPaintValueSupported(ITypeDescriptorContext context)
         {
-            return (context.Instance is TableConfigSettingTypeDescriptor);
+            return (context.Instance is IColorListProvider);
         }
+
         public override void PaintValue(PaintValueEventArgs e)
         {
-            if (e.Context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
+            if (e.Context.Instance is IColorListProvider) {
                 var colorConfig = e.Value as ColorConfig;
                 if (colorConfig != null) {
                     Rectangle rect = e.Bounds;

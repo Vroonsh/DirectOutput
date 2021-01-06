@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DirectOutputControls
 {
-    public abstract class BaseTypeDescriptor : CustomTypeDescriptor
+    public abstract class BaseTypeDescriptor : CustomTypeDescriptor, IEditableInstance
     {
         public bool Editable { get; private set; } = true;
 
@@ -18,6 +18,10 @@ namespace DirectOutputControls
 
         protected List<PropertyDescriptor> CustomFields = new List<PropertyDescriptor>();
         protected Dictionary<string, object> CustomFieldValues = new Dictionary<string, object>();
+
+        #region IEditableInstance
+        public bool IsEditable() => Editable;
+        #endregion
 
         public object this[string fieldName]
         {

@@ -50,9 +50,13 @@
     <Compile Include="Common\CustomField.cs" />
     <Compile Include="Common\DofConfigToolResources.cs" />
     <Compile Include="Common\PropertyDescriptorHandler.cs" />
+    <Compile Include="Editors\ColorConfigEditor.cs" />
+    <Compile Include="Editors\IEditableInstance.cs" />
     <Compile Include="Editors\ListBoxEditor.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\ShapeNameEditor.cs" />
+    <Compile Include="Editors\ToyNameEditor.cs" />
     <Compile Include="Preview\DirectOutputPreviewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -65,6 +69,7 @@
     </Compile>
     <Compile Include="Preview\ViewAreas\SetupControl\TreeNodeArea.cs" />
     <Compile Include="Preview\ViewAreas\SetupControl\ViewAreaRGBTypeDescriptor.cs" />
+    <Compile Include="Preview\ViewAreas\SetupControl\ViewAreaVirtualTypeDescriptor.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -15,9 +15,11 @@ namespace DirectOutputControls
         {
             WrappedArea = area;
 
-            PropertyDescriptors["Width"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["Height"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["Squarred"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["MxWidth"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["MxHeight"] = new PropertyDescriptorHandler();
             PropertyDescriptors["StartAngle"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["ValueType"] = new PropertyDescriptorHandler();
 
             Refresh();
         }
@@ -25,25 +27,42 @@ namespace DirectOutputControls
         public override void Refresh()
         {
             switch (WrappedArea.RenderType) {
+                case DirectOutputViewAreaRGB.RenderTypeEnum.Simple: {
+                    WrappedArea.MxWidth = WrappedArea.MxHeight = 0;
+                    PropertyDescriptors["Squarred"].Browsable = true;
+                    PropertyDescriptors["MxWidth"].Browsable = false;
+                    PropertyDescriptors["MxHeight"].Browsable = false;
+                    PropertyDescriptors["StartAngle"].Browsable = false;
+                    PropertyDescriptors["ValueType"].Browsable = false;
+                    break;
+                }
+
                 case DirectOutputViewAreaRGB.RenderTypeEnum.Frame:
                 case DirectOutputViewAreaRGB.RenderTypeEnum.Matrix: {
-                    PropertyDescriptors["Width"].Browsable = true;
-                    PropertyDescriptors["Height"].Browsable = true;
+                    PropertyDescriptors["Squarred"].Browsable = false;
+                    PropertyDescriptors["MxWidth"].Browsable = true;
+                    PropertyDescriptors["MxHeight"].Browsable = true;
                     PropertyDescriptors["StartAngle"].Browsable = false;
+                    PropertyDescriptors["ValueType"].Browsable = true;
                     break;
                 }
 
                 case DirectOutputViewAreaRGB.RenderTypeEnum.Ring: {
-                    PropertyDescriptors["Width"].Browsable = true;
-                    PropertyDescriptors["Height"].Browsable = false;
+                    WrappedArea.MxHeight = 1;
+                    PropertyDescriptors["Squarred"].Browsable = true;
+                    PropertyDescriptors["MxWidth"].Browsable = true;
+                    PropertyDescriptors["MxHeight"].Browsable = false;
                     PropertyDescriptors["StartAngle"].Browsable = true;
+                    PropertyDescriptors["ValueType"].Browsable = true;
                     break;
                 }
 
                 default: {
-                    PropertyDescriptors["Width"].Browsable = false;
-                    PropertyDescriptors["Height"].Browsable = false;
+                    WrappedArea.MxWidth = WrappedArea.MxHeight = 0;
+                    PropertyDescriptors["MxWidth"].Browsable = false;
+                    PropertyDescriptors["MxHeight"].Browsable = false;
                     PropertyDescriptors["StartAngle"].Browsable = false;
+                    PropertyDescriptors["ValueType"].Browsable = false;
                     break;
                 }
             }
