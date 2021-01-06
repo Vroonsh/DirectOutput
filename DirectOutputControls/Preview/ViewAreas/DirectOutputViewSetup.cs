@@ -199,7 +199,13 @@ namespace DirectOutputControls
         {
             foreach (var area in ViewAreas) {
                 area.DisplayArea(gr, f, br, p);
-                area.Display(gr, f, br, p);
+            }
+        }
+
+        public void Display(Graphics gr, Font f, SolidBrush br)
+        {
+            foreach (var area in ViewAreas) {
+                area.Display(gr, f, br);
             }
         }
 

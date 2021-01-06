@@ -35,7 +35,7 @@ namespace DirectOutputControls
             p.Finish();
             p.Cabinet.Clear(true);
 
-            int firstAdressableLedNumber = 0;
+            int firstAdressableLedNumber = 1;
 
             //LedWizEquivalentOutputNumber is PortNum
 

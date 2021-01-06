@@ -14,8 +14,6 @@ namespace DirectOutputControls
 
         private byte Value = 0;
 
-        public bool Squarred { get; set; } = true;
-
         public override bool SetValues(byte[] values)
         {
             if (Value != values[0]) {
@@ -25,15 +23,9 @@ namespace DirectOutputControls
             return false;
         }
 
-        public override void Display(Graphics gr, Font f, SolidBrush br, Pen p)
+        public override void Display(Graphics gr, Font f, SolidBrush br)
         {
-            var rect = DisplayRect;
-            if (Squarred) {
-                var minDim = Math.Min(rect.Width, rect.Height);
-                rect.X += (rect.Width - minDim) / 2;
-                rect.Y += (rect.Height - minDim) / 2;
-                rect.Width = rect.Height = minDim;
-            }
+            var rect = ComputeDisplayRect();
 
             var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
             if (icon == null) {
