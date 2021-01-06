@@ -176,6 +176,8 @@ namespace DirectOutputControls
 
             if (node.Area is DirectOutputViewAreaRGB rgbArea) {
                 propertyGridViewArea.SelectedObject = new ViewAreaRGBTypeDescriptor(rgbArea, true);
+            } else if (node.Area is DirectOutputViewAreaVirtual vArea) {
+                propertyGridViewArea.SelectedObject = new ViewAreaVirtualTypeDescriptor(vArea, true);
             } else {
                 propertyGridViewArea.SelectedObject = node.Area;
             }
