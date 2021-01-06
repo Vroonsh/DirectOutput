@@ -11,12 +11,6 @@ using System.Windows.Forms.Design;
 
 namespace DirectOutputControls
 {
-    public interface IColorListProvider
-    {
-        ColorConfig GetColorConfig(string colorName);
-        ColorList GetColorList();
-    }
-
     public class ColorConfigTypeConverter : TypeConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
