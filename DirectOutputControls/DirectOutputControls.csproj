@@ -46,17 +46,20 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Common\BaseTypeDescriptor.cs" />
-    <Compile Include="Common\CustomField.cs" />
-    <Compile Include="Common\DofConfigToolResources.cs" />
-    <Compile Include="Common\PropertyDescriptorHandler.cs" />
-    <Compile Include="Editors\ColorConfigEditor.cs" />
+    <Compile Include="TypeDescriptors\BaseTypeDescriptor.cs" />
+    <Compile Include="TypeDescriptors\CustomField.cs" />
+    <Compile Include="DofConfigToolResources.cs" />
+    <Compile Include="TypeDescriptors\PropertyDescriptorHandler.cs" />
+    <Compile Include="Editors\UITypeEditors\ColorConfigEditor.cs" />
     <Compile Include="Editors\IEditableInstance.cs" />
     <Compile Include="Editors\ListBoxEditor.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Editors\ShapeNameEditor.cs" />
-    <Compile Include="Editors\ToyNameEditor.cs" />
+    <Compile Include="Editors\Providers\IColorListProvider.cs" />
+    <Compile Include="Editors\Providers\IShapeListProvider.cs" />
+    <Compile Include="Editors\Providers\IToyListProvider.cs" />
+    <Compile Include="Editors\UITypeEditors\ShapeNameEditor.cs" />
+    <Compile Include="Editors\UITypeEditors\ToyNameEditor.cs" />
     <Compile Include="Preview\DirectOutputPreviewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
