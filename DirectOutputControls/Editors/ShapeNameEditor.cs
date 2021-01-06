@@ -1,17 +1,15 @@
-﻿using DirectOutputControls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Drawing.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace LedControlToolkit
+namespace DirectOutputControls
 {
+    public interface IShapeListProvider
+    {
+        string[] GetShapeNames();
+    }
+
     public class ShapeNameEditor : UITypeEditor
     {
         public ShapeNameEditor()
@@ -20,12 +18,12 @@ namespace LedControlToolkit
 
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            if (context.Instance is TableConfigSettingTypeDescriptor TCSDesc) {
+            if (context.Instance is IShapeListProvider shapeListProvider) {
                 IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
                 string shapeName = value as string;
                 if (edSvc != null) {
                     ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
-                    dropdown.Items.AddRange(TCSDesc.Handler.GetShapeNames());
+                    dropdown.Items.AddRange(shapeListProvider.GetShapeNames());
                     edSvc.DropDownControl(dropdown);
                     return dropdown.Selection;
                 }
@@ -35,7 +33,13 @@ namespace LedControlToolkit
         }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            return UITypeEditorEditStyle.DropDown;
+            if (context != null) {
+                if (context.Instance is IEditableInstance editable) {
+                    return editable.IsEditable() ? UITypeEditorEditStyle.DropDown : UITypeEditorEditStyle.None;
+                }
+                return UITypeEditorEditStyle.DropDown;
+            }
+            return UITypeEditorEditStyle.None;
         }
         public override bool GetPaintValueSupported(ITypeDescriptorContext context)
         {
