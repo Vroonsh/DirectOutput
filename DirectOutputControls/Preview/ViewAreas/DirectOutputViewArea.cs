@@ -24,7 +24,10 @@ namespace DirectOutputControls
 
         public bool Enabled { get; set; } = true;
 
+        [Browsable(false)]
         public bool Visible { get; set; } = true;
+
+        public bool Squarred { get; set; } = true;
 
         public virtual DofConfigToolOutputEnum DofOutput { get; set; } = DofConfigToolOutputEnum.Invalid;
 
@@ -84,6 +87,18 @@ namespace DirectOutputControls
             }
         }
 
+        protected Rectangle ComputeDisplayRect()
+        {
+            Rectangle rect = DisplayRect;
+            if (Squarred) {
+                var minDim = Math.Min(rect.Width, rect.Height);
+                rect.X += (rect.Width - minDim) / 2;
+                rect.Y += (rect.Height - minDim) / 2;
+                rect.Width = rect.Height = minDim;
+            }
+            return rect;
+        }
+
         public void DisplayArea(Graphics gr, Font f, SolidBrush br, Pen p)
         {
             if (!Enabled) return;
@@ -102,10 +117,10 @@ namespace DirectOutputControls
         }
 
         public virtual bool SetValues(byte[] values) => false;
-        public virtual void Display(Graphics gr, Font f, SolidBrush br, Pen p)
+        public virtual void Display(Graphics gr, Font f, SolidBrush br)
         {
             foreach (var area in Children) {
-                area.Display(gr, f, br, p);
+                area.Display(gr, f, br);
             }
         }
 

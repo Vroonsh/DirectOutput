@@ -50,6 +50,7 @@ namespace DirectOutputControls
                 DirectOutputViewSetup.Resize(e.ClipRectangle);
                 Brush.Color = AreaDisplayColor;
                 DirectOutputViewSetup.DisplayAreas(e.Graphics, Font, Brush, new Pen(Brush));
+                DirectOutputViewSetup.Display(e.Graphics, Font, Brush);
             }
         }
 

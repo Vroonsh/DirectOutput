@@ -1,4 +1,5 @@
-﻿using DirectOutput.FX.MatrixFX;
+﻿using DirectOutput.Cab.Toys;
+using DirectOutput.FX.MatrixFX;
 using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
 using DirectOutputControls;
@@ -12,11 +13,36 @@ using System.Threading.Tasks;
 
 namespace LedControlToolkit
 {
-    class TableConfigSettingTypeDescriptor : BaseTypeDescriptor
+    class TableConfigSettingTypeDescriptor : BaseTypeDescriptor, IColorListProvider, IShapeListProvider, IToyListProvider
     {
         public EffectTreeNode EffectNode { get; private set; }
         public TableConfigSetting WrappedTCS { get; private set; }
         public LedControlToolkitHandler Handler;
+
+        #region IColorListProvider
+
+        public ColorConfig GetColorConfig(string colorName)
+        {
+            if (colorName.IsNullOrEmpty()) {
+                return Handler?.LedControlConfigData.ColorConfigurations[0];
+            }
+            return Handler?.LedControlConfigData.ColorConfigurations.FirstOrDefault(CC => CC.Name.Equals(colorName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public ColorList GetColorList() => Handler?.LedControlConfigData.ColorConfigurations.GetCabinetColorList();
+
+        #endregion
+
+        #region IShapeListProvider
+        public string[] GetShapeNames() => Handler.GetShapeNames();
+        #endregion
+
+        #region IToyListProvider
+        public IEnumerable<IToy> GetToyList(Func<IToy, bool> Match) 
+        {
+            return Handler.Pinball.Cabinet.Toys.Where(Match);
+        }
+        #endregion
 
         public TableConfigSettingTypeDescriptor(EffectTreeNode node, bool editable, LedControlToolkitHandler handler)
             : base(node.TCS, editable)
