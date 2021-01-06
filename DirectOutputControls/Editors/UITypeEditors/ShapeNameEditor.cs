@@ -5,11 +5,6 @@ using System.Windows.Forms.Design;
 
 namespace DirectOutputControls
 {
-    public interface IShapeListProvider
-    {
-        string[] GetShapeNames();
-    }
-
     public class ShapeNameEditor : UITypeEditor
     {
         public ShapeNameEditor()

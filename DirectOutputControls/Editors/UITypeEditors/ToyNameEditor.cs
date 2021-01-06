@@ -10,11 +10,6 @@ using System.Windows.Forms.Design;
 
 namespace DirectOutputControls
 {
-    public interface IToyListProvider
-    {
-        IEnumerable<IToy> GetToyList(Func<IToy, bool> Match);
-    }
-
     public class ToyNameEditor : UITypeEditor
     {
         public ToyNameEditor()
