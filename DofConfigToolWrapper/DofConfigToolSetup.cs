@@ -1,6 +1,7 @@
 ﻿using DirectOutput.General;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace DofConfigToolWrapper
         /// <summary>
         /// List of the controllers used by this setup.
         /// </summary>
-        public List<ControllerSetup> ControllerSetups { get; set; } = new List<ControllerSetup>();
+        public List<ControllerSetup> ControllerSetups { get; private set; } = new List<ControllerSetup>();
 
         /// <summary>
         /// Will validate the whole setup and eventually shows a messagebox listing errors & warnings
@@ -114,17 +115,17 @@ namespace DofConfigToolWrapper
                     var mapping = controller.OutputMappings[num];
 
                     if (mapping.Output == DofConfigToolOutputEnum.Invalid) {
-                        Errors += $"controller [{controller.ToString()}] mapping {num} is Invalid type.\n";
+                        Errors += $"controller [{controller}] mapping {num} is Invalid type.\n";
                     }else if (controller.OutputMappings.Any(M=>M != mapping && M.Output == mapping.Output)) {
-                        Warnings += $"controller [{controller.ToString()}] mapping {num} has duplicated Output {mapping.Output}.\n";
+                        Warnings += $"controller [{controller}] mapping {num} has duplicated Output {mapping.Output}.\n";
                     }
 
                     if (mapping.PortNumber <= 0) {
-                        Errors += $"controller [{controller.ToString()}] mapping {num} has invalid PortNumber {mapping.PortNumber} (need to be at least 1).\n";
+                        Errors += $"controller [{controller}] mapping {num} has invalid PortNumber {mapping.PortNumber} (need to be at least 1).\n";
                     }
                     var dupPortNum = controller.OutputMappings.FirstOrDefault(M => M != mapping && M.PortNumber == mapping.PortNumber);
                     if (dupPortNum != null && dupPortNum.Output == mapping.Output) {
-                        Errors += $"controller [{controller.ToString()}] mapping {num} has duplicated PortNumber {mapping.PortNumber} with same output {mapping.Output}.\n";
+                        Errors += $"controller [{controller}] mapping {num} has duplicated PortNumber {mapping.PortNumber} with same output {mapping.Output}.\n";
                     }
                 }
             }
