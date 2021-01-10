@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace DirectOutputToolkit
 {
-    static class Program
+    static class DirectOutputToolkitProgram
     {
         /// <summary>
         /// Point d'entrée principal de l'application.
@@ -16,7 +16,7 @@ namespace DirectOutputToolkit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new DirectOutputToolkitForm());
         }
     }
 }

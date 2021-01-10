@@ -67,14 +67,45 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\DirectOutputToolkitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\DirectOutputToolkitForm.Designer.cs">
+      <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="DirectOutputToolkitProgram.cs" />
+    <Compile Include="Forms\DofConfigSetupEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DofConfigSetupEditForm.Designer.cs">
+      <DependentUpon>DofConfigSetupEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DofViewSetupEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DofViewSetupEditForm.Designer.cs">
+      <DependentUpon>DofViewSetupEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OpenConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OpenConfigDialog.Designer.cs">
+      <DependentUpon>OpenConfigDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <EmbeddedResource Include="Forms\DirectOutputToolkitForm.resx">
+      <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DofConfigSetupEditForm.resx">
+      <DependentUpon>DofConfigSetupEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DofViewSetupEditForm.resx">
+      <DependentUpon>DofViewSetupEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OpenConfigDialog.resx">
+      <DependentUpon>OpenConfigDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
