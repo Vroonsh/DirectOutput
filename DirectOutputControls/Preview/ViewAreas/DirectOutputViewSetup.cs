@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 namespace DirectOutputControls
 {
     [Serializable]
-    public class DirectOutputViewSetup
+    public class DirectOutputViewSetup 
     {
         public ExtList<DirectOutputViewArea> ViewAreas { get; private set; } = new ExtList<DirectOutputViewArea>();
 
@@ -228,5 +228,22 @@ namespace DirectOutputControls
             return newName;
         }
 
+        public delegate void HierarchyItemFunc(DirectOutputViewArea Parent, DirectOutputViewArea Child);
+
+        private static void ParseHierarchy(DirectOutputViewArea Parent, HierarchyItemFunc HierarchyFunc)
+        {
+            foreach(var child in Parent.Children) {
+                HierarchyFunc.Invoke(Parent, child);
+                ParseHierarchy(child, HierarchyFunc);
+            }
+        }
+
+        public void ParseHierarchy(HierarchyItemFunc HierarchyFunc)
+        {
+            foreach(var area in ViewAreas) {
+                HierarchyFunc.Invoke(null, area);
+                ParseHierarchy(area, HierarchyFunc);
+            }
+        }
     }
 }
