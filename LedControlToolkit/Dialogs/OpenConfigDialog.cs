@@ -15,7 +15,6 @@ namespace LedControlToolkit
     public partial class OpenConfigDialog : Form
     {
         private Settings Settings = new Settings();
-        private DirectOutputViewSetup ViewSetup = new DirectOutputViewSetup();
 
         public OpenConfigDialog(Settings Settings = null)
         {
@@ -27,8 +26,6 @@ namespace LedControlToolkit
 
             LoadData();
 
-            this.directOutputPreviewControl1.DirectOutputViewSetup = ViewSetup;
-            this.directOutputViewSetupControl1.DirectOutputViewSetup = ViewSetup;
             this.directOutputViewSetupControl1.SetupChanged += this.directOutputPreviewControl1.OnSetupChanged;
         }
 

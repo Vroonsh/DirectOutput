@@ -67,28 +67,10 @@ namespace DirectOutputControls
                 _DirectOutputViewSetup = new DirectOutputViewSetup();
             }
 
-            string Xml;
-            try {
-                Xml = DirectOutput.General.FileReader.ReadFileToString(FileName);
-            } catch (Exception E) {
-                Log.Exception("Could not load DirectOutput View Setup from {0}.".Build(FileName), E);
-                throw new Exception("Could not read DirectOutput View Setup file {0}.".Build(FileName), E);
-            }
-
-            byte[] xmlBytes = Encoding.Default.GetBytes(Xml);
-            using (MemoryStream ms = new MemoryStream(xmlBytes)) {
-                try {
-                    DirectOutputViewSetup.Init((DirectOutputViewSetup)new XmlSerializer(typeof(DirectOutputViewSetup)).Deserialize(ms));
-                    RebuildTreeView();
-                    OnSetupChanged();
-                    _FileName = FileName;
-                } catch (Exception E) {
-                    Exception Ex = new Exception("Could not deserialize DirectOutput View Setup from XML data.", E);
-                    Ex.Data.Add("XML Data", Xml);
-                    Log.Exception("Could not load DirectOutput View Setup from XML data.", Ex);
-                    throw Ex;
-                }
-            }
+            DirectOutputViewSetup.Init(DirectOutputViewSetupSerializer.ReadFromXml(FileName));
+            RebuildTreeView();
+            OnSetupChanged();
+            _FileName = FileName;
         }
 
         private void RebuildTreeView()
@@ -283,17 +265,7 @@ namespace DirectOutputControls
             fd.ShowDialog();
 
             if (!fd.FileName.IsNullOrEmpty()) {
-                using (MemoryStream ms = new MemoryStream()) {
-                    var serializer = new XmlSerializer(typeof(DirectOutputViewSetup));
-                    serializer.Serialize(ms, DirectOutputViewSetup);
-                    ms.Position = 0;
-                    string Xml = string.Empty;
-                    using (StreamReader sr = new StreamReader(ms, Encoding.Default)) {
-                        Xml = sr.ReadToEnd();
-                        sr.Dispose();
-                    }
-                    File.WriteAllText(fd.FileName, Xml);
-                }
+                DirectOutputViewSetupSerializer.WriteToXml(DirectOutputViewSetup, fd.FileName);
             }
         }
 
