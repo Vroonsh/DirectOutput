@@ -157,7 +157,6 @@
             this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
             this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
             this.directOutputPreviewControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.directOutputPreviewControl1.DirectOutputViewSetup = null;
             this.directOutputPreviewControl1.Location = new System.Drawing.Point(1203, 103);
             this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
             this.directOutputPreviewControl1.Size = new System.Drawing.Size(363, 725);
