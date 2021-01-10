@@ -51,8 +51,16 @@ namespace DofConfigToolWrapper
             this.labelControllers = new System.Windows.Forms.Label();
             this.buttonAddController = new System.Windows.Forms.Button();
             this.dataGridViewControllers = new System.Windows.Forms.DataGridView();
+            this.numberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.controllerSetupBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridViewOutputMappings = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.portNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.portRangeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.outputDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.outputMappingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonAddOutputMapping = new System.Windows.Forms.Button();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,17 +73,9 @@ namespace DofConfigToolWrapper
             this.dataGridViewComboBoxColumn4 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.controllerSetupBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.outputMappingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.numberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.portNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.portRangeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.outputDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewControllers)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutputMappings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.controllerSetupBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutputMappings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputMappingsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,9 +94,9 @@ namespace DofConfigToolWrapper
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxUserName.Location = new System.Drawing.Point(69, 5);
             this.textBoxUserName.Name = "textBoxUserName";
-            this.textBoxUserName.Size = new System.Drawing.Size(534, 20);
+            this.textBoxUserName.Size = new System.Drawing.Size(890, 20);
             this.textBoxUserName.TabIndex = 1;
-            this.textBoxUserName.TextChanged += new System.EventHandler(this.textBoxUserName_TextChanged);
+            this.textBoxUserName.TextChanged += new System.EventHandler(this.TextBoxUserName_TextChanged);
             // 
             // labelAPIKey
             // 
@@ -113,9 +113,9 @@ namespace DofConfigToolWrapper
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAPIKey.Location = new System.Drawing.Point(69, 34);
             this.textBoxAPIKey.Name = "textBoxAPIKey";
-            this.textBoxAPIKey.Size = new System.Drawing.Size(534, 20);
+            this.textBoxAPIKey.Size = new System.Drawing.Size(890, 20);
             this.textBoxAPIKey.TabIndex = 3;
-            this.textBoxAPIKey.TextChanged += new System.EventHandler(this.textBoxAPIKey_TextChanged);
+            this.textBoxAPIKey.TextChanged += new System.EventHandler(this.TextBoxAPIKey_TextChanged);
             // 
             // labelControllers
             // 
@@ -129,13 +129,13 @@ namespace DofConfigToolWrapper
             // buttonAddController
             // 
             this.buttonAddController.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddController.Location = new System.Drawing.Point(571, 72);
+            this.buttonAddController.Location = new System.Drawing.Point(927, 72);
             this.buttonAddController.Name = "buttonAddController";
             this.buttonAddController.Size = new System.Drawing.Size(29, 23);
             this.buttonAddController.TabIndex = 7;
             this.buttonAddController.Text = "+";
             this.buttonAddController.UseVisualStyleBackColor = true;
-            this.buttonAddController.Click += new System.EventHandler(this.buttonAddController_Click);
+            this.buttonAddController.Click += new System.EventHandler(this.ButtonAddController_Click);
             // 
             // dataGridViewControllers
             // 
@@ -152,10 +152,29 @@ namespace DofConfigToolWrapper
             this.dataGridViewControllers.MultiSelect = false;
             this.dataGridViewControllers.Name = "dataGridViewControllers";
             this.dataGridViewControllers.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            this.dataGridViewControllers.Size = new System.Drawing.Size(588, 137);
+            this.dataGridViewControllers.Size = new System.Drawing.Size(944, 137);
             this.dataGridViewControllers.TabIndex = 8;
-            this.dataGridViewControllers.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewControllers_CellMouseClick);
-            this.dataGridViewControllers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewControllers_KeyDown);
+            this.dataGridViewControllers.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewControllers_CellMouseClick);
+            this.dataGridViewControllers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DataGridViewControllers_KeyDown);
+            // 
+            // numberDataGridViewTextBoxColumn
+            // 
+            this.numberDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.numberDataGridViewTextBoxColumn.DataPropertyName = "Number";
+            this.numberDataGridViewTextBoxColumn.HeaderText = "Number";
+            this.numberDataGridViewTextBoxColumn.Name = "numberDataGridViewTextBoxColumn";
+            this.numberDataGridViewTextBoxColumn.Width = 69;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            // 
+            // controllerSetupBindingSource
+            // 
+            this.controllerSetupBindingSource.DataSource = typeof(DofConfigToolWrapper.DofConfigToolSetup.ControllerSetup);
             // 
             // label1
             // 
@@ -183,23 +202,62 @@ namespace DofConfigToolWrapper
             this.dataGridViewOutputMappings.Location = new System.Drawing.Point(15, 275);
             this.dataGridViewOutputMappings.MultiSelect = false;
             this.dataGridViewOutputMappings.Name = "dataGridViewOutputMappings";
-            this.dataGridViewOutputMappings.Size = new System.Drawing.Size(585, 194);
+            this.dataGridViewOutputMappings.Size = new System.Drawing.Size(941, 376);
             this.dataGridViewOutputMappings.TabIndex = 10;
-            this.dataGridViewOutputMappings.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewOutputMappings_CellMouseClick);
-            this.dataGridViewOutputMappings.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOutputMappings_CellValueChanged);
-            this.dataGridViewOutputMappings.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewOutputMappings_CurrentCellDirtyStateChanged);
-            this.dataGridViewOutputMappings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewOutputMappings_KeyDown);
+            this.dataGridViewOutputMappings.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewOutputMappings_CellMouseClick);
+            this.dataGridViewOutputMappings.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOutputMappings_CellValueChanged);
+            this.dataGridViewOutputMappings.CurrentCellDirtyStateChanged += new System.EventHandler(this.DataGridViewOutputMappings_CurrentCellDirtyStateChanged);
+            this.dataGridViewOutputMappings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DataGridViewOutputMappings_KeyDown);
+            // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.Width = 60;
+            // 
+            // portNumberDataGridViewTextBoxColumn
+            // 
+            this.portNumberDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.portNumberDataGridViewTextBoxColumn.DataPropertyName = "PortNumber";
+            this.portNumberDataGridViewTextBoxColumn.HeaderText = "PortNumber";
+            this.portNumberDataGridViewTextBoxColumn.Name = "portNumberDataGridViewTextBoxColumn";
+            this.portNumberDataGridViewTextBoxColumn.Width = 88;
+            // 
+            // portRangeDataGridViewTextBoxColumn
+            // 
+            this.portRangeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.portRangeDataGridViewTextBoxColumn.DataPropertyName = "PortRange";
+            this.portRangeDataGridViewTextBoxColumn.HeaderText = "PortRange";
+            this.portRangeDataGridViewTextBoxColumn.Name = "portRangeDataGridViewTextBoxColumn";
+            this.portRangeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.portRangeDataGridViewTextBoxColumn.Width = 83;
+            // 
+            // outputDataGridViewTextBoxColumn
+            // 
+            this.outputDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.outputDataGridViewTextBoxColumn.DataPropertyName = "Output";
+            this.outputDataGridViewTextBoxColumn.HeaderText = "Output";
+            this.outputDataGridViewTextBoxColumn.Name = "outputDataGridViewTextBoxColumn";
+            this.outputDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.outputDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // outputMappingsBindingSource
+            // 
+            this.outputMappingsBindingSource.DataMember = "OutputMappings";
+            this.outputMappingsBindingSource.DataSource = this.controllerSetupBindingSource;
             // 
             // buttonAddOutputMapping
             // 
             this.buttonAddOutputMapping.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddOutputMapping.Location = new System.Drawing.Point(571, 246);
+            this.buttonAddOutputMapping.Location = new System.Drawing.Point(927, 246);
             this.buttonAddOutputMapping.Name = "buttonAddOutputMapping";
             this.buttonAddOutputMapping.Size = new System.Drawing.Size(29, 23);
             this.buttonAddOutputMapping.TabIndex = 11;
             this.buttonAddOutputMapping.Text = "+";
             this.buttonAddOutputMapping.UseVisualStyleBackColor = true;
-            this.buttonAddOutputMapping.Click += new System.EventHandler(this.buttonAddOutputMapping_Click);
+            this.buttonAddOutputMapping.Click += new System.EventHandler(this.ButtonAddOutputMapping_Click);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -242,24 +300,24 @@ namespace DofConfigToolWrapper
             // buttonSaveSetup
             // 
             this.buttonSaveSetup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveSetup.Location = new System.Drawing.Point(525, 475);
+            this.buttonSaveSetup.Location = new System.Drawing.Point(881, 657);
             this.buttonSaveSetup.Name = "buttonSaveSetup";
             this.buttonSaveSetup.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveSetup.TabIndex = 12;
             this.buttonSaveSetup.Text = "Save Setup";
             this.buttonSaveSetup.UseVisualStyleBackColor = true;
-            this.buttonSaveSetup.Click += new System.EventHandler(this.buttonSaveSetup_Click);
+            this.buttonSaveSetup.Click += new System.EventHandler(this.ButtonSaveSetup_Click);
             // 
             // buttonLoadSetup
             // 
             this.buttonLoadSetup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonLoadSetup.Location = new System.Drawing.Point(444, 475);
+            this.buttonLoadSetup.Location = new System.Drawing.Point(800, 657);
             this.buttonLoadSetup.Name = "buttonLoadSetup";
             this.buttonLoadSetup.Size = new System.Drawing.Size(75, 23);
             this.buttonLoadSetup.TabIndex = 13;
             this.buttonLoadSetup.Text = "Load Setup";
             this.buttonLoadSetup.UseVisualStyleBackColor = true;
-            this.buttonLoadSetup.Click += new System.EventHandler(this.buttonLoadSetup_Click);
+            this.buttonLoadSetup.Click += new System.EventHandler(this.ButtonLoadSetup_Click);
             // 
             // dataGridViewComboBoxColumn3
             // 
@@ -297,64 +355,6 @@ namespace DofConfigToolWrapper
             this.dataGridViewComboBoxColumn6.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewComboBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
-            // controllerSetupBindingSource
-            // 
-            this.controllerSetupBindingSource.DataSource = typeof(DofConfigToolWrapper.DofConfigToolSetup.ControllerSetup);
-            // 
-            // outputMappingsBindingSource
-            // 
-            this.outputMappingsBindingSource.DataMember = "OutputMappings";
-            this.outputMappingsBindingSource.DataSource = this.controllerSetupBindingSource;
-            // 
-            // numberDataGridViewTextBoxColumn
-            // 
-            this.numberDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.numberDataGridViewTextBoxColumn.DataPropertyName = "Number";
-            this.numberDataGridViewTextBoxColumn.HeaderText = "Number";
-            this.numberDataGridViewTextBoxColumn.Name = "numberDataGridViewTextBoxColumn";
-            this.numberDataGridViewTextBoxColumn.Width = 69;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.Width = 60;
-            // 
-            // portNumberDataGridViewTextBoxColumn
-            // 
-            this.portNumberDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.portNumberDataGridViewTextBoxColumn.DataPropertyName = "PortNumber";
-            this.portNumberDataGridViewTextBoxColumn.HeaderText = "PortNumber";
-            this.portNumberDataGridViewTextBoxColumn.Name = "portNumberDataGridViewTextBoxColumn";
-            this.portNumberDataGridViewTextBoxColumn.Width = 88;
-            // 
-            // portRangeDataGridViewTextBoxColumn
-            // 
-            this.portRangeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.portRangeDataGridViewTextBoxColumn.DataPropertyName = "PortRange";
-            this.portRangeDataGridViewTextBoxColumn.HeaderText = "PortRange";
-            this.portRangeDataGridViewTextBoxColumn.Name = "portRangeDataGridViewTextBoxColumn";
-            this.portRangeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.portRangeDataGridViewTextBoxColumn.Width = 83;
-            // 
-            // outputDataGridViewTextBoxColumn
-            // 
-            this.outputDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.outputDataGridViewTextBoxColumn.DataPropertyName = "Output";
-            this.outputDataGridViewTextBoxColumn.HeaderText = "Output";
-            this.outputDataGridViewTextBoxColumn.Name = "outputDataGridViewTextBoxColumn";
-            this.outputDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.outputDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
             // DofConfigToolSetupControl
             // 
             this.Controls.Add(this.buttonLoadSetup);
@@ -370,10 +370,10 @@ namespace DofConfigToolWrapper
             this.Controls.Add(this.textBoxUserName);
             this.Controls.Add(this.labelUserName);
             this.Name = "DofConfigToolSetupControl";
-            this.Size = new System.Drawing.Size(606, 506);
+            this.Size = new System.Drawing.Size(962, 688);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewControllers)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutputMappings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.controllerSetupBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutputMappings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputMappingsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -382,7 +382,33 @@ namespace DofConfigToolWrapper
 
 
         #region DofConfigToolSetup Management
-        public DofConfigToolSetup DofConfigToolSetup { get; private set; } = new DofConfigToolSetup();
+        private string _FileName = string.Empty;
+        public string FileName
+        {
+            get {
+                return _FileName;
+            }
+            set {
+                LoadSetup(value);
+                _FileName = (_DofConfigToolSetup != null) ? value : string.Empty;
+            }
+        }
+
+        private DofConfigToolSetup _DofConfigToolSetup = new DofConfigToolSetup();
+        public DofConfigToolSetup DofConfigToolSetup 
+        {
+            get {
+                return _DofConfigToolSetup;
+            }
+
+            set {
+                _DofConfigToolSetup = value;
+                RemapSetup();
+                Invalidate();
+            }
+        }
+
+        public bool Dirty { get; private set; } = false;
 
         private DofConfigToolSetup.ControllerSetup SelectedController = null;
         private DofConfigToolSetup.OutputMapping SelectedMapping = null;
@@ -392,29 +418,46 @@ namespace DofConfigToolWrapper
         public DofConfigToolSetupControl()
         {
             InitializeComponent();
-            dataGridViewControllers.DataSource = DofConfigToolSetup.ControllerSetups.ToArray();
+            RemapSetup();
 
 
             (dataGridViewOutputMappings.Columns[OutputColumnNum] as DataGridViewComboBoxColumn).DataSource = Enum.GetValues(typeof(DofConfigToolOutputEnum))
                                                                                                     .Cast<DofConfigToolOutputEnum>()
                                                                                                     .Where(x => {
-                                                                                                        BrowsableAttribute attribute = typeof(DofConfigToolOutputEnum)
+                                                                                                        return !(typeof(DofConfigToolOutputEnum)
                                                                                                             .GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x))
                                                                                                             .GetCustomAttributes(typeof(BrowsableAttribute), false)
-                                                                                                            .FirstOrDefault() as BrowsableAttribute;
-                                                                                                        return attribute == null || attribute.Browsable == true;
+                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || attribute.Browsable == true;
                                                                                                     }
                                                                                                     ).ToList();
         }
 
-        private void textBoxUserName_TextChanged(object sender, EventArgs e)
+        private void RemapSetup()
         {
-            DofConfigToolSetup.UserName = textBoxUserName.Text;
+            if (!FileName.IsNullOrEmpty()) {
+                DofConfigToolSetup.Validate();
+            }
+            textBoxUserName.Text = DofConfigToolSetup.UserName;
+            textBoxAPIKey.Text = DofConfigToolSetup.APIKey;
+            SelectedMapping = null;
+            SelectedController = null;
+            dataGridViewOutputMappings.DataSource = null;
+            dataGridViewOutputMappings.Refresh();
+            dataGridViewControllers.DataSource = DofConfigToolSetup.ControllerSetups.ToArray();
+            dataGridViewControllers.Refresh();
+            Dirty = false;
         }
 
-        private void textBoxAPIKey_TextChanged(object sender, EventArgs e)
+        private void TextBoxUserName_TextChanged(object sender, EventArgs e)
+        {
+            DofConfigToolSetup.UserName = textBoxUserName.Text;
+            Dirty = true;
+        }
+
+        private void TextBoxAPIKey_TextChanged(object sender, EventArgs e)
         {
             DofConfigToolSetup.APIKey = textBoxAPIKey.Text;
+            Dirty = true;
         }
 
         private void SelectLastController()
@@ -426,30 +469,32 @@ namespace DofConfigToolWrapper
             SelectedMapping = null;
         }
 
-        private void buttonAddController_Click(object sender, EventArgs e)
+        private void ButtonAddController_Click(object sender, EventArgs e)
         {
             DofConfigToolSetup.ControllerSetups.Add(new DofConfigToolSetup.ControllerSetup() { Name = $"New Controller #{DofConfigToolSetup.ControllerSetups.Count}" });
             dataGridViewControllers.DataSource = DofConfigToolSetup.ControllerSetups.ToArray();
+            Dirty = true;
             SelectLastController();
             dataGridViewControllers.Refresh();
         }
 
-        private void dataGridViewControllers_KeyDown(object sender, KeyEventArgs e)
+        private void DataGridViewControllers_KeyDown(object sender, KeyEventArgs e)
         {
             if(SelectedController != null && e.KeyCode == Keys.Delete) {
-                if (MessageBox.Show($"Delete controller {SelectedController.ToString()} and all its output mappings ?", "Delete controller", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (MessageBox.Show($"Delete controller {SelectedController} and all its output mappings ?", "Delete controller", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     DofConfigToolSetup.ControllerSetups.Remove(SelectedController);
                     SelectedController = null;
                     dataGridViewControllers.DataSource = DofConfigToolSetup.ControllerSetups.ToArray();
                     dataGridViewControllers.Refresh();
                     SelectedMapping = null;
+                    Dirty = true;
                     dataGridViewOutputMappings.DataSource = null;
                     dataGridViewOutputMappings.Refresh();
                 }
             }
         }
 
-        private void dataGridViewControllers_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridViewControllers_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0) {
                 SelectedController = DofConfigToolSetup.ControllerSetups[e.RowIndex];
@@ -469,41 +514,46 @@ namespace DofConfigToolWrapper
             SelectedMapping = SelectedController.OutputMappings[SelectedController.OutputMappings.Count - 1];
         }
 
-        private void buttonAddOutputMapping_Click(object sender, EventArgs e)
+        private void ButtonAddOutputMapping_Click(object sender, EventArgs e)
         {
             if (SelectedController != null) {
                 SelectedController.OutputMappings.Add(new DofConfigToolSetup.OutputMapping() { PortNumber = SelectedController.OutputMappings.Count == 0 ? 1 : SelectedController.OutputMappings.Max(O=>O.PortNumber+O.PortRange) });
                 dataGridViewOutputMappings.DataSource = SelectedController.OutputMappings.ToArray();
                 SelectLastMapping();
+                Dirty = true;
                 dataGridViewOutputMappings.Refresh();
             }
         }
 
-        private void dataGridViewOutputMappings_KeyDown(object sender, KeyEventArgs e)
+        private void DataGridViewOutputMappings_KeyDown(object sender, KeyEventArgs e)
         {
             if (SelectedController != null && SelectedMapping != null && e.KeyCode == Keys.Delete) {
-                if (MessageBox.Show($"Delete output mapping {SelectedMapping.PortNumber} => {SelectedMapping.Output.ToString()}  ?", "Delete output mapping", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (MessageBox.Show($"Delete output mapping {SelectedMapping.PortNumber} => {SelectedMapping.Output}  ?", "Delete output mapping", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     SelectedController.OutputMappings.Remove(SelectedMapping);
                     SelectedMapping = null;
                     dataGridViewOutputMappings.DataSource = SelectedController.OutputMappings.ToArray();
+                    Dirty = true;
                     dataGridViewOutputMappings.Refresh();
                 }
             }
         }
 
-        private void dataGridViewOutputMappings_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridViewOutputMappings_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (SelectedController != null && e.RowIndex >= 0) {
                 SelectedMapping = SelectedController.OutputMappings[e.RowIndex];
             }
         }
 
-        private void buttonSaveSetup_Click(object sender, EventArgs e)
+        public static readonly string FileFilter = "DofConfigToolSetup files|*.dofsetup|Xml files|*.xml|All Files|*.*";
+        public static readonly string FileDefaultExt = "dofsetup";
+
+        public void SaveSetup()
         {
             if (DofConfigToolSetup.Validate()) {
                 SaveFileDialog fd = new SaveFileDialog() {
-                    Filter = "DofConfigToolSetup files|*.dofsetup|Xml files|*.xml|All Files|*.*",
-                    DefaultExt = "dofsetup",
+                    Filter = FileFilter,
+                    DefaultExt = FileDefaultExt,
                     Title = "Save DofConfigTool Setup"
                 };
 
@@ -511,35 +561,38 @@ namespace DofConfigToolWrapper
 
                 if (!fd.FileName.IsNullOrEmpty()) {
                     DofConfigToolSetup.WriteToXml(fd.FileName);
+                    _FileName = fd.FileName;
+                    Dirty = false;
                 }
             }
         }
 
-        private void buttonLoadSetup_Click(object sender, EventArgs e)
+        private void ButtonSaveSetup_Click(object sender, EventArgs e)
+        {
+            SaveSetup();
+        }
+
+        private void LoadSetup(string Filename)
+        {
+            DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Filename);
+        }
+
+        private void ButtonLoadSetup_Click(object sender, EventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog() {
-                Filter = "DofConfigToolSetup files|*.dofsetup|Xml files|*.xml|All Files|*.*",
-                DefaultExt = "dofsetup",
+                Filter = FileFilter,
+                DefaultExt = FileDefaultExt,
                 Title = "Load DofConfigTool Setup"
             };
 
             fd.ShowDialog();
 
             if (!fd.FileName.IsNullOrEmpty()) {
-                DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(fd.FileName);
-                DofConfigToolSetup.Validate();
-                textBoxUserName.Text = DofConfigToolSetup.UserName;
-                textBoxAPIKey.Text = DofConfigToolSetup.APIKey;
-                SelectedMapping = null;
-                SelectedController = null;
-                dataGridViewOutputMappings.DataSource = null;
-                dataGridViewOutputMappings.Refresh();
-                dataGridViewControllers.DataSource = DofConfigToolSetup.ControllerSetups.ToArray();
-                dataGridViewControllers.Refresh();
+                FileName = fd.FileName;
             }
         }
 
-        private void dataGridViewOutputMappings_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private void DataGridViewOutputMappings_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridViewOutputMappings.IsCurrentCellDirty) {
                 // This fires the cell value changed handler below
@@ -547,14 +600,14 @@ namespace DofConfigToolWrapper
             }
         }
 
-        private void dataGridViewOutputMappings_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridViewOutputMappings_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            // My combobox column is the second one so I hard coded a 1, flavor to taste
+            Dirty = true;
+
             DataGridViewComboBoxCell cb = (DataGridViewComboBoxCell)dataGridViewOutputMappings.Rows[e.RowIndex].Cells[OutputColumnNum];
             if (cb.Value != null) {
-                // do stuff
                 dataGridViewOutputMappings.Invalidate();
             }
         }

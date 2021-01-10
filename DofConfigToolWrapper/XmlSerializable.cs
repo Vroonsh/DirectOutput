@@ -12,6 +12,9 @@ namespace DofConfigToolWrapper
     {
         public static T ReadFromXml(string FilePath)
         {
+            if (!File.Exists(FilePath)) {
+                return new T();
+            }
             string Xml = DirectOutput.General.FileReader.ReadFileToString(FilePath);
             try {
                 using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(Xml))) {
@@ -19,7 +22,7 @@ namespace DofConfigToolWrapper
                     return newObj;
                 }
             } catch (Exception e) {
-                throw new Exception($"Cannot read {typeof(T).ToString()} from {FilePath}", e);
+                throw new Exception($"Cannot read {typeof(T)} from {FilePath}", e);
             }
         }
 
@@ -37,7 +40,7 @@ namespace DofConfigToolWrapper
                 }
                 Xml.WriteToFile(FilePath);
             } catch (Exception e) {
-                throw new Exception($"Cannot write {this.GetType().ToString()} to {FilePath}", e);
+                throw new Exception($"Cannot write {this.GetType()} to {FilePath}", e);
             }
         }
     }
