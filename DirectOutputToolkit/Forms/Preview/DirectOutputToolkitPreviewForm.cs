@@ -63,17 +63,11 @@ namespace DirectOutputToolkit
             }
         }
 
-        public IEnumerable<T> GetChildren<T>(T Parent) where T : TreeNode
-        {
-            return Parent.Nodes.Cast<T>().Concat(
-                   Parent.Nodes.Cast<T>().SelectMany(GetChildren));
-        }
-
         private void treeViewVisibility_AfterCheck(object sender, TreeViewEventArgs e)
         {
             if (e.Node is AreaVisibilityTreeNode areaNode) {
                 areaNode.Area.Visible = areaNode.Checked;
-                var nodes = GetChildren<AreaVisibilityTreeNode>(areaNode);
+                var nodes = areaNode.GetChildren<AreaVisibilityTreeNode>();
                 foreach(var node in nodes) {
                     node.Checked = areaNode.Checked;
                     node.Area.Visible = areaNode.Checked;
