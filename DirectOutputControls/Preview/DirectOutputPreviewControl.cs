@@ -13,12 +13,11 @@ namespace DirectOutputControls
     {
         private DirectOutputViewSetup _DirectOutputViewSetup;
         public DirectOutputViewSetup DirectOutputViewSetup{
-            get { return _DirectOutputViewSetup;  } set { _DirectOutputViewSetup = value; _DirectOutputViewSetup?.Init(); }
+            get { return _DirectOutputViewSetup;  } private set { _DirectOutputViewSetup = value; _DirectOutputViewSetup?.Init(); }
         }
 
         public Color BackgroundColor { get; set; } = Color.MidnightBlue;
         public Color AreaDisplayColor { get; set; } = Color.Green;
-
 
         private SolidBrush Brush = new SolidBrush(Color.Red);
 
@@ -33,9 +32,14 @@ namespace DirectOutputControls
             Invalidate();
         }
 
-        public void OnSetupChanged()
+        public void OnSetupChanged(DirectOutputViewSetup setup)
         {
-            Refresh();
+            if (DirectOutputViewSetup == null) {
+                DirectOutputViewSetup = setup;
+            }
+            if (DirectOutputViewSetup == setup) {
+                Refresh();
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
