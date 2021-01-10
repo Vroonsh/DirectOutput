@@ -101,7 +101,7 @@ namespace DirectOutputControls
 
         public void DisplayArea(Graphics gr, Font f, SolidBrush br, Pen p)
         {
-            if (!Enabled) return;
+            if (!Enabled || !Visible) return;
             var outputs = DofOutput.ToString();
             //if (ComboDofOutputs.Count > 0) {
             //    outputs += "," + string.Join(",", ComboDofOutputs);
@@ -119,6 +119,8 @@ namespace DirectOutputControls
         public virtual bool SetValues(byte[] values) => false;
         public virtual void Display(Graphics gr, Font f, SolidBrush br)
         {
+            if (!Enabled || !Visible) return;
+
             foreach (var area in Children) {
                 area.Display(gr, f, br);
             }
