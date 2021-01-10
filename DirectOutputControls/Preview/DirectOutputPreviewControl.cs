@@ -13,13 +13,22 @@ namespace DirectOutputControls
     {
         private DirectOutputViewSetup _DirectOutputViewSetup;
         public DirectOutputViewSetup DirectOutputViewSetup{
-            get { return _DirectOutputViewSetup;  } private set { _DirectOutputViewSetup = value; _DirectOutputViewSetup?.Init(); }
+            get { return _DirectOutputViewSetup;  }
+            private set {
+                _DirectOutputViewSetup = value;
+                _DirectOutputViewSetup?.Init();
+                if (SetupSet != null) {
+                    SetupSet.Invoke(_DirectOutputViewSetup);
+                }
+            }
         }
 
         public Color BackgroundColor { get; set; } = Color.MidnightBlue;
         public Color AreaDisplayColor { get; set; } = Color.Green;
 
         private SolidBrush Brush = new SolidBrush(Color.Red);
+
+        public Action<DirectOutputViewSetup> SetupSet = null;
 
         public DirectOutputPreviewControl()
         {

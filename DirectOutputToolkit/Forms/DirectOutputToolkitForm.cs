@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DirectOutputControls;
+using DofConfigToolWrapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +15,13 @@ namespace DirectOutputToolkit
     public partial class DirectOutputToolkitForm : Form
     {
         private Settings Settings = new Settings();
+
+        private DofConfigToolSetup DofConfigToolSetup = null;
+        private DirectOutputViewSetup DofViewSetup = null;
+        private DirectOutputToolkitPreviewForm PreviewForm = new DirectOutputToolkitPreviewForm();
+
+        private DirectOutputToolkitHandler Handler = new DirectOutputToolkitHandler();
+
         public DirectOutputToolkitForm()
         {
             InitializeComponent();
@@ -24,6 +33,17 @@ namespace DirectOutputToolkit
         {
             OpenConfigDialog OCD = new OpenConfigDialog(Settings);
             if (OCD.ShowDialog() == DialogResult.OK) {
+
+                DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Settings.LastDofConfigSetup);
+                DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDofViewSetup);
+
+                PreviewForm.Show(this);
+                PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
+
+                Handler.DofConfigToolSetup = DofConfigToolSetup;
+                Handler.DofViewSetup = DofViewSetup;
+                //Handler.SetupPinball();
+
                 return true;
             } else {
                 return false;
@@ -44,7 +64,18 @@ namespace DirectOutputToolkit
 
         private void DirectOutputToolkitForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Handler.FinishPinball();
             SaveSettings();
         }
+
+        #region Pinball
+        #endregion
+
+        #region Main Menu
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Coucou");
+        }
+        #endregion
     }
 }
