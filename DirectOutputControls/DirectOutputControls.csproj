@@ -47,6 +47,7 @@
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Preview\ViewAreas\DirectOutputViewSetupSerializer.cs" />
+    <Compile Include="TreeView\TreeViewExtensions.cs" />
     <Compile Include="TypeDescriptors\BaseTypeDescriptor.cs" />
     <Compile Include="TypeDescriptors\CustomField.cs" />
     <Compile Include="DofConfigToolResources.cs" />
