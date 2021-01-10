@@ -15,6 +15,17 @@ namespace DirectOutputControls
 {
     public partial class DirectOutputViewSetupControl : UserControl
     {
+        private string _FileName = string.Empty;
+        public string FileName
+        {
+            get {
+                return _FileName;
+            }
+            set {
+                LoadSetup(value);
+            }
+        }
+
         private DirectOutputViewSetup _DirectOutputViewSetup = null;
         public DirectOutputViewSetup DirectOutputViewSetup
         {
@@ -23,13 +34,16 @@ namespace DirectOutputControls
             }
             set {
                 _DirectOutputViewSetup = value;
+                Dirty = false;
                 if (_DirectOutputViewSetup != null) {
                     RebuildTreeView();
                 }
             }
         }
 
-        public Action SetupChanged { get; set; }
+        public Action<DirectOutputViewSetup> SetupChanged { get; set; }
+
+        public bool Dirty { get; private set; } = false;
 
         private void AddViewAreaToTreeView(TreeNodeCollection nodes, DirectOutputViewArea area)
         {
@@ -37,6 +51,43 @@ namespace DirectOutputControls
             nodes.Add(newNode);
             foreach(var child in area.Children) {
                 AddViewAreaToTreeView(newNode.Nodes, child);
+            }
+        }
+
+        private void LoadSetup(string FileName)
+        {
+            _FileName = string.Empty;
+            Dirty = false;
+            if (FileName.IsNullOrEmpty()) {
+                DirectOutputViewSetup = new DirectOutputViewSetup();
+                return;
+            }
+
+            if (_DirectOutputViewSetup == null) {
+                _DirectOutputViewSetup = new DirectOutputViewSetup();
+            }
+
+            string Xml;
+            try {
+                Xml = DirectOutput.General.FileReader.ReadFileToString(FileName);
+            } catch (Exception E) {
+                Log.Exception("Could not load DirectOutput View Setup from {0}.".Build(FileName), E);
+                throw new Exception("Could not read DirectOutput View Setup file {0}.".Build(FileName), E);
+            }
+
+            byte[] xmlBytes = Encoding.Default.GetBytes(Xml);
+            using (MemoryStream ms = new MemoryStream(xmlBytes)) {
+                try {
+                    DirectOutputViewSetup.Init((DirectOutputViewSetup)new XmlSerializer(typeof(DirectOutputViewSetup)).Deserialize(ms));
+                    RebuildTreeView();
+                    OnSetupChanged();
+                    _FileName = FileName;
+                } catch (Exception E) {
+                    Exception Ex = new Exception("Could not deserialize DirectOutput View Setup from XML data.", E);
+                    Ex.Data.Add("XML Data", Xml);
+                    Log.Exception("Could not load DirectOutput View Setup from XML data.", Ex);
+                    throw Ex;
+                }
             }
         }
 
@@ -66,7 +117,7 @@ namespace DirectOutputControls
             if (_DirectOutputViewSetup != null) {
                 _DirectOutputViewSetup.ComputeAreaDimensions();
                 if (SetupChanged != null) {
-                    SetupChanged.Invoke();
+                    SetupChanged.Invoke(_DirectOutputViewSetup);
                 }
             }
         }
@@ -84,6 +135,7 @@ namespace DirectOutputControls
                     nodeArea.Nodes.Add(new TreeNodeArea(newArea));
                     nodeArea.Expand();
                     treeViewAreas.Invalidate();
+                    Dirty = true;
                     OnSetupChanged();
                 }
             } else {
@@ -92,6 +144,7 @@ namespace DirectOutputControls
                 _DirectOutputViewSetup.ViewAreas.Add(newArea);
                 treeViewAreas.Nodes.Add(new TreeNodeArea(newArea));
                 treeViewAreas.Invalidate();
+                Dirty = true;
                 OnSetupChanged();
             } 
         }
@@ -124,6 +177,7 @@ namespace DirectOutputControls
                         treeViewAreas.Nodes.Remove(nodeArea);
                     }
                     treeViewAreas.Invalidate();
+                    Dirty = true;
                     OnSetupChanged();
                 }
             }
@@ -207,18 +261,22 @@ namespace DirectOutputControls
             }
 
             propertyGridViewArea.Refresh();
+            Dirty = true;
             OnSetupChanged();
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        public static readonly string FileFilter = "DirectOutput view setup files|*.dovs|Xml files|*.xml|All Files|*.*";
+        public static readonly string FileDefaultExt = "dovs";
+
+        public void SaveSetup()
         {
             if (DirectOutputViewSetup == null) {
                 throw new ArgumentNullException("DirectOutputViewSetup");
             }
 
             SaveFileDialog fd = new SaveFileDialog() {
-                Filter = "DirectOutputViewSetup Files|*.dovs|DirectOutputViewSetup XML Files|*.xml|All Files|*.*",
-                DefaultExt = "dovs",
+                Filter = FileFilter,
+                DefaultExt = FileDefaultExt,
                 Title = "Save DirectOutput View Setup"
             };
 
@@ -237,46 +295,29 @@ namespace DirectOutputControls
                     File.WriteAllText(fd.FileName, Xml);
                 }
             }
+        }
 
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            SaveSetup();
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (DirectOutputViewSetup == null) {
-                throw new ArgumentNullException("DirectOutputViewSetup");
+                DirectOutputViewSetup = new DirectOutputViewSetup();
             }
 
             OpenFileDialog fd = new OpenFileDialog() {
-                Filter = "DirectOutputViewSetup Files|*.dovs|DirectOutputViewSetup XML Files|*.xml|All Files|*.*",
-                DefaultExt = "dovs",
+                Filter = FileFilter,
+                DefaultExt = FileDefaultExt,
                 Title = "Load DirectOutput View Setup"
             };
 
             fd.ShowDialog();
 
             if (!fd.FileName.IsNullOrEmpty()) {
-
-                string Xml;
-                try {
-                    Xml = DirectOutput.General.FileReader.ReadFileToString(fd.FileName);
-                } catch (Exception E) {
-                    Log.Exception("Could not load DirectOutput View Setup from {0}.".Build(fd.FileName), E);
-                    throw new Exception("Could not read DirectOutput View Setup file {0}.".Build(fd.FileName), E);
-                }
-
-                byte[] xmlBytes = Encoding.Default.GetBytes(Xml);
-                using (MemoryStream ms = new MemoryStream(xmlBytes)) {
-                    try {
-                        DirectOutputViewSetup.Init((DirectOutputViewSetup)new XmlSerializer(typeof(DirectOutputViewSetup)).Deserialize(ms));
-                        RebuildTreeView();
-                        OnSetupChanged();
-                    } catch (Exception E) {
-                        Exception Ex = new Exception("Could not deserialize DirectOutput View Setup from XML data.", E);
-                        Ex.Data.Add("XML Data", Xml);
-                        Log.Exception("Could not load DirectOutput View Setup from XML data.", Ex);
-                        throw Ex;
-                    }
-                }
+                LoadSetup(fd.FileName);
             }
 
         }

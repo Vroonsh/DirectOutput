@@ -1,6 +1,6 @@
 ﻿namespace DirectOutputToolkit
 {
-    partial class Form1
+    partial class DirectOutputToolkitForm
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -27,10 +27,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // DirectOutputToolkitForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "DirectOutputToolkitForm";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DirectOutputToolkitForm_FormClosing);
+            this.Load += new System.EventHandler(this.DirectOutputToolkitForm_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
