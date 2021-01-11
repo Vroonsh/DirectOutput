@@ -42,7 +42,7 @@ namespace DirectOutputToolkit
 
                 Handler.DofConfigToolSetup = DofConfigToolSetup;
                 Handler.DofViewSetup = DofViewSetup;
-                //Handler.SetupPinball();
+                Handler.SetupPinball();
 
                 return true;
             } else {

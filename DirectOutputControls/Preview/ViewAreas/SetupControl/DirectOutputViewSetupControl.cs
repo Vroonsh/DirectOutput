@@ -32,7 +32,7 @@ namespace DirectOutputControls
             get {
                 return _DirectOutputViewSetup;
             }
-            set {
+            private set {
                 _DirectOutputViewSetup = value;
                 Dirty = false;
                 if (_DirectOutputViewSetup != null) {
