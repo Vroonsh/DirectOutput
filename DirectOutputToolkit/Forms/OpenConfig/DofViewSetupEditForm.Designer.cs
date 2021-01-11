@@ -28,6 +28,7 @@ namespace DirectOutputToolkit
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DofViewSetupEditForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.directOutputViewSetupControl1 = new DirectOutputControls.DirectOutputViewSetupControl();
             this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
@@ -53,19 +54,18 @@ namespace DirectOutputToolkit
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.directOutputPreviewControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1234, 839);
-            this.splitContainer1.SplitterDistance = 772;
+            this.splitContainer1.Size = new System.Drawing.Size(1261, 886);
+            this.splitContainer1.SplitterDistance = 788;
             this.splitContainer1.TabIndex = 0;
             // 
             // directOutputViewSetupControl1
             // 
-            this.directOutputViewSetupControl1.DirectOutputViewSetup = null;
             this.directOutputViewSetupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directOutputViewSetupControl1.FileName = "";
             this.directOutputViewSetupControl1.Location = new System.Drawing.Point(0, 0);
             this.directOutputViewSetupControl1.Name = "directOutputViewSetupControl1";
             this.directOutputViewSetupControl1.SetupChanged = null;
-            this.directOutputViewSetupControl1.Size = new System.Drawing.Size(772, 839);
+            this.directOutputViewSetupControl1.Size = new System.Drawing.Size(788, 886);
             this.directOutputViewSetupControl1.TabIndex = 0;
             // 
             // directOutputPreviewControl1
@@ -75,13 +75,13 @@ namespace DirectOutputToolkit
             this.directOutputPreviewControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directOutputPreviewControl1.Location = new System.Drawing.Point(0, 0);
             this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
-            this.directOutputPreviewControl1.Size = new System.Drawing.Size(458, 839);
+            this.directOutputPreviewControl1.Size = new System.Drawing.Size(469, 886);
             this.directOutputPreviewControl1.TabIndex = 0;
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(1037, 845);
+            this.buttonOK.Location = new System.Drawing.Point(1064, 892);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(187, 23);
             this.buttonOK.TabIndex = 1;
@@ -93,10 +93,12 @@ namespace DirectOutputToolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1236, 873);
+            this.ClientSize = new System.Drawing.Size(1263, 920);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DofViewSetupEditForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Direct Output View Setup Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DofViewSetupEditForm_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
