@@ -82,7 +82,8 @@ namespace DirectOutputToolkit
             TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
             TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
 
-
+            PreviewController.DofSetup = DofConfigToolSetup;
+            PreviewController.DofViewSetup = DofViewSetup;
             PreviewController.Setup(Pinball);
 
             Pinball.Init();

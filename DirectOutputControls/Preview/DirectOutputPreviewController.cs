@@ -15,7 +15,7 @@ namespace DirectOutputControls
     public class DirectOutputPreviewController : OutputControllerCompleteBase
     {
         public DofConfigToolSetup DofSetup { get; set; }
-        public DirectOutputPreviewControl PreviewControl { get; set; }
+        public DirectOutputViewSetup DofViewSetup { get; set; }
 
         private int NbOutputs = 0;
 
@@ -25,11 +25,12 @@ namespace DirectOutputControls
                 throw new Exception("Cannot setup DirectOutputPreviewController, no valid DofConfigToolSetup set.");
             }
 
-            if (PreviewControl == null || PreviewControl.DirectOutputViewSetup == null) {
+            if (DofViewSetup == null) {
                 throw new Exception("Cannot setup DirectOutputPreviewController, no valid DirectOutputPreviewControl set.");
             }
 
             NbOutputs = 0;
+            Name = "DirectOutputPreviewController";
 
             //Reset Cabinet
             p.Finish();
@@ -53,7 +54,7 @@ namespace DirectOutputControls
 
                     //It's an MX output, find MX Area attached and create a ledstrip
                     if (o.Output > DofConfigToolOutputEnum.RGBMXOutputs_Start && o.Output < DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                        var areas = PreviewControl.DirectOutputViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output);
+                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output);
                         if (areas != null && areas.Length == 1) {
                             var area = areas[0];
                             if (area.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable) {
@@ -83,8 +84,6 @@ namespace DirectOutputControls
             }
 
             p.Cabinet.OutputControllers.Add(this);
-
-            p.Init();
         }
 
         protected override void ConnectToController()
