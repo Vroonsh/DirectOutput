@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -74,6 +75,7 @@ namespace DofConfigToolWrapper
             request.Credentials = CredentialCache.DefaultCredentials;
 
             WebResponse response = request.GetResponse();
+
             using (Stream dataStream = response.GetResponseStream()) {
                 StreamReader reader = new StreamReader(dataStream);
                 string responseFromServer = reader.ReadToEnd();
@@ -82,13 +84,17 @@ namespace DofConfigToolWrapper
             response.Close();
         }
 
-        private void RetrieveDofConfigToolFiles()
+        private void GatherAndExtractConfigFiles(WaitForm waitForm)
         {
             var url = "http://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
             WebRequest request = WebRequest.Create(url);
             request.Credentials = CredentialCache.DefaultCredentials;
 
+            waitForm.Invoke((Action)(()=>waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
+
             WebResponse response = request.GetResponse();
+
+            waitForm.Invoke((Action)(() => waitForm.UpdateMessage("Extracting config files...")));
 
             ClearUserLocalPath();
             var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
@@ -103,6 +109,19 @@ namespace DofConfigToolWrapper
 
             ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
             ParseConfigFiles();
+        }
+
+        private void RetrieveDofConfigToolFiles()
+        {
+            var task = Task.Factory.StartNew(() => { var f = new WaitForm(); f.ShowDialog(); f.Update(); });
+
+            while (Application.OpenForms["WaitForm"] == null) {
+                Application.DoEvents();
+            }
+            var waitForm = (WaitForm)Application.OpenForms["WaitForm"];
+            GatherAndExtractConfigFiles(waitForm);
+
+            waitForm.Invoke((Action)(() => waitForm.Close()));
         }
 
         public void UpdateConfigFiles(bool forceUpdate = false)
