@@ -77,5 +77,20 @@ namespace DirectOutputToolkit
             MessageBox.Show("Coucou");
         }
         #endregion
+
+        private void buttonActivationTable_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void treeViewTableLedEffects_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+        }
     }
 }
