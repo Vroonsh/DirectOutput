@@ -41,10 +41,26 @@
             this.exportToDofConfigToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelRomName = new System.Windows.Forms.Label();
+            this.RomNameComboBox = new System.Windows.Forms.ComboBox();
+            this.buttonPulseTable = new System.Windows.Forms.Button();
+            this.buttonActivationTable = new System.Windows.Forms.Button();
+            this.treeViewTableLedEffects = new System.Windows.Forms.TreeView();
+            this.buttonPulseEdition = new System.Windows.Forms.Button();
+            this.buttonActivationEdition = new System.Windows.Forms.Button();
+            this.treeViewEditionTable = new System.Windows.Forms.TreeView();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStripMain
@@ -135,11 +151,15 @@
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.propertyGridMain);
             this.splitContainer1.Size = new System.Drawing.Size(1291, 889);
-            this.splitContainer1.SplitterDistance = 974;
+            this.splitContainer1.SplitterDistance = 975;
             this.splitContainer1.TabIndex = 1;
             // 
             // propertyGridMain
@@ -147,8 +167,135 @@
             this.propertyGridMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridMain.Location = new System.Drawing.Point(0, 0);
             this.propertyGridMain.Name = "propertyGridMain";
-            this.propertyGridMain.Size = new System.Drawing.Size(313, 889);
+            this.propertyGridMain.Size = new System.Drawing.Size(312, 889);
             this.propertyGridMain.TabIndex = 0;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.label2);
+            this.splitContainer2.Panel1.Controls.Add(this.buttonPulseEdition);
+            this.splitContainer2.Panel1.Controls.Add(this.buttonActivationEdition);
+            this.splitContainer2.Panel1.Controls.Add(this.treeViewEditionTable);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer2.Panel2.Controls.Add(this.buttonPulseTable);
+            this.splitContainer2.Panel2.Controls.Add(this.buttonActivationTable);
+            this.splitContainer2.Panel2.Controls.Add(this.treeViewTableLedEffects);
+            this.splitContainer2.Panel2.Controls.Add(this.labelRomName);
+            this.splitContainer2.Panel2.Controls.Add(this.RomNameComboBox);
+            this.splitContainer2.Panel2.Controls.Add(this.label1);
+            this.splitContainer2.Size = new System.Drawing.Size(975, 889);
+            this.splitContainer2.SplitterDistance = 627;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(136, 13);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "DofConfigTool table effects";
+            // 
+            // labelRomName
+            // 
+            this.labelRomName.AutoSize = true;
+            this.labelRomName.Location = new System.Drawing.Point(13, 34);
+            this.labelRomName.Name = "labelRomName";
+            this.labelRomName.Size = new System.Drawing.Size(60, 13);
+            this.labelRomName.TabIndex = 26;
+            this.labelRomName.Text = "RomName:";
+            // 
+            // RomNameComboBox
+            // 
+            this.RomNameComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.RomNameComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.RomNameComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.RomNameComboBox.FormattingEnabled = true;
+            this.RomNameComboBox.Location = new System.Drawing.Point(79, 31);
+            this.RomNameComboBox.Name = "RomNameComboBox";
+            this.RomNameComboBox.Size = new System.Drawing.Size(892, 21);
+            this.RomNameComboBox.TabIndex = 25;
+            // 
+            // buttonPulseTable
+            // 
+            this.buttonPulseTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPulseTable.Location = new System.Drawing.Point(895, 230);
+            this.buttonPulseTable.Name = "buttonPulseTable";
+            this.buttonPulseTable.Size = new System.Drawing.Size(75, 23);
+            this.buttonPulseTable.TabIndex = 29;
+            this.buttonPulseTable.Text = "Pulse";
+            this.buttonPulseTable.UseVisualStyleBackColor = true;
+            // 
+            // buttonActivationTable
+            // 
+            this.buttonActivationTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonActivationTable.Location = new System.Drawing.Point(814, 230);
+            this.buttonActivationTable.Name = "buttonActivationTable";
+            this.buttonActivationTable.Size = new System.Drawing.Size(75, 23);
+            this.buttonActivationTable.TabIndex = 28;
+            this.buttonActivationTable.Text = "Activate";
+            this.buttonActivationTable.UseVisualStyleBackColor = true;
+            // 
+            // treeViewTableLedEffects
+            // 
+            this.treeViewTableLedEffects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewTableLedEffects.Location = new System.Drawing.Point(17, 58);
+            this.treeViewTableLedEffects.Name = "treeViewTableLedEffects";
+            this.treeViewTableLedEffects.Size = new System.Drawing.Size(953, 166);
+            this.treeViewTableLedEffects.TabIndex = 27;
+            // 
+            // buttonPulseEdition
+            // 
+            this.buttonPulseEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPulseEdition.Location = new System.Drawing.Point(895, 599);
+            this.buttonPulseEdition.Name = "buttonPulseEdition";
+            this.buttonPulseEdition.Size = new System.Drawing.Size(75, 23);
+            this.buttonPulseEdition.TabIndex = 25;
+            this.buttonPulseEdition.Text = "Pulse";
+            this.buttonPulseEdition.UseVisualStyleBackColor = true;
+            // 
+            // buttonActivationEdition
+            // 
+            this.buttonActivationEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonActivationEdition.Location = new System.Drawing.Point(814, 599);
+            this.buttonActivationEdition.Name = "buttonActivationEdition";
+            this.buttonActivationEdition.Size = new System.Drawing.Size(75, 23);
+            this.buttonActivationEdition.TabIndex = 24;
+            this.buttonActivationEdition.Text = "Activate";
+            this.buttonActivationEdition.UseVisualStyleBackColor = true;
+            // 
+            // treeViewEditionTable
+            // 
+            this.treeViewEditionTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewEditionTable.Location = new System.Drawing.Point(17, 26);
+            this.treeViewEditionTable.Name = "treeViewEditionTable";
+            this.treeViewEditionTable.Size = new System.Drawing.Size(953, 567);
+            this.treeViewEditionTable.TabIndex = 23;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 13);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Edition table effects";
             // 
             // DirectOutputToolkitForm
             // 
@@ -165,9 +312,16 @@
             this.Load += new System.EventHandler(this.DirectOutputToolkitForm_Load);
             this.menuStripMain.ResumeLayout(false);
             this.menuStripMain.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,6 +342,17 @@
         private System.Windows.Forms.ToolStripMenuItem exportToDofConfigToolToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PropertyGrid propertyGridMain;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelRomName;
+        private System.Windows.Forms.ComboBox RomNameComboBox;
+        private System.Windows.Forms.Button buttonPulseTable;
+        private System.Windows.Forms.Button buttonActivationTable;
+        private System.Windows.Forms.TreeView treeViewTableLedEffects;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonPulseEdition;
+        private System.Windows.Forms.Button buttonActivationEdition;
+        private System.Windows.Forms.TreeView treeViewEditionTable;
     }
 }
 
