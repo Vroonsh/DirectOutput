@@ -17,5 +17,11 @@ namespace DofConfigToolWrapper
             InitializeComponent();
         }
 
+        public void UpdateMessage(string message)
+        {
+            label1.Text = message;
+            Invalidate();
+        }
+
     }
 }
