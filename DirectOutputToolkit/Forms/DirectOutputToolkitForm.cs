@@ -20,7 +20,7 @@ namespace DirectOutputToolkit
         private DirectOutputViewSetup DofViewSetup = null;
         private DirectOutputToolkitPreviewForm PreviewForm = new DirectOutputToolkitPreviewForm();
 
-        private DirectOutputToolkitHandler Handler = new DirectOutputToolkitHandler();
+        private DirectOutputToolkitHandler Handler = null;
 
         public DirectOutputToolkitForm()
         {
@@ -34,15 +34,17 @@ namespace DirectOutputToolkit
             OpenConfigDialog OCD = new OpenConfigDialog(Settings);
             if (OCD.ShowDialog() == DialogResult.OK) {
 
+                Handler = new DirectOutputToolkitHandler(Settings);
+
                 DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Settings.LastDofConfigSetup);
                 DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDofViewSetup);
-
-                PreviewForm.Show(this);
-                PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
                 Handler.DofConfigToolSetup = DofConfigToolSetup;
                 Handler.DofViewSetup = DofViewSetup;
                 Handler.SetupPinball();
+
+                PreviewForm.Show(this);
+                PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
                 return true;
             } else {
