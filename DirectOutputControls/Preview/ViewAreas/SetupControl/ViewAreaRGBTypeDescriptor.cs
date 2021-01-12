@@ -48,10 +48,11 @@ namespace DirectOutputControls
                 }
 
                 case DirectOutputViewAreaRGB.RenderTypeEnum.Ring: {
-                    WrappedArea.MxHeight = 1;
-                    PropertyDescriptors["Squarred"].Browsable = true;
-                    PropertyDescriptors["MxWidth"].Browsable = true;
-                    PropertyDescriptors["MxHeight"].Browsable = false;
+                    WrappedArea.MxWidth = 1;
+                    PropertyDescriptors["Squarred"].Browsable = false;
+                    PropertyDescriptors["MxWidth"].Browsable = false;
+                    PropertyDescriptors["MxHeight"].Browsable = true;
+                    PropertyDescriptors["MxHeight"].DisplayName = "Length";
                     PropertyDescriptors["StartAngle"].Browsable = true;
                     PropertyDescriptors["ValueType"].Browsable = true;
                     break;

@@ -132,12 +132,13 @@ namespace DirectOutputToolkit
         #region Tables
         internal void SetupTable(ETableType TableType, string RomName)
         {
+            ResetPinball();
             Configurator tableConfigurator = new Configurator();
+            TableDescriptors[TableType].Table = new Table();
             var table = TableDescriptors[TableType].Table;
             tableConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
             table.Init(Pinball);
             table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
-            ResetPinball();
         }
         #endregion
 
