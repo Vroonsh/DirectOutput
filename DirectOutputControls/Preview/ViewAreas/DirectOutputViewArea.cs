@@ -47,7 +47,6 @@ namespace DirectOutputControls
         [Browsable(false)]
         public ExtList<DirectOutputViewArea> Children = new ExtList<DirectOutputViewArea>();
 
-        protected byte[] Values;
         protected RectangleF GlobalDimensions;
         protected Rectangle DisplayRect = Rectangle.Empty;
 
@@ -117,6 +116,7 @@ namespace DirectOutputControls
         }
 
         public virtual bool SetValues(byte[] values) => false;
+
         public virtual void Display(Graphics gr, Font f, SolidBrush br)
         {
             if (!Enabled || !Visible) return;
