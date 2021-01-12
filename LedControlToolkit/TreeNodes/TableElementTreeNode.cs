@@ -35,7 +35,7 @@ namespace LedControlToolkit
 
         private void TE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
         {
-            Refresh();
+            TreeView.Invoke((Action)(()=>this.Refresh()));
         }
 
         public override string ToString()
