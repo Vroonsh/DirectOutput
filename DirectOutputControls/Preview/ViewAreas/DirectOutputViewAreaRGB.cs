@@ -42,19 +42,42 @@ namespace DirectOutputControls
         [Category("RGB")]
         public int StartAngle { get; set; } = 90;
 
+        private byte[] Values = null;
+
         public override bool SetValues(byte[] values)
         {
-            if (Values.Length != values.Length || !values.CompareContents(Values)) {
-                values = new byte[values.Length];
+            if (Values == null) {
+                Values = new byte[values.Length];
+            }
+
+            if (!values.CompareContents(Values)) {
                 values.CopyTo(Values, 0);
                 return true;
             } 
             return false;
         }
 
+        private void DisplaySingleValue(Graphics gr, Font f, SolidBrush br)
+        {
+            var rect = ComputeDisplayRect();
+
+            var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
+            if (icon == null) {
+                if (Values != null) {
+                    br.Color = Color.FromArgb(Values[0], Values[1], Values[2]);
+                } else {
+                    br.Color = Color.Black;
+                }
+
+                gr.FillEllipse(br, rect);
+            }
+        }
+
         public override void Display(Graphics gr, Font f, SolidBrush br)
         {
-
+            if (ValueType == ValueTypeEnum.SingleValue) {
+                DisplaySingleValue(gr, f, br);
+            }
         }
     }
 }

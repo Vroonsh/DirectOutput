@@ -100,19 +100,19 @@ namespace LedControlToolkit
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Pinball p = new Pinball();
-            p.Setup(GlobalConfigFilename);
+            //Pinball p = new Pinball();
+            //p.Setup(GlobalConfigFilename);
 
-            var setup = DofConfigToolSetup.ReadFromXml("./DofToolkit/DofConfigSetup_DofToolkit.dofsetup");
+            //var setup = DofConfigToolSetup.ReadFromXml("./DofToolkit/DofConfigSetup_DofToolkit.dofsetup");
             //var handler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups", DofSetup = setup };
             //handler.UpdateConfigFiles(true);
 
-            DirectOutputPreviewController controller = new DirectOutputPreviewController();
-            controller.DofSetup = setup;
-            controller.Name = "DirectOutputPreviewController_1";
-            controller.PreviewControl = this.directOutputPreviewControl1;
-            controller.Setup(p);
-            p.Finish();
+            //DirectOutputPreviewController controller = new DirectOutputPreviewController();
+            //controller.DofSetup = setup;
+            //controller.DofViewSetup = this.directOutputPreviewControl1.DirectOutputViewSetup;
+            //controller.Name = "DirectOutputPreviewController_1";
+            //controller.Setup(p);
+            //p.Finish();
 
             SaveData();
         }

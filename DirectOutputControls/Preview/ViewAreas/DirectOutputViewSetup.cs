@@ -212,7 +212,7 @@ namespace DirectOutputControls
         internal T[] GetViewAreas<T>(DofConfigToolOutputEnum output, bool enabledOnly = true)
         {
             if (ViewAreasDictionary.Keys.Contains(output)) {
-                return ViewAreasDictionary[output].Where(V => V.GetType() == typeof(T) && (!enabledOnly || V.Enabled)).Cast<T>().ToArray();
+                return ViewAreasDictionary[output].Where(V => V is T && (!enabledOnly || V.Enabled)).Cast<T>().ToArray();
             }
             return null;
         }

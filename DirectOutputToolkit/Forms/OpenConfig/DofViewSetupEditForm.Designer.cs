@@ -50,10 +50,13 @@ namespace DirectOutputToolkit
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.directOutputViewSetupControl1);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.splitContainer1.Panel2.Controls.Add(this.directOutputPreviewControl1);
+            this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
             this.splitContainer1.Size = new System.Drawing.Size(1261, 886);
             this.splitContainer1.SplitterDistance = 788;
             this.splitContainer1.TabIndex = 0;
@@ -62,10 +65,10 @@ namespace DirectOutputToolkit
             // 
             this.directOutputViewSetupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directOutputViewSetupControl1.FileName = "";
-            this.directOutputViewSetupControl1.Location = new System.Drawing.Point(0, 0);
+            this.directOutputViewSetupControl1.Location = new System.Drawing.Point(3, 3);
             this.directOutputViewSetupControl1.Name = "directOutputViewSetupControl1";
             this.directOutputViewSetupControl1.SetupChanged = null;
-            this.directOutputViewSetupControl1.Size = new System.Drawing.Size(788, 886);
+            this.directOutputViewSetupControl1.Size = new System.Drawing.Size(782, 880);
             this.directOutputViewSetupControl1.TabIndex = 0;
             // 
             // directOutputPreviewControl1
@@ -73,9 +76,9 @@ namespace DirectOutputToolkit
             this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
             this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
             this.directOutputPreviewControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.directOutputPreviewControl1.Location = new System.Drawing.Point(0, 0);
+            this.directOutputPreviewControl1.Location = new System.Drawing.Point(3, 3);
             this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
-            this.directOutputPreviewControl1.Size = new System.Drawing.Size(469, 886);
+            this.directOutputPreviewControl1.Size = new System.Drawing.Size(463, 880);
             this.directOutputPreviewControl1.TabIndex = 0;
             // 
             // buttonOK
