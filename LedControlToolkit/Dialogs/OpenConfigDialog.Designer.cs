@@ -166,7 +166,6 @@
             // 
             this.directOutputViewSetupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.directOutputViewSetupControl1.DirectOutputViewSetup = null;
             this.directOutputViewSetupControl1.Location = new System.Drawing.Point(613, 103);
             this.directOutputViewSetupControl1.Name = "directOutputViewSetupControl1";
             this.directOutputViewSetupControl1.Size = new System.Drawing.Size(584, 725);
