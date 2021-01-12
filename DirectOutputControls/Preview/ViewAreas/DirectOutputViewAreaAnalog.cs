@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace DirectOutputControls
 {
@@ -11,6 +13,18 @@ namespace DirectOutputControls
     public class DirectOutputViewAreaAnalog : DirectOutputViewArea
     {
         public override bool IsVirtual() => false;
+
+        [XmlIgnore]
+        [Category("Analog")]
+        public Color BackColor { get; set; } = Color.White;
+
+        [Browsable(false)]
+        [XmlElement("BackColor")]
+        public int BackColorAsArgb
+        {
+            get { return BackColor.ToArgb(); }
+            set { BackColor = Color.FromArgb(value); }
+        }
 
         private byte Value = 0;
 
@@ -29,7 +43,7 @@ namespace DirectOutputControls
 
             var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
             if (icon == null) {
-                br.Color = Color.FromArgb(Value, Value, Value);
+                br.Color = Color.FromArgb((byte)((float)BackColor.R * Value), (byte)((float)BackColor.G * Value), (byte)((float)BackColor.B * Value));
                 gr.FillEllipse(br, rect);
             }
         }

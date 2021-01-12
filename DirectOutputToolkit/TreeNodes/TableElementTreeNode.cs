@@ -35,7 +35,7 @@ namespace DirectOutputToolkit
 
         private void TE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
         {
-            Refresh();
+            TreeView?.Invoke((Action)(() => this.Refresh()));
         }
 
         public override string ToString()
@@ -58,7 +58,7 @@ namespace DirectOutputToolkit
             Nodes.Clear();
             foreach(var eff in TE.AssignedEffects) {
                 handler.InitEffect(eff, _TableType);
-                var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler.LedControlConfigData);
+                var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler.ColorConfigurations);
                 effNode.UpdateFromTableElement(TE);
                 Nodes.Add(effNode);
             }

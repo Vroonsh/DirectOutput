@@ -40,6 +40,14 @@ namespace DirectOutputToolkit
             set { _DirectOutputViewSetups = value; }
         }
 
+        private string _LastRomName = "";
+
+        public string LastRomName
+        {
+            get { return _LastRomName; }
+            set { _LastRomName = value; }
+        }
+
         private int _PulseDurationMs = 100;
 
         public int PulseDurationMs

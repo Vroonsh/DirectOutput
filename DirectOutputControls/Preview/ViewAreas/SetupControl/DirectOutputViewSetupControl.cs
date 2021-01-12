@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
 using DirectOutput;
+using System.Reflection;
 
 namespace DirectOutputControls
 {
@@ -86,6 +87,9 @@ namespace DirectOutputControls
         public DirectOutputViewSetupControl()
         {
             InitializeComponent();
+
+            var privateDoubleBuffered = treeViewAreas.GetType().GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            privateDoubleBuffered.SetValue(treeViewAreas, true);
         }
 
         private void treeViewAreas_MouseClick(object sender, MouseEventArgs e)
@@ -266,6 +270,7 @@ namespace DirectOutputControls
 
             if (!fd.FileName.IsNullOrEmpty()) {
                 DirectOutputViewSetupSerializer.WriteToXml(DirectOutputViewSetup, fd.FileName);
+                Dirty = false;
             }
         }
 
