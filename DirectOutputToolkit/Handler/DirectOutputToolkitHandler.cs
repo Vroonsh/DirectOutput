@@ -1,6 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.Cab.Toys;
 using DirectOutput.FX;
+using DirectOutput.GlobalConfiguration;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.LedControl.Setup;
 using DirectOutput.Table;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DirectOutputToolkit
 {
@@ -18,7 +20,7 @@ namespace DirectOutputToolkit
     {
         private Settings Settings;
 
-        public Pinball Pinball { get; private set; }
+        private Pinball Pinball { get; set; }
 
         public DofConfigToolSetup DofConfigToolSetup { get; set; } = null;
         public DirectOutputViewSetup DofViewSetup { get; set; } = null;
@@ -57,8 +59,13 @@ namespace DirectOutputToolkit
 
         private DofConfigToolFilesHandler DofFilesHandler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups" };
 
-        public LedControlConfigList LedControlConfigList { get; private set; } = new LedControlConfigList();
-        public LedControlConfig LedControlConfigData { get; private set; } = new LedControlConfig();
+        public LedControlConfigList LedControlConfigList => DofFilesHandler.ConfigFiles;
+
+        public ColorConfigList ColorConfigurations => LedControlConfigList.Count == 0 ? null : LedControlConfigList[0].ColorConfigurations;
+
+        public string[] ShapeNames => TableDescriptors[ETableType.ReferenceTable].Table.ShapeDefinitions.Shapes.Select(S => S.Name).ToArray();
+
+        public ToyList Toys => Pinball?.Cabinet.Toys;
 
         public Configurator RebuildConfigurator { get; private set; } = new Configurator();
 
@@ -84,6 +91,7 @@ namespace DirectOutputToolkit
 
             PreviewController.DofSetup = DofConfigToolSetup;
             PreviewController.DofViewSetup = DofViewSetup;
+            PreviewController.Refresh += PreviewControl.OnControllerRefresh;
             PreviewController.Setup(Pinball);
 
             Pinball.Init();
@@ -121,6 +129,18 @@ namespace DirectOutputToolkit
         }
         #endregion
 
+        #region Tables
+        internal void SetupTable(ETableType TableType, string RomName)
+        {
+            Configurator tableConfigurator = new Configurator();
+            var table = TableDescriptors[TableType].Table;
+            tableConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
+            table.Init(Pinball);
+            table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
+            ResetPinball();
+        }
+        #endregion
+
         #region Table Elements
         internal void AddTableElement(TableElement TE, ETableType tableType)
         {
@@ -144,6 +164,37 @@ namespace DirectOutputToolkit
                     break;
                 }
             }
+        }
+
+        internal int SwitchTableElement(TreeNode TreeNode)
+        {
+            var tableElementTreeNode = (TreeNode as ITableElementTreeNode);
+            if (tableElementTreeNode == null) return 0;
+
+            var TableDesc = TableDescriptors[tableElementTreeNode.GetTableType()];
+            var Table = TableDesc.Table;
+            var tableElement = tableElementTreeNode.GetTableElement();
+            var TEData = tableElement.GetTableElementData();
+
+            if (TreeNode is EffectTreeNode effectTreeNode) {
+                //Inject the one from the EffectNode
+                if (!Table.TableElements.Contains(effectTreeNode.GetTableElement())) {
+                    Table.TableElements.Add(effectTreeNode.GetTableElement());
+                }
+            }
+
+            TableElementData D = tableElement.GetTableElementData();
+            D.Value = TEData.Value > 0 ? 0 : 255;
+            if (D.Value == 0) {
+                TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
+            } else {
+                if (!TableDesc.RunnigTableElements.Contains(tableElement)) {
+                    TableDesc.RunnigTableElements.Add(tableElement);
+                }
+            }
+            Pinball.Table = Table;
+            Pinball.ReceiveData(D);
+            return D.Value;
         }
         #endregion
 

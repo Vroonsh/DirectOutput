@@ -80,5 +80,9 @@ namespace DirectOutputControls
 
         }
 
+        public void OnControllerRefresh()
+        {
+            Parent?.Invoke((Action)(() => this.Invalidate()));
+        }
     }
 }

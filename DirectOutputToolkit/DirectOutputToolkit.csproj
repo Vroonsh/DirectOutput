@@ -100,6 +100,9 @@
     </Compile>
     <Compile Include="Handler\DirectOutputToolkitHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyGrid\EditionTableTypeDescriptor.cs" />
+    <Compile Include="PropertyGrid\TableConfigSettingTypeDescriptor.cs" />
+    <Compile Include="PropertyGrid\TableElementTypeDescriptor.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TreeNodes\EditionTableTreeNode.cs" />
     <Compile Include="TreeNodes\EffectTreeNode.cs" />

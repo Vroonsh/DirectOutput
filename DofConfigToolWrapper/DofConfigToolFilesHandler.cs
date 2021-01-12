@@ -25,7 +25,10 @@ namespace DofConfigToolWrapper
                 ParseConfigFiles();
             }
         }
-        public List<LedControlConfig> ConfigFiles { get; private set; } = new List<LedControlConfig>();
+
+        public string UserDirectory => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), RootDirectory, string.Join("-", new string[] { DofSetup?.UserName, DofSetup?.APIKey }));
+
+        public LedControlConfigList ConfigFiles { get; private set; } = new LedControlConfigList();
 
         private int DofConfigToolVersion = 0;
         private string UserLocalPath = string.Empty;
