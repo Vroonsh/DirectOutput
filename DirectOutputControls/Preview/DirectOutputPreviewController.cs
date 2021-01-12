@@ -66,7 +66,7 @@ namespace DirectOutputControls
                             var area = areas[0];
                             if (area.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable) {
                                 var ledstrip = new LedStrip() {
-                                    ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RBG,
+                                    ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RGB,
                                     FadingCurveName = "SwissLizardsLedCurve",
                                     Name = $"Ledstrip {p.Cabinet.Toys.Where(T => T is LedStrip).Count()}",
                                     OutputControllerName = this.Name,
