@@ -6,6 +6,6 @@ namespace DirectOutputControls
 {
     public interface IToyListProvider
     {
-        IEnumerable<IToy> GetToyList(Func<IToy, bool> Match);
+        IEnumerable<IToy> GetToyList();
     }
 }

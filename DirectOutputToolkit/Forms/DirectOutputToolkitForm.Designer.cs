@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectOutputToolkitForm));
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.DofEditionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +53,7 @@
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
+            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -304,6 +306,13 @@
             this.propertyGridMain.Size = new System.Drawing.Size(306, 883);
             this.propertyGridMain.TabIndex = 0;
             // 
+            // imageListIcons
+            // 
+            this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
+            this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
+            this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
+            // 
             // DirectOutputToolkitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -360,6 +369,7 @@
         private System.Windows.Forms.Button buttonPulseEdition;
         private System.Windows.Forms.Button buttonActivationEdition;
         private System.Windows.Forms.TreeView treeViewEditionTable;
+        private System.Windows.Forms.ImageList imageListIcons;
     }
 }
 
