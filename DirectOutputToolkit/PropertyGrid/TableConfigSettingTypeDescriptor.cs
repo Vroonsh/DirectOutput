@@ -3,6 +3,7 @@ using DirectOutput.FX.MatrixFX;
 using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
 using DirectOutputControls;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,9 +39,9 @@ namespace DirectOutputToolkit
         #endregion
 
         #region IToyListProvider
-        public IEnumerable<IToy> GetToyList(Func<IToy, bool> Match) 
+        public IEnumerable<IToy> GetToyList()
         {
-            return Handler.Toys.Where(Match);
+            return Handler.GetCompatibleToys(WrappedTCS);
         }
         #endregion
 
@@ -92,23 +93,31 @@ namespace DirectOutputToolkit
 
         protected override void GenerateCustomFields()
         {
-            CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this, 
+            CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this,
                 new CustomField<string>("ToyName", EffectNode.Effect.GetAssignedToy()?.Name), 
-                new Attribute[] 
+                new Attribute[]
                 {
                     new DisplayNameAttribute("Toy Name"),
                     new ReadOnlyAttribute(!Editable),
                     new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
                 }));
+
+            //CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this, 
+            //    new CustomField<string>("DofOutput", Enum.GetName(typeof(DofConfigToolOutputEnum), EffectNode.Output)), 
+            //    new Attribute[] 
+            //    {
+            //        new DisplayNameAttribute("Dof Output"),
+            //        new ReadOnlyAttribute(!Editable),
+            //        new EditorAttribute(typeof(DofOutputEditor), typeof(UITypeEditor))
+            //    }));
         }
 
         public override void Refresh()
         {
-            // TODO Update Effect Toy if needed
-            //var toyName = (CustomFieldValues["ToyName"] as string);
-            //if (!toyName.Equals(EffectNode.Effect.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
-            //    EffectNode.Effect.SetAssignedToy(Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase)));
-            //}
+            var toyName = (CustomFieldValues["ToyName"] as string);
+            if (!toyName.Equals(EffectNode.Effect.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
+                EffectNode.Effect.SetAssignedToy(Handler.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase)));
+            }
 
             var effectType = WrappedTCS.EffectType;
 

@@ -46,7 +46,9 @@ namespace DirectOutputControls
 
         //Adressable Management
         private Rectangle LedRectangle = new Rectangle();
-        public bool ShowMatrixGrid = false;
+
+        [Category("RGB")]
+        public bool ShowMatrixGrid { get; set; } = true;
 
         public override bool SetValues(byte[] values)
         {
@@ -63,8 +65,6 @@ namespace DirectOutputControls
 
         private void DisplaySingleValue(Graphics gr, Font f, SolidBrush br)
         {
-            if (Values == null) return;
-
             var rect = ComputeDisplayRect();
 
             var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
@@ -96,6 +96,8 @@ namespace DirectOutputControls
 
         private void DisplayMatrix(Graphics gr, SolidBrush br)
         {
+            if (MxWidth == 0 || MxHeight == 0) return;
+
             var center = new Point(DisplayRect.X + DisplayRect.Width / 2, DisplayRect.Y + DisplayRect.Height / 2);
 
             //Round width & height to ledstrip matrix dimensions

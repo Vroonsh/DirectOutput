@@ -1,4 +1,5 @@
 ﻿using DirectOutputControls;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,6 +40,16 @@ namespace DirectOutputToolkit
             privateDoubleBuffered.SetValue(treeViewVisibility, true);
 
             PreviewControl.SetupSet += OnViewSetupSet;
+
+            InitDofResources();
+        }
+
+        private void InitDofResources()
+        {
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.StartButton, imageListIcons.Images["StartButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.LaunchButton, imageListIcons.Images["LaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListIcons.Images["LaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListIcons.Images["LaunchButton"]);
         }
 
         private void HierarchyFunc(DirectOutputViewArea Parent, DirectOutputViewArea Child)

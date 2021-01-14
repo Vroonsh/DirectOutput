@@ -14,7 +14,6 @@ namespace DirectOutputControls
             Name = name;
             DataType = typeof(TField);
             DefaultValue = defaultValue;
-            ReadOnly = false;
         }
 
         public String Name { get; private set; }
@@ -22,8 +21,6 @@ namespace DirectOutputControls
         public Type DataType { get; private set; }
 
         public TField DefaultValue { get; private set; }
-
-        public bool ReadOnly { get; set; }
     }
 
     public class CustomFieldPropertyDescriptor<TComponent, TField> : PropertyDescriptor
@@ -61,7 +58,8 @@ namespace DirectOutputControls
         public override bool IsReadOnly
         {
             get {
-                return false;
+                var readOnlyAttribute = Attributes.Cast<Attribute>().FirstOrDefault(A=>A is ReadOnlyAttribute) as ReadOnlyAttribute;
+                return (readOnlyAttribute != null && readOnlyAttribute.IsReadOnly);
             }
         }
 

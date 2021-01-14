@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace DirectOutputControls
             set { BackColor = Color.FromArgb(value); }
         }
 
-        private byte Value = 0;
+        private int Value = -1;
 
         public override bool SetValues(byte[] values)
         {
@@ -42,9 +43,21 @@ namespace DirectOutputControls
             var rect = ComputeDisplayRect();
 
             var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
+            if (Value < 0) {
+                br.Color = BackColor;
+            } else {
+                br.Color = Color.FromArgb((byte)((float)BackColor.R * Value / 255.0f), (byte)((float)BackColor.G * Value / 255.0f), (byte)((float)BackColor.B * Value / 255.0f));
+            }
             if (icon == null) {
-                br.Color = Color.FromArgb((byte)((float)BackColor.R * Value), (byte)((float)BackColor.G * Value), (byte)((float)BackColor.B * Value));
                 gr.FillEllipse(br, rect);
+            } else {
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.Matrix00 = br.Color.R / 255.0f;
+                matrix.Matrix11 = br.Color.G / 255.0f;
+                matrix.Matrix22 = br.Color.B / 255.0f;
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                gr.DrawImage(icon, rect, 0, 0, icon.Width, icon.Height, GraphicsUnit.Pixel, attributes);
             }
         }
     }
