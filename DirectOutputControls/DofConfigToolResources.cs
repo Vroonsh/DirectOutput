@@ -10,9 +10,14 @@ namespace DirectOutputControls
 {
     public class DofConfigToolResources
     {
-        private static readonly Dictionary<DofConfigToolOutputEnum, Image> DofOutputIcons = new Dictionary<DofConfigToolOutputEnum, Image>(){
+        private static Dictionary<DofConfigToolOutputEnum, Image> DofOutputIcons = new Dictionary<DofConfigToolOutputEnum, Image>(){
             { DofConfigToolOutputEnum.Invalid, null},
         };
+
+        public static void AddDofOutputIcon(DofConfigToolOutputEnum output, Image icon)
+        {
+            DofOutputIcons[output] = icon;
+        }
 
         public static Image GetDofOutputIcon(DofConfigToolOutputEnum output)
         {

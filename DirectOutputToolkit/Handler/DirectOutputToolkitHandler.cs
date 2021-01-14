@@ -1,6 +1,9 @@
 ﻿using DirectOutput;
+using DirectOutput.Cab.Out;
 using DirectOutput.Cab.Toys;
 using DirectOutput.FX;
+using DirectOutput.General.Analog;
+using DirectOutput.General.Color;
 using DirectOutput.GlobalConfiguration;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.LedControl.Setup;
@@ -9,6 +12,7 @@ using DirectOutputControls;
 using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,15 +93,15 @@ namespace DirectOutputToolkit
             TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
             TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
 
+            DofFilesHandler.DofSetup = DofConfigToolSetup;
+            DofFilesHandler.UpdateConfigFiles();
+
             PreviewController.DofSetup = DofConfigToolSetup;
             PreviewController.DofViewSetup = DofViewSetup;
             PreviewController.Refresh += PreviewControl.OnControllerRefresh;
             PreviewController.Setup(Pinball);
 
             Pinball.Init();
-
-            DofFilesHandler.DofSetup = DofConfigToolSetup;
-            DofFilesHandler.UpdateConfigFiles();
         }
 
         internal void FinishPinball()
@@ -133,12 +137,12 @@ namespace DirectOutputToolkit
         internal void SetupTable(ETableType TableType, string RomName)
         {
             ResetPinball();
-            Configurator tableConfigurator = new Configurator();
             TableDescriptors[TableType].Table = new Table();
             var table = TableDescriptors[TableType].Table;
-            tableConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
-            table.Init(Pinball);
+            RebuildConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
             table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
+            Pinball.Table = table;
+            Pinball.Init();
         }
         #endregion
 
@@ -244,6 +248,22 @@ namespace DirectOutputToolkit
                     }
                 }
             }
+        }
+
+        internal IEnumerable<IToy> GetCompatibleToys(TableConfigSetting TCS)
+        {
+            if (TCS == null) return new IToy[0];
+
+            List<IToy> compatibleToys = new List<IToy>();
+
+            compatibleToys.AddRange(Toys.Where(T=>
+                    (TCS.IsArea && (T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>)) ||
+                    (!TCS.IsArea &&
+                        ((TCS.OutputType == OutputTypeEnum.AnalogOutput && T is IAnalogAlphaToy) ||
+                        (TCS.OutputType == OutputTypeEnum.RGBOutput && T is IRGBAToy)))
+                ));
+
+            return compatibleToys.ToArray();
         }
         #endregion
 

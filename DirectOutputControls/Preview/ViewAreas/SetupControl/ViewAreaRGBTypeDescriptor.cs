@@ -20,12 +20,15 @@ namespace DirectOutputControls
             PropertyDescriptors["MxHeight"] = new PropertyDescriptorHandler();
             PropertyDescriptors["StartAngle"] = new PropertyDescriptorHandler();
             PropertyDescriptors["ValueType"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["ShowMatrixGrid"] = new PropertyDescriptorHandler();
 
             Refresh();
         }
 
         public override void Refresh()
         {
+            PropertyDescriptors["ShowMatrixGrid"].Browsable = (WrappedArea.RenderType == DirectOutputViewAreaRGB.RenderTypeEnum.Matrix);
+
             switch (WrappedArea.RenderType) {
                 case DirectOutputViewAreaRGB.RenderTypeEnum.Simple: {
                     WrappedArea.MxWidth = WrappedArea.MxHeight = 0;
