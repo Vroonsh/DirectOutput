@@ -58,7 +58,7 @@ namespace DirectOutputToolkit
             Nodes.Clear();
             foreach(var eff in TE.AssignedEffects) {
                 handler.InitEffect(eff, _TableType);
-                var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler.ColorConfigurations);
+                var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler);
                 effNode.UpdateFromTableElement(TE);
                 Nodes.Add(effNode);
             }

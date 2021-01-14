@@ -2,7 +2,9 @@
 using DirectOutput.FX;
 using DirectOutput.FX.MatrixFX;
 using DirectOutput.LedControl.Loader;
+using DirectOutput.LedControl.Setup;
 using DirectOutput.Table;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace DirectOutputToolkit
     {
         public static readonly string TableElementTestName = "LCTK Effect Test";
 
-        public EffectTreeNode(TableElement tableElement, DirectOutputToolkitHandler.ETableType TableType, IEffect effect, ColorConfigList colorConfigList) : base()
+        public EffectTreeNode(TableElement tableElement, DirectOutputToolkitHandler.ETableType TableType, IEffect effect, DirectOutputToolkitHandler handler) : base()
         {
             Effect = effect;
             _TableType = TableType;
@@ -27,10 +29,10 @@ namespace DirectOutputToolkit
             TestTE.ValueChanged += TestTE_ValueChanged;
             ImageIndex = TestTE.Value > 0 ? 1 : 0;
             SelectedImageIndex = ImageIndex;
-            CCL = colorConfigList;
+            Handler = handler;
             TCS.FromEffect(Effect);
-            TCS.ResolveColorConfigs(CCL);
-            TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOff;
+            TCS.ResolveColorConfigs(Handler.ColorConfigurations);
+            TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOn;
             if (Effect != null) {
                 UpdateFromTableElement(TableTE);
             }
@@ -50,36 +52,28 @@ namespace DirectOutputToolkit
         {
             if (TCS.OutputControl == OutputControlEnum.Controlled) {
                 TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
-                DofConfigCommand = TCS.ToConfigToolCommand(CCL.GetCabinetColorList());
-                Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
             }
+            DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
+            Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
         }
 
         public void Rebuild(DirectOutputToolkitHandler Handler, IEffect SrcEffect)
         {
             var RefEffect = SrcEffect != null ? SrcEffect : Effect;
 
-            //Retrieve Toy 
-            var Toy = RefEffect.GetAssignedToy();
-
             //rebuild Effect
             List<IEffect> allEffects = new List<IEffect>();
             RefEffect.GetAllEffects(allEffects);
 
             //Retrieve necessary data for the Configurator directly from the effect name
-            var nameData = RefEffect.Name.Split(' ');
-            int LedWizNumber = 0;
-            int TCCNumber = 0;
-            int SettingNumber = 0;
-            for (var n = 0; n < nameData.Length - 1; ++n) {
-                if (nameData[n].Equals("LedWiz", StringComparison.InvariantCultureIgnoreCase)) {
-                    LedWizNumber = Int32.Parse(nameData[n + 1]);
-                } else if (nameData[n].Equals("Column", StringComparison.InvariantCultureIgnoreCase)) {
-                    TCCNumber = Int32.Parse(nameData[n + 1]);
-                } else if (nameData[n].Equals("Setting", StringComparison.InvariantCultureIgnoreCase)) {
-                    SettingNumber = Int32.Parse(nameData[n + 1]);
-                }
-            }
+            int LedWizNumber, TCCNumber, SettingNumber;
+            string Suffix = string.Empty;
+            Configurator.RetrieveEffectSettings(RefEffect.Name, out LedWizNumber, out TCCNumber, out SettingNumber, out Suffix);
+
+            //Retrieve Toy & TCCNumber from Chosen Output
+            //TODO
+            var Toy = Effect.GetAssignedToy();
+
 
             //Remove all effects from Table & AssignedEffects before rebuilding
             Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
@@ -94,7 +88,7 @@ namespace DirectOutputToolkit
             Effect = newEffect;
 
             //Update Name
-            DofConfigCommand = TCS.ToConfigToolCommand(CCL.GetCabinetColorList());
+            DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
 
             Refresh();
         }
@@ -113,7 +107,8 @@ namespace DirectOutputToolkit
 
         public IEffect Effect { get; private set; }
         public TableConfigSetting TCS { get; private set; } = new TableConfigSetting();
-        public ColorConfigList CCL { get; private set; }
+        public DofConfigToolOutputEnum Output = DofConfigToolOutputEnum.Invalid;
+        public DirectOutputToolkitHandler Handler { get; private set; }
         public string DofConfigCommand { get; private set; }
         public TableElement TableTE { get; private set; } = null;
         public TableElement TestTE { get; private set; } = new TableElement(TableElementTestName, 0);

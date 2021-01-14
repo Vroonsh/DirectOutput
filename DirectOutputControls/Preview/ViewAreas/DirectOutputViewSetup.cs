@@ -214,7 +214,7 @@ namespace DirectOutputControls
             if (ViewAreasDictionary.Keys.Contains(output)) {
                 return ViewAreasDictionary[output].Where(V => V is T && (!enabledOnly || V.Enabled)).Cast<T>().ToArray();
             }
-            return null;
+            return new T[0];
         }
 
         internal string FindUniqueAreaName(string prefix)

@@ -23,6 +23,8 @@ namespace DirectOutputControls
             }
         }
 
+        public DofConfigToolResources DofResources { get; private set; } = new DofConfigToolResources();
+
         public Color BackgroundColor { get; set; } = Color.MidnightBlue;
         public Color AreaDisplayColor { get; set; } = Color.Green;
 

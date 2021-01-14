@@ -29,7 +29,7 @@ namespace DirectOutputControls
                 string shapeName = value as string;
                 if (edSvc != null) {
                     ListBoxEditor dropdown = new ListBoxEditor(value, edSvc);
-                    dropdown.Items.AddRange(toyListProvider.GetToyList(T => T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>).Select(T => T.Name).ToArray());
+                    dropdown.Items.AddRange(toyListProvider.GetToyList().Select(T => T.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
                     return dropdown.Selection;
                 }

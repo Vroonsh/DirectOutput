@@ -39,6 +39,13 @@ namespace DirectOutputToolkit
             var privateDoubleBuffered = typeof(TreeView).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
             privateDoubleBuffered.SetValue(treeViewEditionTable, true);
             privateDoubleBuffered.SetValue(treeViewTableEffects, true);
+
+            treeViewTableEffects.ImageList = imageListIcons;
+            treeViewTableEffects.FullRowSelect = true;
+            treeViewTableEffects.HideSelection = false;
+            treeViewEditionTable.ImageList = imageListIcons;
+            treeViewEditionTable.FullRowSelect = true;
+            treeViewEditionTable.HideSelection = false;
         }
 
         public bool LoadConfig()
@@ -118,12 +125,21 @@ namespace DirectOutputToolkit
 
             treeViewTableEffects.Nodes.Clear();
 
+            if (table.AssignedStaticEffects.Count > 0) {
+                var listNode = new TreeNode("Persistent effects");
+                foreach (var effect in table.AssignedStaticEffects) {
+                    var effectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler);
+                    listNode.Nodes.Add(effectNode);
+                }
+                treeViewTableEffects.Nodes.Add(listNode);
+            }
+
             foreach (TableElement tableElement in table.TableElements) {
                 var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
                 var listNode = new TableElementTreeNode(tableElement, DirectOutputToolkitHandler.ETableType.ReferenceTable);
 
                 foreach (var effect in tableElement.AssignedEffects) {
-                    var effectNode = new EffectTreeNode(tableElement, DirectOutputToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler.ColorConfigurations);
+                    var effectNode = new EffectTreeNode(tableElement, DirectOutputToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler);
                     listNode.Nodes.Add(effectNode);
                 }
 
@@ -262,7 +278,7 @@ namespace DirectOutputToolkit
                 EditionTableNode.Refresh();
             }
 
-            var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler.ColorConfigurations);
+            var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
             newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
             parentTE.AssignedEffects.Init(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
             TENode.Nodes.Add(newEffectNode);
@@ -290,7 +306,7 @@ namespace DirectOutputToolkit
 
             foreach (var node in SrcTENode.Nodes) {
                 var effectNode = node as EffectTreeNode;
-                var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler.ColorConfigurations);
+                var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler);
                 newEffectNode.Rebuild(Handler, effectNode.Effect);
             }
             parentTE.AssignedEffects.Init(EditionTable);
