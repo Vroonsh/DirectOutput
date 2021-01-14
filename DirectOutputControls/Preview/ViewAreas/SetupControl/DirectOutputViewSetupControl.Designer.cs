@@ -88,10 +88,13 @@
             this.treeViewAreas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewAreas.CheckBoxes = true;
+            this.treeViewAreas.FullRowSelect = true;
             this.treeViewAreas.Location = new System.Drawing.Point(10, 23);
             this.treeViewAreas.Name = "treeViewAreas";
             this.treeViewAreas.Size = new System.Drawing.Size(501, 788);
             this.treeViewAreas.TabIndex = 1;
+            this.treeViewAreas.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewAreas_AfterCheck);
             this.treeViewAreas.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewAreas_AfterSelect);
             this.treeViewAreas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeViewAreas_MouseClick);
             this.treeViewAreas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewAreas_MouseDown);
