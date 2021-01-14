@@ -217,6 +217,13 @@ namespace DirectOutputControls
             return new T[0];
         }
 
+        internal DirectOutputViewArea[] HitTest(Point coords)
+        {
+            if (coords == null) return new DirectOutputViewArea[0];
+
+            return AllAreas.Where(A => A.HitTest(coords)).ToArray();
+        }
+
         internal string FindUniqueAreaName(string prefix)
         {
             int count = 0;

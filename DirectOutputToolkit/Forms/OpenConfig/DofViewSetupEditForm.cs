@@ -27,6 +27,9 @@ namespace DirectOutputToolkit
 
             directOutputViewSetupControl1.SetupChanged += directOutputPreviewControl1.OnSetupChanged;
             FileName = fileName;
+
+            directOutputPreviewControl1.DrawViewAreasInfos = checkBoxDrawAreasInfos.Checked;
+            directOutputPreviewControl1.Invalidate();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -43,6 +46,12 @@ namespace DirectOutputToolkit
                     break;
                 }
             }
+        }
+
+        private void checkBoxDrawAreasInfos_CheckedChanged(object sender, EventArgs e)
+        {
+            directOutputPreviewControl1.DrawViewAreasInfos = checkBoxDrawAreasInfos.Checked;
+            directOutputPreviewControl1.Invalidate();
         }
     }
 }

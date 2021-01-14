@@ -32,6 +32,10 @@ namespace DirectOutputControls
 
         public Action<DirectOutputViewSetup> SetupSet = null;
 
+        public bool DrawViewAreasInfos { get; set; } = false;
+
+        private ToolTip AreasTooltip = new ToolTip();
+
         public DirectOutputPreviewControl()
         {
             InitializeComponent();
@@ -63,9 +67,11 @@ namespace DirectOutputControls
 
             if (DirectOutputViewSetup != null) {
                 DirectOutputViewSetup.Resize(e.ClipRectangle);
-                Brush.Color = AreaDisplayColor;
-                DirectOutputViewSetup.DisplayAreas(e.Graphics, Font, Brush, new Pen(Brush));
                 DirectOutputViewSetup.Display(e.Graphics, Font, Brush);
+                if (DrawViewAreasInfos) {
+                    Brush.Color = AreaDisplayColor;
+                    DirectOutputViewSetup.DisplayAreas(e.Graphics, Font, Brush, new Pen(Brush));
+                }
             }
         }
 
@@ -78,6 +84,7 @@ namespace DirectOutputControls
             this.DoubleBuffered = true;
             this.Name = "DirectOutputPreviewControl";
             this.Size = new System.Drawing.Size(454, 715);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DirectOutputPreviewControl_MouseMove);
             this.ResumeLayout(false);
 
         }
@@ -85,6 +92,17 @@ namespace DirectOutputControls
         public void OnControllerRefresh()
         {
             Parent?.Invoke((Action)(() => this.Invalidate()));
+        }
+
+        private void DirectOutputPreviewControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            var areas = _DirectOutputViewSetup.HitTest(e.Location);
+            AreasTooltip.UseFading = true;
+            if (areas.Length > 0) {
+                AreasTooltip.Show(string.Join("\n", areas.Where(A => !(A is DirectOutputViewAreaVirtual) && A.Enabled && A.Visible).Select(A=>A.Name).ToArray()), this, e.Location.X + 10, e.Location.Y);
+            } else {
+                AreasTooltip.Hide(this);
+            }
         }
     }
 }

@@ -136,6 +136,8 @@ namespace DirectOutputControls
                 }
             }
         }
+
+        internal bool HitTest(Point coords) => DisplayRect.Contains(coords);
     }
 
     [Serializable]
@@ -145,6 +147,18 @@ namespace DirectOutputControls
         public override DofConfigToolOutputEnum DofOutput => DofConfigToolOutputEnum.Invalid;
 
         public override bool IsVirtual() => true;
+
+        public bool Draw { get; set; } = false;
+
+        public override void Display(Graphics gr, Font f, SolidBrush br)
+        {
+            if (!Enabled || !Visible) return;
+
+            if (Draw) {
+                gr.DrawRectangle(new Pen(new SolidBrush(Color.Black)), DisplayRect);
+            }
+            base.Display(gr, f, br);
+        }
     }
 
 }
