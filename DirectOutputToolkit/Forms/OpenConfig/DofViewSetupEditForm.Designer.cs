@@ -30,9 +30,10 @@ namespace DirectOutputToolkit
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DofViewSetupEditForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.checkBoxDrawAreasInfos = new System.Windows.Forms.CheckBox();
             this.directOutputViewSetupControl1 = new DirectOutputControls.DirectOutputViewSetupControl();
             this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
-            this.buttonOK = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +62,30 @@ namespace DirectOutputToolkit
             this.splitContainer1.SplitterDistance = 788;
             this.splitContainer1.TabIndex = 0;
             // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.Location = new System.Drawing.Point(1064, 892);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(187, 23);
+            this.buttonOK.TabIndex = 1;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // checkBoxDrawAreasInfos
+            // 
+            this.checkBoxDrawAreasInfos.AutoSize = true;
+            this.checkBoxDrawAreasInfos.Checked = true;
+            this.checkBoxDrawAreasInfos.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDrawAreasInfos.Location = new System.Drawing.Point(795, 891);
+            this.checkBoxDrawAreasInfos.Name = "checkBoxDrawAreasInfos";
+            this.checkBoxDrawAreasInfos.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxDrawAreasInfos.TabIndex = 2;
+            this.checkBoxDrawAreasInfos.Text = "Draw view areas infos";
+            this.checkBoxDrawAreasInfos.UseVisualStyleBackColor = true;
+            this.checkBoxDrawAreasInfos.CheckedChanged += new System.EventHandler(this.checkBoxDrawAreasInfos_CheckedChanged);
+            // 
             // directOutputViewSetupControl1
             // 
             this.directOutputViewSetupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -76,27 +101,18 @@ namespace DirectOutputToolkit
             this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
             this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
             this.directOutputPreviewControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.directOutputPreviewControl1.DrawViewAreasInfos = false;
             this.directOutputPreviewControl1.Location = new System.Drawing.Point(3, 3);
             this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
             this.directOutputPreviewControl1.Size = new System.Drawing.Size(463, 880);
             this.directOutputPreviewControl1.TabIndex = 0;
-            // 
-            // buttonOK
-            // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(1064, 892);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(187, 23);
-            this.buttonOK.TabIndex = 1;
-            this.buttonOK.Text = "OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // DofViewSetupEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1263, 920);
+            this.Controls.Add(this.checkBoxDrawAreasInfos);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -109,6 +125,7 @@ namespace DirectOutputToolkit
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -118,5 +135,6 @@ namespace DirectOutputToolkit
         private DirectOutputControls.DirectOutputViewSetupControl directOutputViewSetupControl1;
         private DirectOutputControls.DirectOutputPreviewControl directOutputPreviewControl1;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.CheckBox checkBoxDrawAreasInfos;
     }
 }

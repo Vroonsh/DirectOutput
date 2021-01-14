@@ -228,6 +228,7 @@
             this.treeViewEditionTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewEditionTable.FullRowSelect = true;
             this.treeViewEditionTable.Location = new System.Drawing.Point(17, 26);
             this.treeViewEditionTable.Name = "treeViewEditionTable";
             this.treeViewEditionTable.Size = new System.Drawing.Size(947, 562);
@@ -260,6 +261,7 @@
             this.treeViewTableEffects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewTableEffects.FullRowSelect = true;
             this.treeViewTableEffects.Location = new System.Drawing.Point(17, 58);
             this.treeViewTableEffects.Name = "treeViewTableEffects";
             this.treeViewTableEffects.Size = new System.Drawing.Size(947, 165);

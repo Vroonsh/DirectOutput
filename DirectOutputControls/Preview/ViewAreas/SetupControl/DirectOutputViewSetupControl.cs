@@ -48,7 +48,7 @@ namespace DirectOutputControls
 
         private void AddViewAreaToTreeView(TreeNodeCollection nodes, DirectOutputViewArea area)
         {
-            var newNode = new TreeNodeArea(area);
+            var newNode = new TreeNodeArea(area) { Checked = area.Visible };
             nodes.Add(newNode);
             foreach(var child in area.Children) {
                 AddViewAreaToTreeView(newNode.Nodes, child);
@@ -297,6 +297,19 @@ namespace DirectOutputControls
                 LoadSetup(fd.FileName);
             }
 
+        }
+
+        private void treeViewAreas_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node is TreeNodeArea areaNode) {
+                areaNode.Area.Visible = areaNode.Checked;
+                var nodes = areaNode.GetChildren<TreeNodeArea>();
+                foreach (var node in nodes) {
+                    node.Checked = areaNode.Checked;
+                    node.Area.Visible = areaNode.Checked;
+                }
+                OnSetupChanged();
+            }
         }
     }
 }
