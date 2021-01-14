@@ -27,9 +27,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectOutputToolkitPreviewForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewVisibility = new System.Windows.Forms.TreeView();
+            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -76,6 +79,13 @@
             this.treeViewVisibility.TabIndex = 0;
             this.treeViewVisibility.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewVisibility_AfterCheck);
             // 
+            // imageListIcons
+            // 
+            this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
+            this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListIcons.Images.SetKeyName(0, "StartButton");
+            this.imageListIcons.Images.SetKeyName(1, "LaunchButton");
+            // 
             // directOutputPreviewControl1
             // 
             this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
@@ -112,5 +122,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TreeView treeViewVisibility;
         private DirectOutputControls.DirectOutputPreviewControl directOutputPreviewControl1;
+        private System.Windows.Forms.ImageList imageListIcons;
     }
 }

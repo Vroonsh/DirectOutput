@@ -35,6 +35,39 @@ namespace DirectOutput.LedControl.Setup
         /// </summary>
         public int EffectRGBMinDurationMs = 120;
 
+        private static readonly string BaseEffectNameFormat = "Ledwiz {0:00} Column {1:00} Setting {2:00}";
+        /// <summary>
+        /// Provides a correctly formated effect name using usual parameters.
+        /// </summary>
+        /// <param name="LedWizNum">the number of the LedWiz equivalent</param>
+        /// <param name="Column">The TCC number</param>
+        /// <param name="Setting">The Setting number</param>
+        /// <param name="Suffix">An optional suffix</param>
+        /// <returns></returns>
+        public static string GetFormatedEffectName(int LedWizNum, int Column, int Setting, string Suffix)
+        {
+            return $"{BaseEffectNameFormat.Build(LedWizNum, Column, Setting)}{(Suffix.IsNullOrEmpty() ? string.Empty : " " + Suffix)}";
+        }
+
+        public static void RetrieveEffectSettings(string EffectName, out int LedWizNum, out int Column, out int Setting, out string Suffix)
+        {
+            var nameData = EffectName.Split(' ');
+            var suffix = string.Empty;
+            LedWizNum = Column = Setting = -1;
+            for (var n = 0; n < nameData.Length - 1; ++n) {
+                if (nameData[n].Equals("LedWiz", StringComparison.InvariantCultureIgnoreCase)) {
+                    LedWizNum = Int32.Parse(nameData[++n]);
+                } else if (nameData[n].Equals("Column", StringComparison.InvariantCultureIgnoreCase)) {
+                    Column = Int32.Parse(nameData[++n]);
+                } else if (nameData[n].Equals("Setting", StringComparison.InvariantCultureIgnoreCase)) {
+                    Setting = Int32.Parse(nameData[++n]);
+                } else if (LedWizNum >= 0 && Column >= 0 && Setting >= 0) {
+                    suffix = suffix + nameData[n];
+                }
+            }
+            Suffix = suffix;
+        }
+
         /// <summary>
         /// Configures the system based on the data loaded from ini files.
         /// </summary>
@@ -284,20 +317,20 @@ namespace DirectOutput.LedControl.Setup
 
             }
             if (Effect != null) {
-                Effect.Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} {3}".Build(new object[] { LedWizNr, TCCNumber, SettingNumber, Effect.GetType().Name });
+                Effect.Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, Effect.GetType().Name);
                 MakeEffectNameUnique(Effect, Table);
 
                 Table.Effects.Add(Effect);
 
                 if (TCS.FadingUpDurationMs > 0 || TCS.FadingDownDurationMs > 0) {
-                    Effect = new FadeEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} FadeEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, FadeDownDuration = TCS.FadingDownDurationMs, FadeUpDuration = TCS.FadingUpDurationMs };
+                    Effect = new FadeEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "FadeEffect"), TargetEffectName = Effect.Name, FadeDownDuration = TCS.FadingDownDurationMs, FadeUpDuration = TCS.FadingUpDurationMs };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
                 if (TCS.Blink != 0 && TCS.BlinkIntervalMsNested > 0) {
                     var durationActive = (int)((double)TCS.BlinkIntervalMsNested * (double)TCS.BlinkPulseWidthNested / 100);
                     var durationInactive = TCS.BlinkIntervalMsNested - durationActive; // To avoid rounding loss
-                    Effect = new BlinkEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} BlinkEffect Inner".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, LowValue = TCS.BlinkLow, DurationActiveMs = durationActive, DurationInactiveMs = durationInactive};
+                    Effect = new BlinkEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "BlinkEffect Inner"), TargetEffectName = Effect.Name, LowValue = TCS.BlinkLow, DurationActiveMs = durationActive, DurationInactiveMs = durationInactive};
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
@@ -306,7 +339,7 @@ namespace DirectOutput.LedControl.Setup
                 if (TCS.Blink != 0) {
                     var durationActive = (int)((double)TCS.BlinkIntervalMs * (double)TCS.BlinkPulseWidth / 100);
                     var durationInactive = TCS.BlinkIntervalMs - durationActive; // To avoid rounding loss
-                    Effect = new BlinkEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} BlinkEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, DurationActiveMs = durationActive, DurationInactiveMs = durationInactive };
+                    Effect = new BlinkEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "BlinkEffect"), TargetEffectName = Effect.Name, DurationActiveMs = durationActive, DurationInactiveMs = durationInactive };
                     if (TCS.BlinkIntervalMsNested == 0) {
                         ((BlinkEffect)Effect).LowValue = TCS.BlinkLow;
                     }
@@ -317,13 +350,13 @@ namespace DirectOutput.LedControl.Setup
                 if (TCS.DurationMs > 0 || TCS.Blink > 0) {
                     string N = TCS.DurationMs > 0 ? "DurationEffect" : $"BlinkDurationEffect({TCS.Blink},{TCS.BlinkIntervalMs})";
                     int Duration = (TCS.DurationMs > 0 ? TCS.DurationMs : (TCS.Blink * 2 - 1) * TCS.BlinkIntervalMs / 2 + 1);
-                    Effect = new DurationEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} {3}".Build(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, DurationMs = Duration, RetriggerBehaviour = RetriggerBehaviourEnum.Restart };
+                    Effect = new DurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, DurationMs = Duration, RetriggerBehaviour = RetriggerBehaviourEnum.Restart };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
                 if (TCS.MaxDurationMs > 0) {
 
-                    Effect = new MaxDurationEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} MaxDurationEffect".Build(new object[] { LedWizNr, TCCNumber, SettingNumber }), TargetEffectName = Effect.Name, MaxDurationMs = TCS.MaxDurationMs };
+                    Effect = new MaxDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "MaxDurationEffect"), TargetEffectName = Effect.Name, MaxDurationMs = TCS.MaxDurationMs };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
@@ -332,32 +365,32 @@ namespace DirectOutput.LedControl.Setup
                 if (TCS.MinDurationMs > 0 || (Toy is IRGBAToy && EffectRGBMinDurationMs > 0) || (!(Toy is IRGBAToy) && EffectMinDurationMs > 0)) {
                     string N = (TCS.MinDurationMs > 0 ? "MinDuratonEffect" : "DefaultMinDurationEffect");
                     int Min = (TCS.MinDurationMs > 0 ? TCS.MinDurationMs : (Toy is IRGBAToy ? EffectRGBMinDurationMs : EffectMinDurationMs));
-                    Effect = new MinDurationEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} {3}".Build(new object[] { LedWizNr, TCCNumber, SettingNumber, N }), TargetEffectName = Effect.Name, MinDurationMs = Min };
+                    Effect = new MinDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, MinDurationMs = Min };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
 
                 if (TCS.ExtDurationMs > 0) {
-                    Effect = new ExtendDurationEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} ExtDurationEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, DurationMs = TCS.ExtDurationMs };
+                    Effect = new ExtendDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "ExtDurationEffect"), TargetEffectName = Effect.Name, DurationMs = TCS.ExtDurationMs };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
 
                 }
 
                 if (TCS.WaitDurationMs > 0) {
-                    Effect = new DelayEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} DelayEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, DelayMs = TCS.WaitDurationMs };
+                    Effect = new DelayEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "DelayEffect"), TargetEffectName = Effect.Name, DelayMs = TCS.WaitDurationMs };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
 
                 if (TCS.Invert) {
-                    Effect = new ValueInvertEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} ValueInvertEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name };
+                    Effect = new ValueInvertEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "ValueInvertEffect"), TargetEffectName = Effect.Name };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
                 if (!TCS.NoBool) {
 
-                    Effect = new ValueMapFullRangeEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} FullRangeEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name };
+                    Effect = new ValueMapFullRangeEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "FullRangeEffect"), TargetEffectName = Effect.Name };
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
 
@@ -366,7 +399,7 @@ namespace DirectOutput.LedControl.Setup
                 switch (TCS.OutputControl) {
                     case OutputControlEnum.Condition:
 
-                        Effect = new TableElementConditionEffect() { Name = "Ledwiz {0:00} Column {1:00} Setting {2:00} TableElementConditionEffect".Build(LedWizNr, TCCNumber, SettingNumber), TargetEffectName = Effect.Name, Condition = TCS.Condition };
+                        Effect = new TableElementConditionEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "TableElementConditionEffect"), TargetEffectName = Effect.Name, Condition = TCS.Condition };
                         MakeEffectNameUnique(Effect, Table);
                         Table.Effects.Add(Effect);
 

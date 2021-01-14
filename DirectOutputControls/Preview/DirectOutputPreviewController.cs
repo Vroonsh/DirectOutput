@@ -1,7 +1,9 @@
 ﻿using DirectOutput;
 using DirectOutput.Cab;
 using DirectOutput.Cab.Out;
+using DirectOutput.Cab.Toys;
 using DirectOutput.Cab.Toys.Hardware;
+using DirectOutput.Cab.Toys.Layer;
 using DirectOutput.Cab.Toys.LWEquivalent;
 using DofConfigToolWrapper;
 using System;
@@ -56,71 +58,101 @@ namespace DirectOutputControls
             //First pass create Ledwiz Equivalent & adressable outputs, they've to be first
             foreach (var controller in DofSetup.ControllerSetups) {
                 var LWE = new LedWizEquivalent() { Name = $"{controller.Name} Equivalent", LedWizNumber = controller.Number };
+
                 for (var i = 0; i < controller.OutputMappings.Count; ++i) {
                     var o = controller.OutputMappings[i];
 
                     //It's an MX output, find MX Area attached and create a ledstrip
                     if (o.Output > DofConfigToolOutputEnum.RGBMXOutputs_Start && o.Output < DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output);
+                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output)
+                                                .Where(A=>A.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable)
+                                                .ToArray();
+
                         if (areas != null && areas.Length > 0) {
-                            var area = areas[0];
-                            if (area.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable) {
+                            int maxWidth = 0;
+                            int maxHeight = 0;
+                            foreach (var area in areas) {
+                                maxWidth = Math.Max(maxWidth, area.MxWidth);
+                                maxHeight = Math.Max(maxHeight, area.MxHeight);
+                            }
+
+                            if (maxWidth > 0 && maxHeight > 0) {
                                 var ledstrip = new LedStrip() {
                                     ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RGB,
                                     FadingCurveName = "SwissLizardsLedCurve",
-                                    Name = $"Ledstrip {p.Cabinet.Toys.Where(T => T is LedStrip).Count()}",
+                                    Name = $"{o.Output} (Mx)",
                                     OutputControllerName = this.Name,
                                     LedStripArrangement = DirectOutput.Cab.Toys.Layer.LedStripArrangementEnum.LeftRightTopDown,
-                                    Width = area.MxWidth,
-                                    Height = area.MxHeight,
+                                    Width = maxWidth,
+                                    Height = maxHeight,
                                     FirstLedNumber = firstAdressableLedNumber
                                 };
 
-                                firstAdressableLedNumber += area.MxWidth * area.MxHeight;
+                                firstAdressableLedNumber += maxWidth * maxHeight;
                                 p.Cabinet.Toys.Add(ledstrip);
 
                                 LedWizEquivalentOutput LWEO = new LedWizEquivalentOutput() { OutputName = ledstrip.Name, LedWizEquivalentOutputNumber = o.PortNumber };
                                 LWE.Outputs.Add(LWEO);
+                                Outputs.Add(new Output() { Name = LWEO.OutputName, Number = NbOutputs + 1, Value = 0 });
 
-                                Outputs.Add(new Output() { Name = LWEO.OutputName, Number = NbOutputs+1, Value = 0 });
-                                var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange };
-                                OutputMappings.Add(remap);
-                                NbOutputs += remap.OutputSize;
-                            }
-                        }
-                    }
-                }
-                p.Cabinet.Toys.Add(LWE);
-            }
-
-            //Second pass non Adressable outputs.
-            foreach (var controller in DofSetup.ControllerSetups) {
-                var LWE = p.Cabinet.Toys.OfType<LedWizEquivalent>().FirstOrDefault(T => T.LedWizNumber == controller.Number);
-                if (LWE != null) {
-                    for (var i = 0; i < controller.OutputMappings.Count; ++i) {
-                        var o = controller.OutputMappings[i];
-
-                        //It's an MX output, find MX Area attached and create a ledstrip
-                        if (o.Output < DofConfigToolOutputEnum.RGBMXOutputs_Start || o.Output > DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                            for (var num = o.PortNumber; num < o.PortNumber + o.PortRange; ++num) {
-                                var outputName = $"{LWE.Name}.{num:00}";
-                                LedWizEquivalentOutput LWEO = new LedWizEquivalentOutput() { OutputName = $"{Name}\\{outputName}", LedWizEquivalentOutputNumber = num };
-                                LWE.Outputs.Add(LWEO);
-                                Outputs.Add(new Output() { Name = outputName, Number = NbOutputs + num + 1 - o.PortNumber, Value = 0 });
-                            }
-
-                            var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(o.Output);
-                            if (matchingAreas != null && matchingAreas.Length > 0) {
-                                foreach (var area in matchingAreas) {
-                                    var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };
+                                foreach (var area in areas) {
+                                    var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange };
                                     OutputMappings.Add(remap);
                                 }
+
+                                NbOutputs += maxWidth * maxHeight * o.PortRange;
+                            }
+                        }
+                    } else {
+
+                        //Create Toy regarding the Output range
+                        IToy toy = null;
+                        switch (o.PortRange) {
+                            case 1: {
+                                toy = new AnalogAlphaToy() {
+                                    Name = $"{o.Output} (Analog)",
+                                    OutputName = $"{LWE.Name}.{o.PortNumber:00}"
+                                };
+                                p.Cabinet.Toys.Add(toy);
+                                break;
                             }
 
-                            NbOutputs += o.PortRange;
+                            case 3: {
+                                toy = new RGBAToy() {
+                                    Name = $"{o.Output} (RGB)",
+                                    OutputNameRed = $"{LWE.Name}.{o.PortNumber:00}",
+                                    OutputNameGreen = $"{LWE.Name}.{o.PortNumber+1:00}",
+                                    OutputNameBlue = $"{LWE.Name}.{o.PortNumber+2:00}"
+                                };
+                                p.Cabinet.Toys.Add(toy);
+                                break;
+                            }
+
+                            default: {
+                                break;
+                            }
                         }
+
+                        for (var num = o.PortNumber; num < o.PortNumber + o.PortRange; ++num) {
+                            var outputName = $"{LWE.Name}.{num:00}";
+                            LedWizEquivalentOutput LWEO = new LedWizEquivalentOutput() { OutputName = $"{outputName}", LedWizEquivalentOutputNumber = num };
+                            LWE.Outputs.Add(LWEO);
+                            Outputs.Add(new Output() { Name = outputName, Number = NbOutputs + num + 1 - o.PortNumber, Value = 0 });
+                        }
+
+                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(o.Output);
+                        if (matchingAreas.Length > 0) {
+                            foreach (var area in matchingAreas) {
+                                var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };
+                                OutputMappings.Add(remap);
+                            }
+                        }
+
+                        NbOutputs += o.PortRange;
                     }
+
                 }
+                p.Cabinet.Toys.Add(LWE);
             }
 
             p.Cabinet.OutputControllers.Add(this);
