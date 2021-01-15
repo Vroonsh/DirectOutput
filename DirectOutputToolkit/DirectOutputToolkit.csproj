@@ -74,6 +74,18 @@
       <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DirectOutputToolkitProgram.cs" />
+    <Compile Include="Forms\DofConfigTool\DirectOutputToolkitDOFCommandsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DofConfigTool\DirectOutputToolkitDOFCommandsDialog.Designer.cs">
+      <DependentUpon>DirectOutputToolkitDOFCommandsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DofConfigTool\DirectOutputToolkitDOFOutputs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DofConfigTool\DirectOutputToolkitDOFOutputs.Designer.cs">
+      <DependentUpon>DirectOutputToolkitDOFOutputs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OpenConfig\DofConfigSetupEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,7 +110,14 @@
     <Compile Include="Forms\Preview\DirectOutputToolkitPreviewForm.Designer.cs">
       <DependentUpon>DirectOutputToolkitPreviewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Handler\DirectOutputToolkitHandler.cs" />
+    <Compile Include="Handler\DirectOutputToolkitSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyGrid\EditionTableTypeDescriptor.cs" />
     <Compile Include="PropertyGrid\TableConfigSettingTypeDescriptor.cs" />
@@ -111,6 +130,12 @@
     <EmbeddedResource Include="Forms\DirectOutputToolkitForm.resx">
       <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DofConfigTool\DirectOutputToolkitDOFCommandsDialog.resx">
+      <DependentUpon>DirectOutputToolkitDOFCommandsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DofConfigTool\DirectOutputToolkitDOFOutputs.resx">
+      <DependentUpon>DirectOutputToolkitDOFOutputs.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenConfig\DofConfigSetupEditForm.resx">
       <DependentUpon>DofConfigSetupEditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Preview\DirectOutputToolkitPreviewForm.resx">
       <DependentUpon>DirectOutputToolkitPreviewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
