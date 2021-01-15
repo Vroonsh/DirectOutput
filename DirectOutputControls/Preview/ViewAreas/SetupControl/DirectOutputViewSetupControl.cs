@@ -169,6 +169,25 @@ namespace DirectOutputControls
             }
         }
 
+        private void OnCopyViewArea(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+
+            if (command.Sender is TreeNodeArea sourceNode) {
+                if (command.Target is TreeNodeArea targetNode) {
+                    if (targetNode.Area is DirectOutputViewAreaVirtual) {
+                        var destArea = sourceNode.Area.Clone();
+                        targetNode.Area.Children.Add(destArea);
+                        targetNode.Nodes.Add(new TreeNodeArea(destArea));
+                        treeViewAreas.Invalidate();
+                        Dirty = true;
+                        OnSetupChanged();
+                    }
+                }
+            }
+        }
+
         private void treeViewAreas_MouseDown(object sender, MouseEventArgs e)
         {
             if (_DirectOutputViewSetup == null) return;
@@ -200,6 +219,13 @@ namespace DirectOutputControls
                     }
 
                     areaMenu.MenuItems.Add(new MenuItem($"Delete [{nodeArea.Text}]", new EventHandler(this.OnDeleteArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });
+
+                    var copyMenu = new MenuItem($"Copy [{nodeArea.Text}] into");
+                    areaMenu.MenuItems.Add(copyMenu);
+                    var destinations = treeViewAreas.GetNodes<TreeNodeArea>().Where(N => N.Area is DirectOutputViewAreaVirtual);
+                    foreach (var node in destinations) {
+                        copyMenu.MenuItems.Add(new MenuItem($"{node.Text}", new EventHandler(this.OnCopyViewArea)) { Tag = new TreeNodeCommand() { Sender = nodeArea, Target = (node as TreeNode) } });
+                    }
 
                     areaMenu.Show(treeViewAreas, e.Location);
                 }
@@ -271,6 +297,7 @@ namespace DirectOutputControls
             if (!fd.FileName.IsNullOrEmpty()) {
                 DirectOutputViewSetupSerializer.WriteToXml(DirectOutputViewSetup, fd.FileName);
                 Dirty = false;
+                _FileName = fd.FileName;
             }
         }
 

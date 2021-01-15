@@ -15,10 +15,16 @@ namespace DirectOutputControls
                    Parent.Nodes.OfType<T>().SelectMany(GetChildren<T>));
         }
 
-        public static IEnumerable<T> GetChildren<T>(this TreeNode Parent, Func<T, bool> Match) where T : TreeNode
+        public static IEnumerable<T> GetNodes<T>(this TreeView TreeView) where T : TreeNode
         {
-            return Parent.Nodes.OfType<T>().Concat(
-                   Parent.Nodes.OfType<T>().SelectMany(GetChildren<T>).Where(Match));
+            List<T> nodes = new List<T>();
+            foreach(var node in TreeView.Nodes) {
+                if (node is T) {
+                    nodes.Add(node as T);
+                }
+                nodes.AddRange((node as TreeNode).GetChildren<T>());
+            }
+            return nodes.ToArray();
         }
     }
 }
