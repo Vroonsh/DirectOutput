@@ -146,6 +146,9 @@ namespace DirectOutputToolkit
                 listNode.Refresh();
                 treeViewTableEffects.Nodes.Add(listNode);
             }
+
+            Handler.LaunchTable(DirectOutputToolkitHandler.ETableType.ReferenceTable);
+            PreviewForm.Invalidate();
         }
 
         private void buttonActivationTable_Click(object sender, EventArgs e)

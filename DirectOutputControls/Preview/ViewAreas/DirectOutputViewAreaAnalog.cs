@@ -60,5 +60,18 @@ namespace DirectOutputControls
                 gr.DrawImage(icon, rect, 0, 0, icon.Width, icon.Height, GraphicsUnit.Pixel, attributes);
             }
         }
+
+        public DirectOutputViewAreaAnalog() : base() { }
+
+        internal DirectOutputViewAreaAnalog(DirectOutputViewAreaAnalog src) : base(src)
+        {
+            BackColor = src.BackColor;
+        }
+
+        internal override DirectOutputViewArea Clone()
+        {
+            return new DirectOutputViewAreaAnalog(this);
+        }
+
     }
 }
