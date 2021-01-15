@@ -24,6 +24,7 @@ namespace DirectOutputControls
 
         public bool Enabled { get; set; } = true;
 
+        [XmlIgnore]
         [Browsable(false)]
         public bool Visible { get; set; } = true;
 
@@ -138,6 +139,20 @@ namespace DirectOutputControls
         }
 
         internal bool HitTest(Point coords) => DisplayRect.Contains(coords);
+
+        public DirectOutputViewArea() { }
+
+        internal DirectOutputViewArea(DirectOutputViewArea src)
+        {
+            Name = src.Name + "_Copy";
+            Enabled = src.Enabled;
+            Visible = src.Visible;
+            Squarred = src.Squarred;
+            DofOutput = src.DofOutput;
+            _Dimensions = src._Dimensions;
+        }
+
+        internal abstract DirectOutputViewArea Clone();
     }
 
     [Serializable]
@@ -158,6 +173,18 @@ namespace DirectOutputControls
                 gr.DrawRectangle(new Pen(new SolidBrush(Color.Black)), DisplayRect);
             }
             base.Display(gr, f, br);
+        }
+
+        internal DirectOutputViewAreaVirtual(DirectOutputViewAreaVirtual src) : base(src)
+        {
+            Draw = src.Draw;
+        }
+
+        public DirectOutputViewAreaVirtual() : base() { }
+
+        internal override DirectOutputViewArea Clone()
+        {
+            return new DirectOutputViewAreaVirtual(this);
         }
     }
 
