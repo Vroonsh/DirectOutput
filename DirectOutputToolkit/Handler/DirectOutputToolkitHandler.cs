@@ -80,6 +80,7 @@ namespace DirectOutputToolkit
             Settings = settings;
             RebuildConfigurator.EffectMinDurationMs = Settings.EffectMinDurationMs;
             RebuildConfigurator.EffectRGBMinDurationMs = Settings.EffectRGBMinDurationMs;
+            ResetEditionTable();
         }
 
         #region Pinball
@@ -134,6 +135,18 @@ namespace DirectOutputToolkit
         #endregion
 
         #region Tables
+        internal void ResetEditionTable()
+        {
+            ResetPinball();
+            TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = "Edition Table", RomName = "romname" };
+            if (Pinball != null) {
+                TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
+                TableDescriptors[ETableType.EditionTable].Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
+                TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
+                Pinball.Init();
+            }
+        }
+
         internal void SetupTable(ETableType TableType, string RomName)
         {
             ResetPinball();
