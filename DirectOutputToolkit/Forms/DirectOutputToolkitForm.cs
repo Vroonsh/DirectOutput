@@ -100,10 +100,195 @@ namespace DirectOutputToolkit
         }
 
         #region Main Menu
+
+        private void newTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Do you really want to start a new Table ?\n" +
+                                $"The table {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName} will be deleted.",
+                                "Create New Table",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning) == DialogResult.Yes) {
+                ResetEditionTable();
+                SetCurrentSelectedNode(EditionTableNode);
+            }
+        }
+
+        private void loadTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog() {
+                Filter = "DirectOutput Toolkit Files|*.dotk|DOTK XML Files|*.xml|All Files|*.*",
+                DefaultExt = "dotk",
+                Title = "Load Table Effects"
+            };
+
+            fd.ShowDialog();
+            if (!fd.FileName.IsNullOrEmpty()) {
+                ResetEditionTable();
+                var serializer = new DirectOutputToolkitSerializer();
+                if (serializer.Deserialize(EditionTableNode, fd.FileName, Handler)) {
+                    SetCurrentSelectedNode(EditionTableNode);
+                    //MessageBox.Show($"Table [{EditionTableNode.EditionTable.TableName}] loaded", "Load Table Effects", MessageBoxButtons.OK);
+                }
+            }
+        }
+
+        private void saveTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog fd = new SaveFileDialog() {
+                Filter = "DirectOutput Toolkit Files|*.dotk|DOTK XML Files|*.xml|All Files|*.*",
+                DefaultExt = "dotk",
+                Title = "Save Table Effects"
+            };
+
+            fd.ShowDialog();
+
+            if (!fd.FileName.IsNullOrEmpty()) {
+                var serializer = new DirectOutputToolkitSerializer();
+                if (serializer.Serialize(EditionTableNode, fd.FileName, Handler)) {
+                    SetCurrentSelectedNode(EditionTableNode);
+                    MessageBox.Show($"Table [{EditionTableNode.EditionTable.TableName}] descriptor\n" +
+                                    $"is saved in {fd.FileName}.", "Save Table Effects", MessageBoxButtons.OK);
+                }
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void importFromDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TOdo Mapping
+            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { /*AvailableToys = ToyOuputMappings.Select(M => M.Key).ToArray()*/ };
+            dlg.ShowDialog(this);
+
+            if (dlg.CommandLines != null) {
+
+                Dictionary<TableElement, List<TableConfigSetting>> TableConfigSettings = new Dictionary<TableElement, List<TableConfigSetting>>();
+
+                int TCCNumber = EditionTableNode.EditionTable.TableElements.Count;
+                foreach (var line in dlg.CommandLines) {
+                    CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, dlg.ToyName, Handler);
+                    TCCNumber++;
+                }
+            }
+            EditionTableNode.Rebuild(Handler);
+        }
+
+        private void exportToDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Todo Mapping
+            DirectOutputToolkitDOFOutputs dlg = new DirectOutputToolkitDOFOutputs() { TableNode = EditionTableNode, /*OutputMappings = ToyOuputMappings,*/ Handler = Handler };
+            dlg.ShowDialog(this);
+        }
+
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SettingsForm frm = new SettingsForm() { Settings = Settings };
+            frm.ShowDialog(this);
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
+
+        #region Effect Editor
+        private void ResetEditionTable()
+        {
+            Handler.ResetEditionTable();
+            EditionTableNode.EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
+            EditionTableNode.Rebuild(Handler);
+            ResetAllTableElements();
+            UpdateActivationButton(buttonActivationEdition, 0);
+            UpdateActivationButton(buttonActivationTable, 0);
+            UpdatePulseButton(buttonPulseEdition, 0);
+            UpdatePulseButton(buttonPulseTable, 0);
+        }
+
+        private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button != MouseButtons.None) {
+                //Right mouse
+                if (e.Button == MouseButtons.Right) {
+                    ShowContextMenu(e);
+                }
+            }
+        }
+
+        private void buttonActivationEdition_Click(object sender, EventArgs e)
+        {
+            if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
+                UpdateActivationButton(buttonActivationEdition, value);
+            }
+        }
+
+        private void buttonPulseEdition_Click(object sender, EventArgs e)
+        {
+            if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
+                UpdatePulseButton(buttonPulseEdition, value);
+                Thread.Sleep(Settings.PulseDurationMs);
+                value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
+                UpdatePulseButton(buttonPulseEdition, value);
+            }
+        }
+
+        private void DeleteEffectNode(EffectTreeNode node, bool silent = false)
+        {
+            if (silent || MessageBox.Show($"Do you want to delete effect {node.Text} from {(node.Parent as TableElementTreeNode)?.TE.Name} ?", "Delete Effect", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                var TENode = (node.Parent as TableElementTreeNode);
+                if (TENode != null) {
+                    TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
+                    Handler.RemoveEffects(new List<IEffect> { node.Effect }, (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
+                    if (!silent) {
+                        TENode.Rebuild(Handler);
+                        SetCurrentSelectedNode(TENode);
+                    }
+                }
+            }
+        }
+
+        private void DeleteTableElementNode(TableElementTreeNode node)
+        {
+            if (MessageBox.Show($"Do you want to delete {node.TE.Name} and all its effects ?", "Delete Table Element", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                foreach (var effNode in node.Nodes) {
+                    DeleteEffectNode(effNode as EffectTreeNode, true);
+                }
+                Handler.RemoveTableElement(node.GetTableElement(), node.GetTableType());
+                EditionTableNode.Rebuild(Handler);
+                SetCurrentSelectedNode(EditionTableNode);
+            }
+        }
+
+        private void treeViewEditionTable_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete) {
+
+                if (treeViewEditionTable.SelectedNode is EffectTreeNode effectNode) {
+                    DeleteEffectNode(effectNode);
+                } else if (treeViewEditionTable.SelectedNode is TableElementTreeNode tableElementNode) {
+                    DeleteTableElementNode(tableElementNode);
+                }
+
+                e.Handled = true;
+            }
+        }
+
+        private void treeViewEditionTable_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SetCurrentSelectedNode(treeViewEditionTable.SelectedNode);
+        }
+
+        #endregion
+
 
         #region Dof Table Effects
         private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -187,6 +372,78 @@ namespace DirectOutputToolkit
             SetCurrentSelectedNode(treeViewTableEffects.SelectedNode);
         }
         #endregion
+
+        #region Property Grid
+        private void propertyGridMain_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            var propertyGrid = (s as PropertyGrid);
+            if (propertyGrid.SelectedObject is TableConfigSettingTypeDescriptor TCSDesc) {
+                OnTableConfigSettingChanged(TCSDesc, e);
+            } else if (propertyGrid.SelectedObject is TableElementTypeDescriptor TEDesc) {
+                OnTableElementChanged(TEDesc, e);
+            } else if (propertyGrid.SelectedObject is EditionTableTypeDescriptor ETDesc) {
+                OnEditionTableChanged(ETDesc, e);
+            }
+        }
+
+        private void OnEditionTableChanged(EditionTableTypeDescriptor TD, PropertyValueChangedEventArgs e)
+        {
+            TD.Refresh();
+            propertyGridMain.Refresh();
+            if (treeViewEditionTable.SelectedNode is EditionTableTreeNode editionTableNode) {
+                if (editionTableNode.EditionTable == TD.EditionTable) {
+                    editionTableNode.Rebuild(Handler);
+                    treeViewEditionTable.Refresh();
+                }
+            }
+        }
+
+        private void OnTableElementChanged(TableElementTypeDescriptor TD, PropertyValueChangedEventArgs e)
+        {
+            var TE = TD.WrappedTE;
+            //Check for TE.Name
+
+            if (TE.TableElementType == TableElementTypeEnum.NamedElement) {
+                if (!TE.Name.All(C => char.IsLetterOrDigit(C) || C == '_')) {
+                    var newName = string.Concat(TE.Name.Select(C => (char.IsLetterOrDigit(C) || C == '_') ? C : '_'));
+                    MessageBox.Show($"Invalid Table Element Name [{TE.Name}]\n" +
+                                    $"It must only contains letters, numbers & '_' characters.\n" +
+                                    $"Will set name to [{newName}]", "Wrong Table Element Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    TE.Name = newName;
+                }
+            }
+            TE.Name = TE.Name.Replace(" ", "_");
+            TD.Refresh();
+            propertyGridMain.Refresh();
+            if (treeViewEditionTable.SelectedNode is TableElementTreeNode editionTETreeNode) {
+                if (editionTETreeNode.TE == TE) {
+                    Handler.RemoveTableElement(TE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    editionTETreeNode.Rebuild(Handler);
+                    Handler.AddTableElement(TE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    treeViewEditionTable.Refresh();
+                }
+            }
+        }
+
+        private void OnTableConfigSettingChanged(TableConfigSettingTypeDescriptor TD, PropertyValueChangedEventArgs e)
+        {
+            var TCS = TD.WrappedTCS;
+            TD.Refresh();
+            propertyGridMain.Refresh();
+            if (treeViewEditionTable.SelectedNode is EffectTreeNode editionEffectTreeNode) {
+                if (editionEffectTreeNode.TCS == TCS) {
+                    if (e.ChangedItem.Value == TCS.ColorConfig) {
+                        TCS.ColorName = TCS.ColorConfig.Name;
+                    } else if (e.ChangedItem.Value == TCS.ColorConfig2) {
+                        TCS.ColorName2 = TCS.ColorConfig2.Name;
+                    }
+                    editionEffectTreeNode.Rebuild(Handler, null);
+                    treeViewEditionTable.Refresh();
+                }
+            }
+        }
+        #endregion
+
 
         #region Helpers
         private void SetCurrentSelectedNode(TreeNode node)
@@ -341,6 +598,41 @@ namespace DirectOutputToolkit
             newTENode.Rebuild(Handler);
             SetCurrentSelectedNode(newTENode);
         }
+
+        public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, int TCCNumber, string DofCommand, string ToyName, DirectOutputToolkitHandler Handler)
+        {
+            TableConfigSetting TCS = new TableConfigSetting();
+            TCS.ParseSettingData(DofCommand);
+            TCS.ResolveColorConfigs(Handler.ColorConfigurations);
+
+            int LastEffectsCount = EditionTableNode.EditionTable.Effects.Count;
+
+            var Toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+
+            //TODO REmap 
+            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, TCCNumber, TableNode.EditionTable
+                                                                        , Toy
+                                                                        , 0//Handler.LedControlConfigData.LedWizNumber
+                                                                        , string.Empty//Handler.LedControlConfigData.LedControlIniFile.DirectoryName
+                                                                        , TableNode.EditionTable.RomName);
+
+            for (var num = LastEffectsCount; num < EditionTableNode.EditionTable.Effects.Count; ++num) {
+                EditionTableNode.EditionTable.Effects[num].Init(EditionTableNode.EditionTable);
+            }
+
+            foreach (var te in TableNode.EditionTable.TableElements) {
+                te.AssignedEffects.Init(TableNode.EditionTable);
+                var teNode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
+                if (teNode == null) {
+                    teNode = new TableElementTreeNode(te, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    TableNode.Nodes.Add(teNode);
+                }
+                if (teNode.TE.AssignedEffects.Any(AE => AE.Effect == newEffect)) {
+                    teNode.Rebuild(Handler);
+                }
+            }
+        }
+
 
         private void ShowContextMenu(TreeNodeMouseClickEventArgs e)
         {
