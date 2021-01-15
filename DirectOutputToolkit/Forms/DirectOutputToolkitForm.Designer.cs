@@ -94,24 +94,28 @@
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
             this.newTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.newTableToolStripMenuItem.Text = "New Table";
+            this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // loadTableToolStripMenuItem
             // 
             this.loadTableToolStripMenuItem.Name = "loadTableToolStripMenuItem";
             this.loadTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.loadTableToolStripMenuItem.Text = "Load Table";
+            this.loadTableToolStripMenuItem.Click += new System.EventHandler(this.loadTableToolStripMenuItem_Click);
             // 
             // saveTableToolStripMenuItem
             // 
             this.saveTableToolStripMenuItem.Name = "saveTableToolStripMenuItem";
             this.saveTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.saveTableToolStripMenuItem.Text = "Save Table";
+            this.saveTableToolStripMenuItem.Click += new System.EventHandler(this.saveTableToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // DofConfigToolStripMenuItem
             // 
@@ -127,12 +131,14 @@
             this.importFromDofConfigToolToolStripMenuItem.Name = "importFromDofConfigToolToolStripMenuItem";
             this.importFromDofConfigToolToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.importFromDofConfigToolToolStripMenuItem.Text = "Import from DofConfigTool";
+            this.importFromDofConfigToolToolStripMenuItem.Click += new System.EventHandler(this.importFromDofConfigToolToolStripMenuItem_Click);
             // 
             // exportToDofConfigToolToolStripMenuItem
             // 
             this.exportToDofConfigToolToolStripMenuItem.Name = "exportToDofConfigToolToolStripMenuItem";
             this.exportToDofConfigToolToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.exportToDofConfigToolToolStripMenuItem.Text = "Export to DofConfigTool";
+            this.exportToDofConfigToolToolStripMenuItem.Click += new System.EventHandler(this.exportToDofConfigToolToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -146,6 +152,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -212,6 +219,7 @@
             this.buttonPulseEdition.TabIndex = 25;
             this.buttonPulseEdition.Text = "Pulse";
             this.buttonPulseEdition.UseVisualStyleBackColor = true;
+            this.buttonPulseEdition.Click += new System.EventHandler(this.buttonPulseEdition_Click);
             // 
             // buttonActivationEdition
             // 
@@ -222,6 +230,7 @@
             this.buttonActivationEdition.TabIndex = 24;
             this.buttonActivationEdition.Text = "Activate";
             this.buttonActivationEdition.UseVisualStyleBackColor = true;
+            this.buttonActivationEdition.Click += new System.EventHandler(this.buttonActivationEdition_Click);
             // 
             // treeViewEditionTable
             // 
@@ -233,6 +242,8 @@
             this.treeViewEditionTable.Name = "treeViewEditionTable";
             this.treeViewEditionTable.Size = new System.Drawing.Size(947, 562);
             this.treeViewEditionTable.TabIndex = 23;
+            this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
+            this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             // 
             // buttonPulseTable
             // 
@@ -307,6 +318,7 @@
             this.propertyGridMain.Name = "propertyGridMain";
             this.propertyGridMain.Size = new System.Drawing.Size(306, 883);
             this.propertyGridMain.TabIndex = 0;
+            this.propertyGridMain.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridMain_PropertyValueChanged);
             // 
             // imageListIcons
             // 
