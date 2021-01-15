@@ -16,6 +16,7 @@ namespace DirectOutputControls
         internal void Refresh()
         {
             Text = Area.Name;
+            Checked = Area.Visible;
         }
     }
 }

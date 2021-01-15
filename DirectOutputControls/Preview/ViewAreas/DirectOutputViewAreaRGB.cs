@@ -42,13 +42,13 @@ namespace DirectOutputControls
         [Category("RGB")]
         public int StartAngle { get; set; } = 90;
 
+        [Category("RGB")]
+        public bool ShowMatrixGrid { get; set; } = true;
+
         private byte[] Values = null;
 
         //Adressable Management
         private Rectangle LedRectangle = new Rectangle();
-
-        [Category("RGB")]
-        public bool ShowMatrixGrid { get; set; } = true;
 
         public override bool SetValues(byte[] values)
         {
@@ -179,11 +179,31 @@ namespace DirectOutputControls
 
         public override void Display(Graphics gr, Font f, SolidBrush br)
         {
+            if (!Visible || !Enabled) return;
+
             if (ValueType == ValueTypeEnum.SingleValue) {
                 DisplaySingleValue(gr, f, br);
             } else {
                 DisplayAdressable(gr, f, br);
             }
         }
+
+        public DirectOutputViewAreaRGB() : base() { }
+
+        internal DirectOutputViewAreaRGB(DirectOutputViewAreaRGB src) : base(src)
+        {
+            ValueType = src.ValueType;
+            MxWidth = src.MxWidth;
+            MxHeight = src.MxHeight;
+            RenderType = src.RenderType;
+            StartAngle = src.StartAngle;
+            ShowMatrixGrid = src.ShowMatrixGrid;
+        }
+
+        internal override DirectOutputViewArea Clone()
+        {
+            return new DirectOutputViewAreaRGB(this);
+        }
+
     }
 }
