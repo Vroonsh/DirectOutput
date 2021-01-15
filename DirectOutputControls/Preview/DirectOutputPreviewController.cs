@@ -64,7 +64,7 @@ namespace DirectOutputControls
 
                     //It's an MX output, find MX Area attached and create a ledstrip
                     if (o.Output > DofConfigToolOutputEnum.RGBMXOutputs_Start && o.Output < DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(o.Output)
+                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(A => A.DofOutput == o.Output)
                                                 .Where(A=>A.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable)
                                                 .ToArray();
 
@@ -140,7 +140,7 @@ namespace DirectOutputControls
                             Outputs.Add(new Output() { Name = outputName, Number = NbOutputs + num + 1 - o.PortNumber, Value = 0 });
                         }
 
-                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(o.Output);
+                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(A => A.DofOutput == o.Output);
                         if (matchingAreas.Length > 0) {
                             foreach (var area in matchingAreas) {
                                 var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };

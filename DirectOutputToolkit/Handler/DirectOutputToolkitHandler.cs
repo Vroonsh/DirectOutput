@@ -141,8 +141,13 @@ namespace DirectOutputToolkit
             var table = TableDescriptors[TableType].Table;
             RebuildConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
             table.TableElements.Sort((TE1, TE2) => (TE1.TableElementType == TE2.TableElementType ? TE1.Number.CompareTo(TE2.Number) : TE1.TableElementType.CompareTo(TE2.TableElementType)));
-            Pinball.Table = table;
-            Pinball.Init();
+            table.Init(Pinball);
+        }
+
+        internal void LaunchTable(ETableType TableType)
+        {
+            TableDescriptors[TableType].Table.TriggerStaticEffects();
+            Pinball.Cabinet.Update();
         }
         #endregion
 

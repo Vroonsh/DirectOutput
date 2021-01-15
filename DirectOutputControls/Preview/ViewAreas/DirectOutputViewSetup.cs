@@ -209,12 +209,13 @@ namespace DirectOutputControls
             }
         }
 
-        internal T[] GetViewAreas<T>(DofConfigToolOutputEnum output, bool enabledOnly = true)
+        internal T[] GetViewAreas<T>(Func<DirectOutputViewArea, bool> Match = null, bool enabledOnly = true)
         {
-            if (ViewAreasDictionary.Keys.Contains(output)) {
-                return ViewAreasDictionary[output].Where(V => V is T && (!enabledOnly || V.Enabled)).Cast<T>().ToArray();
+            var areas = AllAreas.Where(V => (V is T) && (!enabledOnly || V.Enabled));
+            if (Match != null) {
+                areas = areas.Where(Match);
             }
-            return new T[0];
+            return areas.Cast<T>().ToArray();
         }
 
         internal DirectOutputViewArea[] HitTest(Point coords)
