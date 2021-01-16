@@ -71,9 +71,7 @@ namespace DirectOutputToolkit
             Configurator.RetrieveEffectSettings(RefEffect.Name, out LedWizNumber, out TCCNumber, out SettingNumber, out Suffix);
 
             //Retrieve Toy & TCCNumber from Chosen Output
-            //TODO
             var Toy = Effect.GetAssignedToy();
-
 
             //Remove all effects from Table & AssignedEffects before rebuilding
             Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
