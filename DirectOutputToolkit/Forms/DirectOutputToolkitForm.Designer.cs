@@ -54,6 +54,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
             this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxRefTableOutputFilter = new System.Windows.Forms.ComboBox();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -191,6 +194,9 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer2.Panel2.Controls.Add(this.comboBoxRefTableOutputFilter);
+            this.splitContainer2.Panel2.Controls.Add(this.label4);
+            this.splitContainer2.Panel2.Controls.Add(this.label3);
             this.splitContainer2.Panel2.Controls.Add(this.buttonPulseTable);
             this.splitContainer2.Panel2.Controls.Add(this.buttonActivationTable);
             this.splitContainer2.Panel2.Controls.Add(this.treeViewTableEffects);
@@ -291,14 +297,12 @@
             // 
             // RomNameComboBox
             // 
-            this.RomNameComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.RomNameComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.RomNameComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.RomNameComboBox.FormattingEnabled = true;
             this.RomNameComboBox.Location = new System.Drawing.Point(79, 31);
             this.RomNameComboBox.Name = "RomNameComboBox";
-            this.RomNameComboBox.Size = new System.Drawing.Size(886, 21);
+            this.RomNameComboBox.Size = new System.Drawing.Size(528, 21);
             this.RomNameComboBox.TabIndex = 25;
             this.RomNameComboBox.SelectedIndexChanged += new System.EventHandler(this.RomNameComboBox_SelectedIndexChanged);
             // 
@@ -326,6 +330,32 @@
             this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
             this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(0, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "label3";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(614, 34);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.TabIndex = 31;
+            this.label4.Text = "Output Filter";
+            // 
+            // comboBoxRefTableOutputFilter
+            // 
+            this.comboBoxRefTableOutputFilter.FormattingEnabled = true;
+            this.comboBoxRefTableOutputFilter.Location = new System.Drawing.Point(694, 31);
+            this.comboBoxRefTableOutputFilter.Name = "comboBoxRefTableOutputFilter";
+            this.comboBoxRefTableOutputFilter.Size = new System.Drawing.Size(270, 21);
+            this.comboBoxRefTableOutputFilter.TabIndex = 32;
             // 
             // DirectOutputToolkitForm
             // 
@@ -384,6 +414,9 @@
         private System.Windows.Forms.Button buttonActivationEdition;
         private System.Windows.Forms.TreeView treeViewEditionTable;
         private System.Windows.Forms.ImageList imageListIcons;
+        private System.Windows.Forms.ComboBox comboBoxRefTableOutputFilter;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
 
