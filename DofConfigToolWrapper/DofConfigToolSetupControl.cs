@@ -421,15 +421,7 @@ namespace DofConfigToolWrapper
             RemapSetup();
 
 
-            (dataGridViewOutputMappings.Columns[OutputColumnNum] as DataGridViewComboBoxColumn).DataSource = Enum.GetValues(typeof(DofConfigToolOutputEnum))
-                                                                                                    .Cast<DofConfigToolOutputEnum>()
-                                                                                                    .Where(x => {
-                                                                                                        return !(typeof(DofConfigToolOutputEnum)
-                                                                                                            .GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x))
-                                                                                                            .GetCustomAttributes(typeof(BrowsableAttribute), false)
-                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || attribute.Browsable == true;
-                                                                                                    }
-                                                                                                    ).ToList();
+            (dataGridViewOutputMappings.Columns[OutputColumnNum] as DataGridViewComboBoxColumn).DataSource = DofConfigToolOutputs.GetPublicDofOutput();
         }
 
         private void RemapSetup()
