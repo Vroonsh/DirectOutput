@@ -2,6 +2,7 @@
 using DirectOutput.FX;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,7 @@ namespace DirectOutputToolkit
     {
         public class EffectDescriptor
         {
-            public string ToyOutput { get; set; }
+            public DofConfigToolOutputEnum ToyOutput { get; set; }
             public string TCS { get; set; }
         }
 
@@ -33,7 +34,7 @@ namespace DirectOutputToolkit
         public string RomName { get; set; } = string.Empty;
         public List<TableElementDescriptor> TableElements = new List<TableElementDescriptor>();
 
-        public void FromTableNode(EditionTableTreeNode node, Dictionary<string, string> ToyOutputMappings)
+        public void FromTableNode(EditionTableTreeNode node, DirectOutputToolkitHandler Handler)
         {
             TableName = node.EditionTable.TableName;
             RomName = node.EditionTable.RomName;
@@ -46,7 +47,7 @@ namespace DirectOutputToolkit
                     var ToyName = effect.GetAssignedToy()?.Name;
 
                     var neweffDesc = new EffectDescriptor();
-                    neweffDesc.ToyOutput = ToyOutputMappings.FirstOrDefault(kv => kv.Key.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase)).Value;
+                    neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
                     neweffDesc.TCS = (effNode as EffectTreeNode).TCS.ToConfigToolCommand();
 
                     newTE.Effects.Add(neweffDesc);
@@ -64,8 +65,7 @@ namespace DirectOutputToolkit
             using (MemoryStream ms = new MemoryStream()) {
                 var serializer = new XmlSerializer(typeof(DirectOutputToolkitTableDescriptor));
                 var tableDesc = new DirectOutputToolkitTableDescriptor();
-//TODO Mapping
-//                tableDesc.FromTableNode(TableNode, ToyOutputMappings);
+                tableDesc.FromTableNode(TableNode, Handler);
                 serializer.Serialize(ms, tableDesc);
                 ms.Position = 0;
                 string Xml = string.Empty;
@@ -125,14 +125,12 @@ namespace DirectOutputToolkit
                         TCS.ParseSettingData(eff.TCS);
                         TCS.ResolveColorConfigs(Handler.ColorConfigurations);
 
-                        //TODO REMap on load
-                        //var ToyName = ToyOutputMappings.FirstOrDefault(kv => kv.Value.Equals(eff.ToyOutput, StringComparison.InvariantCultureIgnoreCase)).Key;
-                        //var Toy = Handler.Toys.FirstOrDefault(T=>T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
-                        //var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
-                        //                                                        , Toy
-                        //                                                        , Handler.LedControlConfigData.LedWizNumber
-                        //                                                        , Handler.LedControlConfigData.LedControlIniFile.DirectoryName, TableNode.EditionTable.RomName);
-                        //var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler.LedControlConfigData);
+                        var Toy = Handler.GetToyFromOutput(eff.ToyOutput);
+                        var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
+                                                                                , Toy
+                                                                                , 0
+                                                                                , Handler.InitFilesPath, TableNode.EditionTable.RomName);
+                        var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
                         SettingNumber++;
                     }
 

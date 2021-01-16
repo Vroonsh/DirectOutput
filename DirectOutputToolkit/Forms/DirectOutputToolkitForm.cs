@@ -64,8 +64,9 @@ namespace DirectOutputToolkit
                 Handler.SetupPinball();
 
                 PreviewForm.Show(this);
+                Screen current = Screen.FromControl(this);
+                PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
                 PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
-
 
                 RomNameComboBox.Items.Clear();
                 RomNameComboBox.Items.Add("");
@@ -159,8 +160,7 @@ namespace DirectOutputToolkit
 
         private void importFromDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TOdo Mapping
-            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { /*AvailableToys = ToyOuputMappings.Select(M => M.Key).ToArray()*/ };
+            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { AvailableToys = Handler.Toys.Select(T=>T.Name).ToArray() };
             dlg.ShowDialog(this);
 
             if (dlg.CommandLines != null) {
@@ -178,8 +178,7 @@ namespace DirectOutputToolkit
 
         private void exportToDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Todo Mapping
-            DirectOutputToolkitDOFOutputs dlg = new DirectOutputToolkitDOFOutputs() { TableNode = EditionTableNode, /*OutputMappings = ToyOuputMappings,*/ Handler = Handler };
+            DirectOutputToolkitDOFOutputs dlg = new DirectOutputToolkitDOFOutputs() { TableNode = EditionTableNode, Handler = Handler };
             dlg.ShowDialog(this);
         }
 
@@ -612,8 +611,8 @@ namespace DirectOutputToolkit
             //TODO REmap 
             var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, TCCNumber, TableNode.EditionTable
                                                                         , Toy
-                                                                        , 0//Handler.LedControlConfigData.LedWizNumber
-                                                                        , string.Empty//Handler.LedControlConfigData.LedControlIniFile.DirectoryName
+                                                                        , Handler.GetToyLedwizNum(ToyName)
+                                                                        , Handler.InitFilesPath
                                                                         , TableNode.EditionTable.RomName);
 
             for (var num = LastEffectsCount; num < EditionTableNode.EditionTable.Effects.Count; ++num) {

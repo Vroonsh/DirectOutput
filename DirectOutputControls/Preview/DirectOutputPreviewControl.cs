@@ -99,7 +99,7 @@ namespace DirectOutputControls
             var areas = _DirectOutputViewSetup.HitTest(e.Location);
             AreasTooltip.UseFading = true;
             if (areas.Length > 0) {
-                AreasTooltip.Show(string.Join("\n", areas.Where(A => !(A is DirectOutputViewAreaVirtual) && A.Enabled && A.Visible).Select(A=>A.Name).ToArray()), this, e.Location.X + 10, e.Location.Y);
+                AreasTooltip.Show(string.Join("\n", areas.Where(A => !(A is DirectOutputViewAreaVirtual) && A.Enabled && A.Visible).Select(A=>$"{A.Name} [{A.DofOutput}]").ToArray()), this, e.Location.X + 10, e.Location.Y);
             } else {
                 AreasTooltip.Hide(this);
             }

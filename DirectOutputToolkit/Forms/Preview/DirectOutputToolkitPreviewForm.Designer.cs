@@ -32,8 +32,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewVisibility = new System.Windows.Forms.TreeView();
-            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
+            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -79,22 +79,23 @@
             this.treeViewVisibility.TabIndex = 0;
             this.treeViewVisibility.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewVisibility_AfterCheck);
             // 
+            // directOutputPreviewControl1
+            // 
+            this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
+            this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
+            this.directOutputPreviewControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.directOutputPreviewControl1.DrawViewAreasInfos = false;
+            this.directOutputPreviewControl1.Location = new System.Drawing.Point(0, 0);
+            this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
+            this.directOutputPreviewControl1.Size = new System.Drawing.Size(591, 999);
+            this.directOutputPreviewControl1.TabIndex = 0;
+            // 
             // imageListIcons
             // 
             this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
             this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListIcons.Images.SetKeyName(0, "StartButton");
             this.imageListIcons.Images.SetKeyName(1, "LaunchButton");
-            // 
-            // directOutputPreviewControl1
-            // 
-            this.directOutputPreviewControl1.AreaDisplayColor = System.Drawing.Color.Green;
-            this.directOutputPreviewControl1.BackgroundColor = System.Drawing.Color.MidnightBlue;
-            this.directOutputPreviewControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.directOutputPreviewControl1.Location = new System.Drawing.Point(0, 0);
-            this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
-            this.directOutputPreviewControl1.Size = new System.Drawing.Size(591, 999);
-            this.directOutputPreviewControl1.TabIndex = 0;
             // 
             // DirectOutputToolkitPreviewForm
             // 
