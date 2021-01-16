@@ -126,6 +126,12 @@ namespace DirectOutputControls
                                     OutputNameBlue = $"{LWE.Name}.{o.PortNumber+2:00}"
                                 };
                                 p.Cabinet.Toys.Add(toy);
+
+                                //Create 3 analog Toys for rgbsplit
+                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
+                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber+1:00}" });
+                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber+2:00}" });
+
                                 break;
                             }
 
