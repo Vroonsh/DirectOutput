@@ -1,5 +1,6 @@
 ﻿using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,13 +25,13 @@ namespace DirectOutputToolkit
 
         private void LedControlToolkitDOFOutputs_Load(object sender, EventArgs e)
         {
-            comboBoxOutput.DataSource = Handler.Toys.Select(T => T.Name).ToArray();
+            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames();
         }
 
         private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
             var ToyName = comboBoxOutput.Text;
-            var Toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            var Toy = Handler.GetToyFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
             Dictionary<string, List<TableElement>> TCSDict = new Dictionary<string, List<TableElement>>();
