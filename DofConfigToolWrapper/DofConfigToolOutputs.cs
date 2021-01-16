@@ -196,4 +196,23 @@ namespace DofConfigToolWrapper
         [Browsable(false)]
         RGBMXOutputs_End,
     }
+
+    public class DofConfigToolOutputs
+    {
+        public static DofConfigToolOutputEnum GetOutput(string OutputName) => Enum.GetValues(typeof(DofConfigToolOutputEnum))
+                                                                                                    .Cast<DofConfigToolOutputEnum>()
+                                                                                                    .FirstOrDefault(x => x.ToString().Equals(OutputName, StringComparison.InvariantCultureIgnoreCase));
+
+        public static DofConfigToolOutputEnum[] GetPublicDofOutput() => Enum.GetValues(typeof(DofConfigToolOutputEnum))
+                                                                                                    .Cast<DofConfigToolOutputEnum>()
+                                                                                                    .Where(x => {
+                                                                                                        return !(typeof(DofConfigToolOutputEnum)
+                                                                                                            .GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x))
+                                                                                                            .GetCustomAttributes(typeof(BrowsableAttribute), false)
+                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || attribute.Browsable == true;
+                                                                                                    }
+                                                                                                    ).ToArray();
+
+        public static string[] GetPublicDofOutputNames() => GetPublicDofOutput().Select(O => O.ToString()).ToArray();
+    }
 }
