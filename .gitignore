@@ -115,3 +115,4 @@ UpgradeLog*.XML
 
 # omit generated files
 DOFSetup/Generated/*
+vs-chromium-project.txt
