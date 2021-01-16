@@ -19,11 +19,12 @@ namespace DirectOutputControls
         public DofConfigToolSetup DofSetup { get; set; }
         public DirectOutputViewSetup DofViewSetup { get; set; }
 
-        class OutputRemap
+        public class OutputRemap
         {
             public int OutputIndex { get; set; } = -1;
             public int OutputSize { get; set; } = -1;
             public int LedWizNum { get; set; } = -1;
+            public string ToyName { get; set; } = string.Empty;
             public DirectOutputViewArea Area { get; set; } = null;
         }
 
@@ -96,7 +97,7 @@ namespace DirectOutputControls
                                 Outputs.Add(new Output() { Name = LWEO.OutputName, Number = NbOutputs + 1, Value = 0 });
 
                                 foreach (var area in areas) {
-                                    var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange };
+                                    var remap = new OutputRemap() { ToyName = ledstrip.Name, LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange };
                                     OutputMappings.Add(remap);
                                 }
 
@@ -143,7 +144,7 @@ namespace DirectOutputControls
                         var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(A => A.DofOutput == o.Output);
                         if (matchingAreas.Length > 0) {
                             foreach (var area in matchingAreas) {
-                                var remap = new OutputRemap() { LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };
+                                var remap = new OutputRemap() { ToyName = toy?.Name, LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };
                                 OutputMappings.Add(remap);
                             }
                         }
@@ -156,6 +157,15 @@ namespace DirectOutputControls
             }
 
             p.Cabinet.OutputControllers.Add(this);
+        }
+
+        public OutputRemap GetToyOutputRemap(Func<OutputRemap, bool> Match)
+        {
+            var remap = OutputMappings.FirstOrDefault(M => Match(M));
+            if (remap != null) {
+                return remap;
+            }
+            return null;
         }
 
         protected override void ConnectToController()

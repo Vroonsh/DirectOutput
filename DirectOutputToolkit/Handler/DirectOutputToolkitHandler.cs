@@ -57,6 +57,24 @@ namespace DirectOutputToolkit
                 }
             };
 
+        internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
+        {
+            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            return (remap != null ? remap.Area.DofOutput : DofConfigToolOutputEnum.Invalid);
+        }
+
+        internal IToy GetToyFromOutput(DofConfigToolOutputEnum ToyOutput)
+        {
+            var remap = PreviewController.GetToyOutputRemap(M => M.Area.DofOutput == ToyOutput);
+            return (remap != null ? Toys.FirstOrDefault(T => T.Name.Equals(remap.ToyName, StringComparison.InvariantCultureIgnoreCase)) : null);
+        }
+
+        internal int GetToyLedwizNum(string ToyName)
+        {
+            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            return (remap != null ? remap.LedWizNum : 0);
+        }
+
         internal string[] GetTableNames() => TableDescriptors.Select(TD => $"{TD.Value.Table.TableName}").ToArray();
         internal Table GetTable(ETableType tableType) => TableDescriptors[tableType].Table;
         internal Table GetTableByName(string text) => TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(text, StringComparison.InvariantCultureIgnoreCase));
@@ -64,6 +82,8 @@ namespace DirectOutputToolkit
         private DofConfigToolFilesHandler DofFilesHandler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups" };
 
         public LedControlConfigList LedControlConfigList => DofFilesHandler.ConfigFiles;
+
+        public string InitFilesPath => DofFilesHandler.UserDirectory;
 
         public ColorConfigList ColorConfigurations => LedControlConfigList.Count == 0 ? null : LedControlConfigList[0].ColorConfigurations;
 
@@ -283,6 +303,7 @@ namespace DirectOutputToolkit
 
             return compatibleToys.ToArray();
         }
+
         #endregion
 
         #region Edition Table
