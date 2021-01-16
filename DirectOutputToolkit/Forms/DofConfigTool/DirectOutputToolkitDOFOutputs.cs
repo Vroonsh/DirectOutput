@@ -14,7 +14,6 @@ namespace DirectOutputToolkit
 {
     public partial class DirectOutputToolkitDOFOutputs : Form
     {
-        public Dictionary<string, string> OutputMappings = null;
         public EditionTableTreeNode TableNode = null;
         public DirectOutputToolkitHandler Handler = null;
 
@@ -25,12 +24,12 @@ namespace DirectOutputToolkit
 
         private void LedControlToolkitDOFOutputs_Load(object sender, EventArgs e)
         {
-            comboBoxOutput.DataSource = OutputMappings.Select(M=>M.Value).ToArray();
+            comboBoxOutput.DataSource = Handler.Toys.Select(T => T.Name).ToArray();
         }
 
         private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var ToyName = OutputMappings.FirstOrDefault(M => M.Value.Equals(comboBoxOutput.Text, StringComparison.InvariantCultureIgnoreCase)).Key;
+            var ToyName = comboBoxOutput.Text;
             var Toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
