@@ -14,6 +14,16 @@ using System.Threading.Tasks;
 
 namespace DirectOutputControls
 {
+    public class RGBSplitAnalogAlphaToy : AnalogAlphaToy
+    {
+        public override void UpdateOutputs()
+        {
+            if (Layers.Count == 0) return;
+
+            base.UpdateOutputs();
+        }
+    }
+
     public class DirectOutputPreviewController : OutputControllerCompleteBase
     {
         public DofConfigToolSetup DofSetup { get; set; }
@@ -128,10 +138,9 @@ namespace DirectOutputControls
                                 p.Cabinet.Toys.Add(toy);
 
                                 //Create 3 analog Toys for rgbsplit
-                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
-                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber+1:00}" });
-                                p.Cabinet.Toys.Add(new AnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber+2:00}" });
-
+                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
+                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 1:00}" });
+                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 2:00}" });
                                 break;
                             }
 
