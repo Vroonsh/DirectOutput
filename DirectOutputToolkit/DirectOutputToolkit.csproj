@@ -126,6 +126,7 @@
     <Compile Include="TreeNodes\EditionTableTreeNode.cs" />
     <Compile Include="TreeNodes\EffectTreeNode.cs" />
     <Compile Include="TreeNodes\ITableElementTreeNode.cs" />
+    <Compile Include="TreeNodes\StaticEffectsTreeNode.cs" />
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
     <EmbeddedResource Include="Forms\DirectOutputToolkitForm.resx">
       <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>

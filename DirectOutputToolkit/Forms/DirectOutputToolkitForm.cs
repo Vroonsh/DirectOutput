@@ -73,6 +73,7 @@ namespace DirectOutputToolkit
                 RomNameComboBox.Items.AddRange(Handler.LedControlConfigList[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
 
                 EditionTableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
+                EditionTableNode.Rebuild(Handler);
                 treeViewEditionTable.Nodes.Add(EditionTableNode);
                 treeViewEditionTable.Refresh();
 
@@ -224,6 +225,9 @@ namespace DirectOutputToolkit
                 var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
                 SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationEdition, value);
+            } else if (treeViewEditionTable.SelectedNode is StaticEffectsTreeNode) {
+                Handler.TriggerStaticEffects(DirectOutputToolkitHandler.ETableType.EditionTable);
+                PreviewForm.Invalidate();
             }
         }
 
@@ -309,14 +313,9 @@ namespace DirectOutputToolkit
 
             treeViewTableEffects.Nodes.Clear();
 
-            if (table.AssignedStaticEffects.Count > 0) {
-                var listNode = new TreeNode("Persistent effects");
-                foreach (var effect in table.AssignedStaticEffects) {
-                    var effectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler);
-                    listNode.Nodes.Add(effectNode);
-                }
-                treeViewTableEffects.Nodes.Add(listNode);
-            }
+            var staticEffectsNode = new StaticEffectsTreeNode(table, DirectOutputToolkitHandler.ETableType.ReferenceTable);
+            staticEffectsNode.Rebuild(Handler);
+            treeViewTableEffects.Nodes.Add(staticEffectsNode);
 
             foreach (TableElement tableElement in table.TableElements) {
                 var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
@@ -525,24 +524,34 @@ namespace DirectOutputToolkit
             var command = (item.Tag as TreeNodeCommand);
             var SrcEffectNode = (command.Sender as EffectTreeNode);
             var TENode = (command.Target as TableElementTreeNode);
+            var StaticNode = (command.Target as StaticEffectsTreeNode);
             var parentTE = TENode?.TE ?? null;
             var EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
 
-            if (TENode == null) {
+            if (TENode == null && StaticNode == null) {
                 parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"{NewTableElementName}{EditionTable.TableElements.Count}" };
                 parentTE.AssignedEffects = new AssignedEffectList();
-                Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableElements.Add(parentTE);
+                EditionTable.TableElements.Add(parentTE);
                 TENode = new TableElementTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable);
                 EditionTableNode.Nodes.Add(TENode);
                 EditionTableNode.Refresh();
             }
 
-            var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
-            newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
-            parentTE.AssignedEffects.Init(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
-            TENode.Nodes.Add(newEffectNode);
-            TENode.Rebuild(Handler);
-            SetCurrentSelectedNode(TENode);
+            if (TENode != null) {
+                var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
+                newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
+                parentTE.AssignedEffects.Init(EditionTable);
+                TENode.Nodes.Add(newEffectNode);
+                TENode.Rebuild(Handler);
+                SetCurrentSelectedNode(TENode);
+            } else {
+                var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
+                newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
+                EditionTable.AssignedStaticEffects.Init(EditionTable);
+                EditionTableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
+                EditionTableNode.StaticEffectsNode.Rebuild(Handler);
+                SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
+            }
         }
 
         private void OnCopyTableElementToEditor(object sender, EventArgs e)
@@ -551,10 +560,11 @@ namespace DirectOutputToolkit
             var command = (item.Tag as TreeNodeCommand);
             var SrcTENode = (command.Sender as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
+            var StaticNode = (command.Target as StaticEffectsTreeNode);
             var parentTE = TargetTENode?.TE ?? null;
             var EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
 
-            if (TargetTENode == null) {
+            if (TargetTENode == null && StaticNode == null) {
                 parentTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"{NewTableElementName}{EditionTable.TableElements.Count}" };
                 parentTE.AssignedEffects = new AssignedEffectList();
                 EditionTable.TableElements.Add(parentTE);
@@ -563,14 +573,26 @@ namespace DirectOutputToolkit
                 EditionTableNode.Refresh();
             }
 
-            foreach (var node in SrcTENode.Nodes) {
-                var effectNode = node as EffectTreeNode;
-                var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler);
-                newEffectNode.Rebuild(Handler, effectNode.Effect);
+            if (TargetTENode != null) {
+                foreach (var node in SrcTENode.Nodes) {
+                    var effectNode = node as EffectTreeNode;
+                    var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler);
+                    newEffectNode.Rebuild(Handler, effectNode.Effect);
+                }
+                parentTE.AssignedEffects.Init(EditionTable);
+                TargetTENode.Rebuild(Handler);
+                SetCurrentSelectedNode(TargetTENode);
+            } else {
+                foreach (var node in SrcTENode.Nodes) {
+                    var effectNode = node as EffectTreeNode;
+                    var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, effectNode.Effect, Handler);
+                    newEffectNode.Rebuild(Handler, effectNode.Effect);
+                    EditionTableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
+                }
+                EditionTable.AssignedStaticEffects.Init(EditionTable);
+                EditionTableNode.StaticEffectsNode.Rebuild(Handler);
+                SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
             }
-            parentTE.AssignedEffects.Init(EditionTable);
-            TargetTENode.Rebuild(Handler);
-            SetCurrentSelectedNode(TargetTENode);
         }
 
         private void OnInsertTableElementToEditor(object sender, EventArgs e)
@@ -641,7 +663,7 @@ namespace DirectOutputToolkit
                 var addMenu = new MenuItem("Add effect to");
                 effectMenu.MenuItems.Add(addMenu);
 
-                addMenu.MenuItems.Add(new MenuItem("<New Table Element>", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
+                addMenu.MenuItems.Add(new MenuItem("New Table Element", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
                 foreach (var node in EditionTableNode.Nodes) {
                     addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                 }
@@ -662,7 +684,9 @@ namespace DirectOutputToolkit
                     insertMenu = new MenuItem($"Insert [{tableElementNode.ToString()}] before");
                     teMenu.MenuItems.Add(insertMenu);
                     foreach (var node in EditionTableNode.Nodes) {
-                        insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                        if (node is TableElementTreeNode) {
+                            insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                        }
                     }
                 }
                 teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewTableEffects, e.Location);
