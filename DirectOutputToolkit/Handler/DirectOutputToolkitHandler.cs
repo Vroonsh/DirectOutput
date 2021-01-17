@@ -239,6 +239,14 @@ namespace DirectOutputToolkit
             Pinball.ReceiveData(D);
             return D.Value;
         }
+
+        internal void TriggerStaticEffects(ETableType tableType)
+        {
+            Pinball.Table = GetTable(tableType);
+            Pinball.Table.TriggerStaticEffects();
+            Pinball.Cabinet.Update();
+        }
+
         #endregion
 
         #region Effects 
