@@ -91,15 +91,16 @@ namespace DirectOutputControls
 
         public void OnControllerRefresh()
         {
-            Parent?.Invoke((Action)(() => this.Invalidate()));
+            Parent?.Invoke((Action)(() => this.Refresh()));
         }
 
         private void DirectOutputPreviewControl_MouseMove(object sender, MouseEventArgs e)
         {
+            if (_DirectOutputViewSetup == null) return;
             var areas = _DirectOutputViewSetup.HitTest(e.Location);
             AreasTooltip.UseFading = true;
             if (areas.Length > 0) {
-                AreasTooltip.Show(string.Join("\n", areas.Where(A => !(A is DirectOutputViewAreaVirtual) && A.Enabled && A.Visible).Select(A=>$"{A.Name} [{A.DofOutput}]").ToArray()), this, e.Location.X + 10, e.Location.Y);
+                AreasTooltip.Show(string.Join("\n", areas.Where(A => !(A is DirectOutputViewAreaVirtual) && A.Enabled && A.Visible).Select(A=>$"{A.DisplayName}").ToArray()), this, e.Location.X + 10, e.Location.Y);
             } else {
                 AreasTooltip.Hide(this);
             }
