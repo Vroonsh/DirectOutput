@@ -16,7 +16,7 @@ namespace DirectOutputControls
     {
         public ExtList<DirectOutputViewArea> ViewAreas { get; private set; } = new ExtList<DirectOutputViewArea>();
 
-        private Dictionary<DofConfigToolOutputEnum, List<DirectOutputViewArea>> ViewAreasDictionary = new Dictionary<DofConfigToolOutputEnum, List<DirectOutputViewArea>>();
+        private Dictionary<DofConfigToolOutputEnum, List<DirectOutputViewAreaUpdatable>> ViewAreasDictionary = new Dictionary<DofConfigToolOutputEnum, List<DirectOutputViewAreaUpdatable>>();
         private List<DirectOutputViewArea> AllAreas = new List<DirectOutputViewArea>();
 
         public DirectOutputViewSetup()
@@ -93,7 +93,7 @@ namespace DirectOutputControls
         private void OnAreasInserted(IEnumerable<DirectOutputViewArea> areas)
         {
             AllAreas.AddRange(areas);
-            AssignToDictionary(areas);
+            AssignToDictionary(areas.Where(A=>A is DirectOutputViewAreaUpdatable).Cast<DirectOutputViewAreaUpdatable>());
             foreach (var area in areas) {
                 AddChildrenCallbacks(area);
             }
@@ -101,26 +101,21 @@ namespace DirectOutputControls
         private void OnAreasRemoved(IEnumerable<DirectOutputViewArea> areas)
         {
             AllAreas.RemoveAll(A=>areas.Contains(A));
-            UnassignFromDictionary(areas);
+            UnassignFromDictionary(areas.Where(A => A is DirectOutputViewAreaUpdatable).Cast<DirectOutputViewAreaUpdatable>());
             foreach (var area in areas) {
                 RemoveChildrenCallbacks(area);
             }
         }
 
-        private void AssignToDictionary(IEnumerable<DirectOutputViewArea> areas)
+        private void AssignToDictionary(IEnumerable<DirectOutputViewAreaUpdatable> areas)
         {
             foreach (var area in areas) {
-                if (!ViewAreasDictionary.Keys.Contains(area.DofOutput)) {
-                    ViewAreasDictionary[area.DofOutput] = new List<DirectOutputViewArea>();
+                foreach(var output in area.DofOutputs) {
+                    if (!ViewAreasDictionary.Keys.Contains(output)) {
+                        ViewAreasDictionary[output] = new List<DirectOutputViewAreaUpdatable>();
+                    }
+                    ViewAreasDictionary[output].Add(area);
                 }
-                ViewAreasDictionary[area.DofOutput].Add(area);
-
-                //foreach (var output in area.ComboDofOutputs) {
-                //    if (!ViewAreasDictionary.Keys.Contains(output)) {
-                //        ViewAreasDictionary[output] = new List<DirectOutputViewArea>();
-                //    }
-                //    ViewAreasDictionary[output].Add(area);
-                //}
             }
         }
 
@@ -140,25 +135,27 @@ namespace DirectOutputControls
             return false;
         }
 
-        private void UnassignFromDictionary(IEnumerable<DirectOutputViewArea> areas)
+        private void UnassignFromDictionary(IEnumerable<DirectOutputViewAreaUpdatable> areas)
         {
             foreach (var area in areas) {
-                if (ViewAreasDictionary.Keys.Contains(area.DofOutput)) {
-                    ViewAreasDictionary[area.DofOutput].RemoveAll(A=>areas.Contains(A));
+                foreach (var output in area.DofOutputs) {
+                    if (ViewAreasDictionary.Keys.Contains(output)) {
+                        ViewAreasDictionary[output].RemoveAll(A => areas.Contains(A));
+                    }
                 }
-
-                //foreach (var output in area.ComboDofOutputs) {
-                //    if (ViewAreasDictionary.Keys.Contains(output)) {
-                //        ViewAreasDictionary[output].RemoveAll(A=>areas.Contains(A));
-                //    }
-                //}
             }
+        }
+
+        private void SetParent(DirectOutputViewArea Parent, DirectOutputViewArea Child)
+        {
+            Child.Parent = Parent;
         }
 
         public void Init()
         {
             AllAreas.Clear();
             ViewAreasDictionary.Clear();
+            ParseHierarchy(SetParent);
             RectangleF baseRect = RectangleF.FromLTRB(0.0f, 0.0f, 1.0f, 1.0f);
             foreach (var area in ViewAreas) {
                 area.ComputeGlobalDimensions(baseRect);
@@ -172,6 +169,7 @@ namespace DirectOutputControls
             ViewAreasDictionary.Clear();
             ViewAreas.Clear();
             ViewAreas.AddRange(other.ViewAreas);
+            ParseHierarchy(SetParent);
             RectangleF baseRect = RectangleF.FromLTRB(0.0f, 0.0f, 1.0f, 1.0f);
             foreach (var area in ViewAreas) {
                 area.ComputeGlobalDimensions(baseRect);

@@ -35,10 +35,15 @@ namespace DirectOutputControls
             public int OutputSize { get; set; } = -1;
             public int LedWizNum { get; set; } = -1;
             public string ToyName { get; set; } = string.Empty;
-            public DirectOutputViewArea Area { get; set; } = null;
         }
 
-        List<OutputRemap> OutputMappings = new List<OutputRemap>();
+        public class AreaMapping
+        {
+            public DirectOutputViewAreaUpdatable Area { get; set; } = null;
+            public List<OutputRemap> OutputMappings = new List<OutputRemap>();
+        }
+
+        private List<AreaMapping> AreaMappings = new List<AreaMapping>();
 
         public Action Refresh = null;
 
@@ -62,7 +67,7 @@ namespace DirectOutputControls
             p.Cabinet.Clear(true);
 
             Outputs = new OutputList();
-            OutputMappings.Clear();
+            AreaMappings.Clear();
 
             int firstAdressableLedNumber = 1;
 
@@ -75,17 +80,13 @@ namespace DirectOutputControls
 
                     //It's an MX output, find MX Area attached and create a ledstrip
                     if (o.Output > DofConfigToolOutputEnum.RGBMXOutputs_Start && o.Output < DofConfigToolOutputEnum.RGBMXOutputs_End) {
-                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(A => A.DofOutput == o.Output)
+                        var areas = DofViewSetup.GetViewAreas<DirectOutputViewAreaRGB>(A => A.Enabled && A is DirectOutputViewAreaUpdatable && (A as DirectOutputViewAreaUpdatable).HasOutput(o.Output))
                                                 .Where(A=>A.ValueType == DirectOutputViewAreaRGB.ValueTypeEnum.Adressable)
                                                 .ToArray();
 
                         if (areas != null && areas.Length > 0) {
-                            int maxWidth = 0;
-                            int maxHeight = 0;
-                            foreach (var area in areas) {
-                                maxWidth = Math.Max(maxWidth, area.MxWidth);
-                                maxHeight = Math.Max(maxHeight, area.MxHeight);
-                            }
+                            int maxWidth = areas.Max(A=>A.MxWidth);
+                            int maxHeight = areas.Max(A=>A.MxHeight);
 
                             if (maxWidth > 0 && maxHeight > 0) {
                                 var ledstrip = new LedStrip() {
@@ -106,12 +107,14 @@ namespace DirectOutputControls
                                 LWE.Outputs.Add(LWEO);
                                 Outputs.Add(new Output() { Name = LWEO.OutputName, Number = NbOutputs + 1, Value = 0 });
 
-                                foreach (var area in areas) {
-                                    var remap = new OutputRemap() { ToyName = ledstrip.Name, LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange };
-                                    OutputMappings.Add(remap);
+                                foreach(var area in areas) {
+                                    AddAreaMapping(area, new OutputRemap() { ToyName = ledstrip.Name, LedWizNum = LWE.LedWizNumber, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange });
                                 }
 
                                 NbOutputs += maxWidth * maxHeight * o.PortRange;
+                            }
+
+                            foreach (var area in areas) {
                             }
                         }
                     } else {
@@ -156,11 +159,10 @@ namespace DirectOutputControls
                             Outputs.Add(new Output() { Name = outputName, Number = NbOutputs + num + 1 - o.PortNumber, Value = 0 });
                         }
 
-                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewArea>(A => A.DofOutput == o.Output);
+                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewAreaUpdatable>(A => A is DirectOutputViewAreaUpdatable && (A as DirectOutputViewAreaUpdatable).HasOutput(o.Output));
                         if (matchingAreas.Length > 0) {
                             foreach (var area in matchingAreas) {
-                                var remap = new OutputRemap() { ToyName = toy?.Name, LedWizNum = LWE.LedWizNumber, Area = area, OutputIndex = NbOutputs, OutputSize = o.PortRange };
-                                OutputMappings.Add(remap);
+                                AddAreaMapping(area, new OutputRemap() { ToyName = toy?.Name, LedWizNum = LWE.LedWizNumber, OutputIndex = NbOutputs, OutputSize = o.PortRange });
                             }
                         }
 
@@ -174,13 +176,28 @@ namespace DirectOutputControls
             p.Cabinet.OutputControllers.Add(this);
         }
 
-        public OutputRemap GetToyOutputRemap(Func<OutputRemap, bool> Match)
+        private void AddAreaMapping(DirectOutputViewAreaUpdatable area, OutputRemap outputRemap)
         {
-            var remap = OutputMappings.FirstOrDefault(M => Match(M));
-            if (remap != null) {
-                return remap;
+            if (!AreaMappings.Any(AM=>AM.Area == area)) {
+                AreaMappings.Add(new AreaMapping() { Area = area });
+            }
+            AreaMappings.First(AM=>AM.Area == area).OutputMappings.Add(outputRemap);
+        }
+
+        public AreaMapping GetToyAreaRemap(Func<OutputRemap, bool> Match)
+        {
+            foreach (var areaRemap in AreaMappings) {
+                var remap = areaRemap.OutputMappings.FirstOrDefault(M => Match(M));
+                if (remap != null) {
+                    return areaRemap;
+                }
             }
             return null;
+        }
+
+        public AreaMapping GetToyAreaRemap(Func<AreaMapping, bool> Match)
+        {
+            return AreaMappings.FirstOrDefault(AM => Match(AM));
         }
 
         protected override void ConnectToController()
@@ -199,9 +216,12 @@ namespace DirectOutputControls
         protected override void UpdateOutputs(byte[] OutputValues)
         {
             bool needRefresh = false;
-            foreach(var mapping in OutputMappings) {
-                var pValues = OutputValues.Skip(mapping.OutputIndex).Take(mapping.OutputSize).ToArray();
-                needRefresh |= mapping.Area.SetValues(pValues);
+            foreach (var mapping in AreaMappings) {
+                mapping.Area.StartUpdate();
+                foreach (var outputRemap in mapping.OutputMappings) {
+                    var pValues = OutputValues.Skip(outputRemap.OutputIndex).Take(outputRemap.OutputSize).ToArray();
+                    needRefresh |= mapping.Area.SetValues(pValues);
+                }
             }
             if (needRefresh && Refresh != null) {
                 Refresh.Invoke();
