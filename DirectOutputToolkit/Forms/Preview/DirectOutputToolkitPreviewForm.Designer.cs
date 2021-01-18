@@ -94,8 +94,17 @@
             // 
             this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
             this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListIcons.Images.SetKeyName(0, "StartButton");
-            this.imageListIcons.Images.SetKeyName(1, "LaunchButton");
+            this.imageListIcons.Images.SetKeyName(0, "ButtonBackground");
+            this.imageListIcons.Images.SetKeyName(1, "StartButton");
+            this.imageListIcons.Images.SetKeyName(2, "LaunchButton");
+            this.imageListIcons.Images.SetKeyName(3, "AuthLaunchButton");
+            this.imageListIcons.Images.SetKeyName(4, "ZBLaunchButton");
+            this.imageListIcons.Images.SetKeyName(5, "FireButton");
+            this.imageListIcons.Images.SetKeyName(6, "Coin");
+            this.imageListIcons.Images.SetKeyName(7, "Exit");
+            this.imageListIcons.Images.SetKeyName(8, "ExtraBall");
+            this.imageListIcons.Images.SetKeyName(9, "Genre");
+            this.imageListIcons.Images.SetKeyName(10, "HowToPlay");
             // 
             // DirectOutputToolkitPreviewForm
             // 
