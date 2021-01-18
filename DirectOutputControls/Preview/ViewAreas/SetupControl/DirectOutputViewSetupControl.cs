@@ -116,7 +116,7 @@ namespace DirectOutputControls
             if (command.Sender is TreeNodeArea nodeArea) {
                 if (_DirectOutputViewSetup.HasArea(nodeArea.Area)) {
                     var newArea = new T();
-                    newArea.Name = _DirectOutputViewSetup.FindUniqueAreaName(newArea.IsVirtual() ? "Virtual Area" : "New Area");
+                    newArea.Name = _DirectOutputViewSetup.FindUniqueAreaName(newArea is DirectOutputViewAreaVirtual ? "Virtual Area" : "New Area");
                     nodeArea.Area.Children.Add(newArea);
                     nodeArea.Nodes.Add(new TreeNodeArea(newArea));
                     nodeArea.Expand();
@@ -126,7 +126,7 @@ namespace DirectOutputControls
                 }
             } else {
                 var newArea = new T();
-                newArea.Name = _DirectOutputViewSetup.FindUniqueAreaName(newArea.IsVirtual() ? "Virtual Area" : "New Area");
+                newArea.Name = _DirectOutputViewSetup.FindUniqueAreaName(newArea is DirectOutputViewAreaVirtual ? "Virtual Area" : "New Area");
                 _DirectOutputViewSetup.ViewAreas.Add(newArea);
                 treeViewAreas.Nodes.Add(new TreeNodeArea(newArea));
                 treeViewAreas.Invalidate();
@@ -210,7 +210,7 @@ namespace DirectOutputControls
                 } else if (hit.Node is TreeNodeArea nodeArea) {
                     ContextMenu areaMenu = new ContextMenu();
 
-                    if (nodeArea.Area.IsVirtual()) {
+                    if (nodeArea.Area is DirectOutputViewAreaVirtual) {
                         var addMenu = new MenuItem($"[{nodeArea.Text}] Add area");
                         areaMenu.MenuItems.Add(addMenu);
                         addMenu.MenuItems.Add(new MenuItem("Virtual area", new EventHandler(this.OnAddVirtualArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });

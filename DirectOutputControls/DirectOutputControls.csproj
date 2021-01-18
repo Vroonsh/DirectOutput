@@ -46,7 +46,10 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Preview\ViewAreas\DirectOutputViewAreaUpdatable.cs" />
+    <Compile Include="Preview\ViewAreas\DirectOutputViewAreaVirtual.cs" />
     <Compile Include="Preview\ViewAreas\DirectOutputViewSetupSerializer.cs" />
+    <Compile Include="Preview\ViewAreas\SetupControl\TreeNodeAreaOutput.cs" />
     <Compile Include="TreeView\TreeViewExtensions.cs" />
     <Compile Include="TypeDescriptors\BaseTypeDescriptor.cs" />
     <Compile Include="TypeDescriptors\CustomField.cs" />

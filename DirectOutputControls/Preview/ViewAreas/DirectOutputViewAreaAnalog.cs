@@ -11,10 +11,8 @@ using System.Xml.Serialization;
 namespace DirectOutputControls
 {
     [Serializable]
-    public class DirectOutputViewAreaAnalog : DirectOutputViewArea
+    public class DirectOutputViewAreaAnalog : DirectOutputViewAreaUpdatable
     {
-        public override bool IsVirtual() => false;
-
         [XmlIgnore]
         [Category("Analog")]
         public Color BackColor { get; set; } = Color.White;
@@ -31,8 +29,13 @@ namespace DirectOutputControls
 
         public override bool SetValues(byte[] values)
         {
-            if (Value != values[0]) {
-                Value = values[0];
+            if (Value != values[0] || (FirstUpdate == false && values[0] != 0)) {
+                if (FirstUpdate) {
+                    Value = values[0];
+                    FirstUpdate = false;
+                } else {
+                    Value += values[0];
+                }
                 return true;
             }
             return false;
@@ -40,9 +43,11 @@ namespace DirectOutputControls
 
         public override void Display(Graphics gr, Font f, SolidBrush br)
         {
+            if (DofOutputs.Count == 0) return;
+
             var rect = ComputeDisplayRect();
 
-            var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
+            var icon = DofConfigToolResources.GetDofOutputIcon(DofOutputs[0]);
             if (Value < 0) {
                 br.Color = BackColor;
             } else {

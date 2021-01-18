@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 namespace DirectOutputControls
 {
     [Serializable]
-    public class DirectOutputViewAreaRGB : DirectOutputViewArea
+    public class DirectOutputViewAreaRGB : DirectOutputViewAreaUpdatable
     {
-        public override bool IsVirtual() => false;
-
         public enum ValueTypeEnum
         {
             SingleValue,
@@ -52,22 +50,36 @@ namespace DirectOutputControls
 
         public override bool SetValues(byte[] values)
         {
-            if (Values == null) {
+            if (Values == null && FirstUpdate) {
                 Values = new byte[values.Length];
             }
 
-            if (!values.CompareContents(Values)) {
-                values.CopyTo(Values, 0);
-                return true;
-            } 
+            if (FirstUpdate) {
+                FirstUpdate = false;
+                if (!values.CompareContents(Values)) {
+                    values.CopyTo(Values, 0);
+                    return true;
+                }
+            } else {
+                if (values.Any(V=>V != 0)) {
+                    var minSize = Math.Min(values.Length, Values.Length);
+                    for (var num = 0; num < minSize; num++) {
+                        Values[num] += values[num];
+                    }
+                    return true;
+                }
+            }
+
             return false;
         }
 
         private void DisplaySingleValue(Graphics gr, Font f, SolidBrush br)
         {
+            if (DofOutputs.Count == 0) return;
+
             var rect = ComputeDisplayRect();
 
-            var icon = DofConfigToolResources.GetDofOutputIcon(DofOutput);
+            var icon = DofConfigToolResources.GetDofOutputIcon(DofOutputs[0]);
             if (icon == null) {
                 if (Values != null) {
                     br.Color = Color.FromArgb(Values[0], Values[1], Values[2]);
