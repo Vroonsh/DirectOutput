@@ -56,6 +56,8 @@ namespace DirectOutputControls
         protected RectangleF GlobalDimensions;
         protected Rectangle DisplayRect = Rectangle.Empty;
 
+        public abstract void Cleanup();
+
         public void ComputeGlobalDimensions(RectangleF ParentDimensions)
         {
             GlobalDimensions.X = ParentDimensions.X + (_Dimensions.X * ParentDimensions.Width);
