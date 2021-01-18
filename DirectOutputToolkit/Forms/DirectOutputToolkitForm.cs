@@ -630,7 +630,6 @@ namespace DirectOutputToolkit
 
             var Toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
 
-            //TODO REmap 
             var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, TCCNumber, TableNode.EditionTable
                                                                         , Toy
                                                                         , Handler.GetToyLedwizNum(ToyName)
