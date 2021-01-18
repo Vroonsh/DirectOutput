@@ -65,7 +65,7 @@ namespace DirectOutputControls
 
             //Reset Cabinet
             p.Finish();
-            p.Cabinet.Clear(true);
+            p.Cabinet = new Cabinet();
 
             Outputs = new OutputList();
             AreaMappings.Clear();
