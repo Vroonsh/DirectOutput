@@ -33,27 +33,41 @@ namespace DirectOutputToolkit
         public string TableName { get; set; } = string.Empty;
         public string RomName { get; set; } = string.Empty;
         public List<TableElementDescriptor> TableElements = new List<TableElementDescriptor>();
+        public List<EffectDescriptor> StaticEffects = new List<EffectDescriptor>();
 
         public void FromTableNode(EditionTableTreeNode node, DirectOutputToolkitHandler Handler)
         {
             TableName = node.EditionTable.TableName;
             RomName = node.EditionTable.RomName;
-            foreach (var TENode in node.Nodes) {
-                var TE = (TENode as TableElementTreeNode).TE;
-                var newTE = new TableElementDescriptor() { Type = TE.TableElementType, Name = TE.Name, Number = TE.Number };
+            foreach (var tableNode in node.Nodes) {
+                if (tableNode is TableElementTreeNode TENode){
+                    var TE = (TENode as TableElementTreeNode).TE;
+                    var newTE = new TableElementDescriptor() { Type = TE.TableElementType, Name = TE.Name, Number = TE.Number };
 
-                foreach(var effNode in (TENode as TreeNode).Nodes) {
-                    var effect = (effNode as EffectTreeNode).Effect;
-                    var ToyName = effect.GetAssignedToy()?.Name;
+                    foreach (var effNode in (TENode as TreeNode).Nodes) {
+                        var effect = (effNode as EffectTreeNode).Effect;
+                        var ToyName = effect.GetAssignedToy()?.Name;
 
-                    var neweffDesc = new EffectDescriptor();
-                    neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
-                    neweffDesc.TCS = (effNode as EffectTreeNode).TCS.ToConfigToolCommand();
+                        var neweffDesc = new EffectDescriptor();
+                        neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
+                        neweffDesc.TCS = (effNode as EffectTreeNode).TCS.ToConfigToolCommand();
 
-                    newTE.Effects.Add(neweffDesc);
+                        newTE.Effects.Add(neweffDesc);
+                    }
+
+                    TableElements.Add(newTE);
+                } else if (tableNode is StaticEffectsTreeNode staticNode) {
+                    foreach (var effNode in (staticNode as TreeNode).Nodes) {
+                        var effect = (effNode as EffectTreeNode).Effect;
+                        var ToyName = effect.GetAssignedToy()?.Name;
+
+                        var neweffDesc = new EffectDescriptor();
+                        neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
+                        neweffDesc.TCS = (effNode as EffectTreeNode).TCS.ToConfigToolCommand();
+
+                        StaticEffects.Add(neweffDesc);
+                    }
                 }
-
-                TableElements.Add(newTE);
             }
         }
     }
@@ -107,8 +121,35 @@ namespace DirectOutputToolkit
                 TableNode.Refresh();
 
                 var TCCNumber = 0;
-                foreach(var te in tableDescriptor.TableElements) {
-                    var newTENode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N=>N.TE.TableElementType == te.Type &&
+
+                foreach(var eff in tableDescriptor.StaticEffects) {
+                    var SettingNumber = 0;
+
+                    TableConfigSetting TCS = new TableConfigSetting();
+                    TCS.ParseSettingData(eff.TCS);
+                    TCS.ResolveColorConfigs(Handler.ColorConfigurations);
+
+                    var Toys = Handler.GetToysFromOutput(eff.ToyOutput);
+                    foreach (var Toy in Toys) {
+                        var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
+                                                                                , Toy
+                                                                                , Handler.GetToyLedwizNum(Toy.Name)
+                                                                                , Handler.InitFilesPath, TableNode.EditionTable.RomName);
+                        var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
+                        TableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
+                        SettingNumber++;
+                    }
+                }
+
+                foreach (var eff in TableNode.EditionTable.Effects) {
+                    eff.Init(TableNode.EditionTable);
+                }
+                TableNode.EditionTable.AssignedStaticEffects.Init(TableNode.EditionTable);
+                TableNode.StaticEffectsNode.Rebuild(Handler);
+                TCCNumber++;
+
+                foreach (var te in tableDescriptor.TableElements) {
+                    var newTENode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE.TableElementType == te.Type &&
                                                                                                 (te.Type == TableElementTypeEnum.NamedElement ? N.TE.Name.Equals(te.Name, StringComparison.InvariantCultureIgnoreCase) : N.TE.Number == te.Number));
                     if (newTENode == null) {
                         var newTE = new TableElement() { TableElementType = te.Type, Name = te.Name, Number = te.Number };
@@ -116,7 +157,7 @@ namespace DirectOutputToolkit
                         TableNode.EditionTable.TableElements.Add(newTE);
                         newTENode = new TableElementTreeNode(newTE, DirectOutputToolkitHandler.ETableType.EditionTable);
                         TableNode.Nodes.Add(newTENode);
-                    } 
+                    }
 
                     var SettingNumber = 0;
                     var lastEffectsCount = TableNode.EditionTable.Effects.Count;
@@ -125,13 +166,15 @@ namespace DirectOutputToolkit
                         TCS.ParseSettingData(eff.TCS);
                         TCS.ResolveColorConfigs(Handler.ColorConfigurations);
 
-                        var Toy = Handler.GetToyFromOutput(eff.ToyOutput);
-                        var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
-                                                                                , Toy
-                                                                                , 0
-                                                                                , Handler.InitFilesPath, TableNode.EditionTable.RomName);
-                        var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
-                        SettingNumber++;
+                        var Toys = Handler.GetToysFromOutput(eff.ToyOutput);
+                        foreach (var Toy in Toys) {
+                            var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
+                                                                                    , Toy
+                                                                                    , Handler.GetToyLedwizNum(Toy.Name)
+                                                                                    , Handler.InitFilesPath, TableNode.EditionTable.RomName);
+                            var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
+                            SettingNumber++;
+                        }
                     }
 
                     for (var num = lastEffectsCount; num < TableNode.EditionTable.Effects.Count; ++num) {
@@ -141,6 +184,7 @@ namespace DirectOutputToolkit
                     newTENode.TE.AssignedEffects.Init(TableNode.EditionTable);
                     newTENode.Rebuild(Handler);
                 }
+
 
                 TableNode.Refresh();
 

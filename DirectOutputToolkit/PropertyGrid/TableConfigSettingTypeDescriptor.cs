@@ -101,15 +101,6 @@ namespace DirectOutputToolkit
                     new ReadOnlyAttribute(!Editable),
                     new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
                 }));
-
-            //CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this, 
-            //    new CustomField<string>("DofOutput", Enum.GetName(typeof(DofConfigToolOutputEnum), EffectNode.Output)), 
-            //    new Attribute[] 
-            //    {
-            //        new DisplayNameAttribute("Dof Output"),
-            //        new ReadOnlyAttribute(!Editable),
-            //        new EditorAttribute(typeof(DofOutputEditor), typeof(UITypeEditor))
-            //    }));
         }
 
         public override void Refresh()
