@@ -38,9 +38,14 @@ namespace DirectOutputControls
 
         public virtual bool SetValues(byte[] values) => false;
 
+        public override void Cleanup()
+        {
+            DofOutputs = DofOutputs.Distinct().ToList();
+        }
+
         internal DirectOutputViewAreaUpdatable(DirectOutputViewAreaUpdatable src) : base(src)
         {
-            DofOutputs.AddRange(src.DofOutputs);
+            DofOutputs.Union(src.DofOutputs);
             Squarred = src.Squarred;
         }
 

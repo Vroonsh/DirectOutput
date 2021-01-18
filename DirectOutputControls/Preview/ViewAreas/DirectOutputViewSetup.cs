@@ -52,6 +52,13 @@ namespace DirectOutputControls
             OnAreasInserted(e.NewItem.GetAllAreas());
         }
 
+        internal void Cleanup()
+        {
+            foreach(var area in ViewAreas) {
+                area.Cleanup();
+            }
+        }
+
         private void Children_AfterRemove(object sender, RemoveEventArgs<DirectOutputViewArea> e)
         {
             OnAreasRemoved(e.Item.GetAllAreas());
@@ -145,7 +152,7 @@ namespace DirectOutputControls
                 }
             }
         }
-
+        
         private void SetParent(DirectOutputViewArea Parent, DirectOutputViewArea Child)
         {
             Child.Parent = Parent;
