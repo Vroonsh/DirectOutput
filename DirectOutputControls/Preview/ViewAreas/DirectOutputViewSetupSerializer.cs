@@ -43,6 +43,7 @@ namespace DirectOutputControls
             if (!FileName.IsNullOrEmpty()) {
                 using (MemoryStream ms = new MemoryStream()) {
                     var serializer = new XmlSerializer(typeof(DirectOutputViewSetup));
+                    Setup.Cleanup();
                     serializer.Serialize(ms, Setup);
                     ms.Position = 0;
                     string Xml = string.Empty;

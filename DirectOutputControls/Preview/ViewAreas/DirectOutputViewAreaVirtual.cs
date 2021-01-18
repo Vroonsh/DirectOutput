@@ -17,6 +17,8 @@ namespace DirectOutputControls
 
         public bool Draw { get; set; } = false;
 
+        public override void Cleanup() {}
+
         public override void Display(Graphics gr, Font f, SolidBrush br)
         {
             if (!Enabled || !Visible) return;
