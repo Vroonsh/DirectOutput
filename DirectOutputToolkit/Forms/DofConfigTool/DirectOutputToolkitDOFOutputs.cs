@@ -31,13 +31,13 @@ namespace DirectOutputToolkit
         private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
             var ToyName = comboBoxOutput.Text;
-            var Toy = Handler.GetToyFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
+            var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
             Dictionary<string, List<TableElement>> TCSDict = new Dictionary<string, List<TableElement>>();
             foreach(var TE in TableNode.EditionTable.TableElements) {
                 foreach(var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
-                    if (eff.GetAssignedToy() == Toy) {
+                    if (Toys.Contains(eff.GetAssignedToy())) {
                         TableConfigSetting TCS = new TableConfigSetting();
                         TCS.FromEffect(eff);
 
