@@ -367,16 +367,6 @@ namespace DirectOutput.Cab
             Log.Write("Cabinet finished");
         }
 
-        public void Clear(bool keepLookups)
-        {
-            Toys.Clear();
-            OutputControllers.Clear();
-            _Outputs = new CabinetOutputList(this);
-            if (!keepLookups) {
-                _Colors.Clear();
-                _Curves.Clear();
-            }
-        }
 
 
         #region Constructor
