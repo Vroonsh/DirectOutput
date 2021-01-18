@@ -146,20 +146,6 @@ namespace DirectOutput.FX
 
 
         /// <summary>
-        /// Will tell if this effect or any targeted effects have an action on the provided toys list
-        /// </summary>
-        /// <param name="ToyNames">a list of toy names</param>
-        /// <returns>true if any effect in the chain is acting on at least one of the provided toys</returns>
-        /// <remarks>only pass through to the targeted effect</remarks>
-        public override bool ActOnAnyToys(IEnumerable<string> ToyNames)
-        {
-            if (TargetEffect != null) {
-                return TargetEffect.ActOnAnyToys(ToyNames);
-            }
-            return base.ActOnAnyToys(ToyNames);
-        }
-
-        /// <summary>
         /// Will populate a List with all effects from an effect hierarchy
         /// </summary>
         /// <param name="Effects">a List of effets to fill</param>
