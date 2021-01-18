@@ -304,7 +304,7 @@ namespace LedControlToolkit
 
             treeViewTableLedEffects.Nodes.Clear();
             var ledstrips = Handler.Pinball.Cabinet.Toys.Where(T => T is LedStrip).Select(T => (T as LedStrip).Name).ToArray();
-            var effects = Handler.Pinball.Table.Effects.Where(E => E.ActOnAnyToys(ledstrips)).ToList();
+//            var effects = Handler.Pinball.Table.Effects.Where(E => E.ActOnAnyToys(ledstrips)).ToList();
 
             List<TableElement> assignedeffects = new List<TableElement>();
             foreach (TableElement TE in Handler.Pinball.Table.TableElements) {
