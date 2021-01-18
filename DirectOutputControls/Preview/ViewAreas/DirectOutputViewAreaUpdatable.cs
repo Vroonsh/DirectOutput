@@ -22,7 +22,7 @@ namespace DirectOutputControls
         [Browsable(false)]
         public override string DisplayName => $"{Name} [{string.Join(",", DofOutputs)}]";
 
-        internal bool HasOutput(DofConfigToolOutputEnum output) => (DofOutputs.Any(O => O == output));
+        public bool HasOutput(DofConfigToolOutputEnum output) => (DofOutputs.Any(O => O == output));
 
         protected Rectangle ComputeDisplayRect()
         {
