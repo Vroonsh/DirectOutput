@@ -59,20 +59,24 @@ namespace DirectOutputToolkit
 
         internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
         {
-            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
-            return (remap != null ? remap.Area.DofOutput : DofConfigToolOutputEnum.Invalid);
+            var remap = PreviewController.GetToyAreaRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            return (remap != null ? remap.Area.DofOutputs[0] : DofConfigToolOutputEnum.Invalid);
         }
 
         internal IToy GetToyFromOutput(DofConfigToolOutputEnum ToyOutput)
         {
-            var remap = PreviewController.GetToyOutputRemap(M => M.Area.DofOutput == ToyOutput);
-            return (remap != null ? Toys.FirstOrDefault(T => T.Name.Equals(remap.ToyName, StringComparison.InvariantCultureIgnoreCase)) : null);
+            var remap = PreviewController.GetToyAreaRemap(M => M.Area.DofOutputs[0] == ToyOutput);
+            //TODO
+            //return (remap != null ? Toys.FirstOrDefault(T => T.Name.Equals(remap.ToyName, StringComparison.InvariantCultureIgnoreCase)) : null);
+            return null;
         }
 
         internal int GetToyLedwizNum(string ToyName)
         {
-            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
-            return (remap != null ? remap.LedWizNum : 0);
+            var remap = PreviewController.GetToyAreaRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            //TODO
+            //return (remap != null ? remap.LedWizNum : 0);
+            return 0;
         }
 
         internal string[] GetTableNames() => TableDescriptors.Select(TD => $"{TD.Value.Table.TableName}").ToArray();
