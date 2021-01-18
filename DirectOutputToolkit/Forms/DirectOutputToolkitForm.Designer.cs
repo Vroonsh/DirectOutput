@@ -46,6 +46,8 @@
             this.buttonPulseEdition = new System.Windows.Forms.Button();
             this.buttonActivationEdition = new System.Windows.Forms.Button();
             this.treeViewEditionTable = new System.Windows.Forms.TreeView();
+            this.comboBoxRefTableOutputFilter = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.buttonPulseTable = new System.Windows.Forms.Button();
             this.buttonActivationTable = new System.Windows.Forms.Button();
             this.treeViewTableEffects = new System.Windows.Forms.TreeView();
@@ -54,9 +56,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
             this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBoxRefTableOutputFilter = new System.Windows.Forms.ComboBox();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -196,7 +195,6 @@
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.splitContainer2.Panel2.Controls.Add(this.comboBoxRefTableOutputFilter);
             this.splitContainer2.Panel2.Controls.Add(this.label4);
-            this.splitContainer2.Panel2.Controls.Add(this.label3);
             this.splitContainer2.Panel2.Controls.Add(this.buttonPulseTable);
             this.splitContainer2.Panel2.Controls.Add(this.buttonActivationTable);
             this.splitContainer2.Panel2.Controls.Add(this.treeViewTableEffects);
@@ -250,6 +248,23 @@
             this.treeViewEditionTable.TabIndex = 23;
             this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
+            // 
+            // comboBoxRefTableOutputFilter
+            // 
+            this.comboBoxRefTableOutputFilter.FormattingEnabled = true;
+            this.comboBoxRefTableOutputFilter.Location = new System.Drawing.Point(694, 31);
+            this.comboBoxRefTableOutputFilter.Name = "comboBoxRefTableOutputFilter";
+            this.comboBoxRefTableOutputFilter.Size = new System.Drawing.Size(270, 21);
+            this.comboBoxRefTableOutputFilter.TabIndex = 32;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(614, 34);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.TabIndex = 31;
+            this.label4.Text = "Output Filter";
             // 
             // buttonPulseTable
             // 
@@ -331,32 +346,6 @@
             this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
             this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 30;
-            this.label3.Text = "label3";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(614, 34);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 13);
-            this.label4.TabIndex = 31;
-            this.label4.Text = "Output Filter";
-            // 
-            // comboBoxRefTableOutputFilter
-            // 
-            this.comboBoxRefTableOutputFilter.FormattingEnabled = true;
-            this.comboBoxRefTableOutputFilter.Location = new System.Drawing.Point(694, 31);
-            this.comboBoxRefTableOutputFilter.Name = "comboBoxRefTableOutputFilter";
-            this.comboBoxRefTableOutputFilter.Size = new System.Drawing.Size(270, 21);
-            this.comboBoxRefTableOutputFilter.TabIndex = 32;
-            // 
             // DirectOutputToolkitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -416,7 +405,6 @@
         private System.Windows.Forms.ImageList imageListIcons;
         private System.Windows.Forms.ComboBox comboBoxRefTableOutputFilter;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
     }
 }
 
