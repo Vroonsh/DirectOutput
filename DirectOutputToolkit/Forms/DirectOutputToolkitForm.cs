@@ -161,7 +161,7 @@ namespace DirectOutputToolkit
 
         private void importFromDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { AvailableToys = Handler.Toys.Select(T=>T.Name).ToArray() };
+            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { Handler = Handler, AvailableToys = Handler.Toys.Select(T=>T.Name).ToArray() };
             dlg.ShowDialog(this);
 
             if (dlg.CommandLines != null) {
@@ -643,7 +643,7 @@ namespace DirectOutputToolkit
 
             foreach (var te in TableNode.EditionTable.TableElements) {
                 te.AssignedEffects.Init(TableNode.EditionTable);
-                var teNode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
+                var teNode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
                 if (teNode == null) {
                     teNode = new TableElementTreeNode(te, DirectOutputToolkitHandler.ETableType.EditionTable);
                     TableNode.Nodes.Add(teNode);
