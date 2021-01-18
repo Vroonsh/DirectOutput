@@ -48,8 +48,14 @@ namespace DirectOutputToolkit
         {
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.StartButton, imageListIcons.Images["StartButton"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.LaunchButton, imageListIcons.Images["LaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListIcons.Images["LaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListIcons.Images["LaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListIcons.Images["AuthLaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListIcons.Images["ZBLaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FireButton, imageListIcons.Images["FireButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Coin, imageListIcons.Images["Coin"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Exit, imageListIcons.Images["Exit"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ExtraBall, imageListIcons.Images["ExtraBall"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Genre, imageListIcons.Images["Genre"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.HowToPlay, imageListIcons.Images["HowToPlay"]);
         }
 
         private void HierarchyFunc(DirectOutputViewArea Parent, DirectOutputViewArea Child)
