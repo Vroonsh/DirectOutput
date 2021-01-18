@@ -809,7 +809,7 @@ namespace LedControlToolkit
 
             foreach (var te in TableNode.EditionTable.TableElements) {
                 te.AssignedEffects.Init(TableNode.EditionTable);
-                var teNode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
+                var teNode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
                 if (teNode == null) {
                     teNode = new TableElementTreeNode(te, LedControlToolkitHandler.ETableType.EditionTable);
                     TableNode.Nodes.Add(teNode);

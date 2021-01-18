@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DirectOutput.LedControl.Loader;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,7 @@ namespace DirectOutputToolkit
         public string[] AvailableToys = new string[0];
         public string[] CommandLines = null;
         public string ToyName => comboBoxOutput.Text;
+        public DirectOutputToolkitHandler Handler { get; set; } = null;
 
         public DirectOutputToolkitDOFCommandsDialog()
         {
