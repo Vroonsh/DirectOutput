@@ -107,7 +107,7 @@ namespace LedControlToolkit
 
                 var TCCNumber = 0;
                 foreach(var te in tableDescriptor.TableElements) {
-                    var newTENode = TableNode.Nodes.Cast<TableElementTreeNode>().FirstOrDefault(N=>N.TE.TableElementType == te.Type &&
+                    var newTENode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N=>N.TE.TableElementType == te.Type &&
                                                                                                 (te.Type == TableElementTypeEnum.NamedElement ? N.TE.Name.Equals(te.Name, StringComparison.InvariantCultureIgnoreCase) : N.TE.Number == te.Number));
                     if (newTENode == null) {
                         var newTE = new TableElement() { TableElementType = te.Type, Name = te.Name, Number = te.Number };
