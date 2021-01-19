@@ -56,6 +56,42 @@ namespace DirectOutputToolkit
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ExtraBall, imageListIcons.Images["ExtraBall"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Genre, imageListIcons.Images["Genre"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.HowToPlay, imageListIcons.Images["HowToPlay"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackLeft, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackCenter, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackRight, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleLeft, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleCenter, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleRight, imageListIcons.Images["BumperCap"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Back, imageListIcons.Images["BumperCapKiss4"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Left, imageListIcons.Images["BumperCapKiss2"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Right, imageListIcons.Images["BumperCapKiss1"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Center, imageListIcons.Images["BumperCapKiss3"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotLeft, imageListIcons.Images["SlingshotLeft"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotRight, imageListIcons.Images["SlingshotRight"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperLeft, imageListIcons.Images["LeftFlipper"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperRight, imageListIcons.Images["RightFlipper"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Shaker, imageListIcons.Images["Shaker"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Gear, imageListIcons.Images["Gear"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Fan, imageListIcons.Images["Fan"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Knocker, imageListIcons.Images["Knocker"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Beacon, imageListIcons.Images["GyroRed"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitHighTone, imageListIcons.Images["Chime"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitMidTone, imageListIcons.Images["Chime"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitLowTone, imageListIcons.Images["Chime"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitExtraLowTone, imageListIcons.Images["Chime"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Chime5, imageListIcons.Images["Chime"]);
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.TopperBell, imageListIcons.Images["Bell"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellLarge, imageListIcons.Images["Bell"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellSmall, imageListIcons.Images["Bell"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.RepeatingBell, imageListIcons.Images["Bell"]);
         }
 
         private void HierarchyFunc(DirectOutputViewArea Parent, DirectOutputViewArea Child)
