@@ -92,12 +92,6 @@ namespace DirectOutputControls
             privateDoubleBuffered.SetValue(treeViewAreas, true);
         }
 
-        private void treeViewAreas_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right) {
-            }
-        }
-
         private void OnSetupChanged()
         {
             if (_DirectOutputViewSetup != null) {
