@@ -112,7 +112,7 @@ namespace DirectOutputToolkit
         }
 
         #region Pinball
-        internal void SetupPinball()
+        internal bool SetupPinball()
         {
             FinishPinball();
 
@@ -126,6 +126,10 @@ namespace DirectOutputToolkit
             DofFilesHandler.RootDirectory = Path.Combine(new string[] { dir , "setups"});
             DofFilesHandler.DofSetup = DofConfigToolSetup;
             DofFilesHandler.UpdateConfigFiles();
+            if (DofFilesHandler.ConfigFiles.Count == 0) {
+                MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             PreviewController.DofSetup = DofConfigToolSetup;
             PreviewController.DofViewSetup = DofViewSetup;
@@ -133,6 +137,7 @@ namespace DirectOutputToolkit
             PreviewController.Setup(Pinball);
 
             Pinball.Init();
+            return true;
         }
 
         internal void FinishPinball()

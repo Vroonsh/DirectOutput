@@ -61,7 +61,9 @@ namespace DirectOutputToolkit
                 Handler.DofConfigToolSetup = DofConfigToolSetup;
                 Handler.DofViewSetup = DofViewSetup;
                 Handler.PreviewControl = PreviewForm.PreviewControl;
-                Handler.SetupPinball();
+                if (!Handler.SetupPinball()) {
+                    return false;
+                }
 
                 PreviewForm.Show(this);
                 Screen current = Screen.FromControl(this);

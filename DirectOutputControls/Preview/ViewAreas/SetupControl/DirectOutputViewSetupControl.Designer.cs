@@ -96,7 +96,6 @@
             this.treeViewAreas.TabIndex = 1;
             this.treeViewAreas.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewAreas_AfterCheck);
             this.treeViewAreas.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewAreas_AfterSelect);
-            this.treeViewAreas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeViewAreas_MouseClick);
             this.treeViewAreas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewAreas_MouseDown);
             // 
             // label1
