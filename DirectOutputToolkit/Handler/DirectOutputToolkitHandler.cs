@@ -116,20 +116,28 @@ namespace DirectOutputToolkit
         {
             FinishPinball();
 
-            Pinball = new Pinball();
-            Pinball.Setup();
-
-            TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
-            TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
-
             var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
-            DofFilesHandler.RootDirectory = Path.Combine(new string[] { dir , "setups"});
+            DofFilesHandler.RootDirectory = Path.Combine(new string[] { dir, "setups" });
             DofFilesHandler.DofSetup = DofConfigToolSetup;
             DofFilesHandler.UpdateConfigFiles();
             if (DofFilesHandler.ConfigFiles.Count == 0) {
                 MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
+            Pinball = new Pinball();
+            var GlobalConfig = new GlobalConfig(){
+                IniFilesPath = DofFilesHandler.UserDirectory,
+                EnableLogging = true,
+                ClearLogOnSessionStart = true,
+                LedWizDefaultMinCommandIntervalMs = 10
+            };
+            var fileName = Path.Combine(DofFilesHandler.UserDirectory, "GlobalConfig.xml");
+            GlobalConfig.SaveGlobalConfig(fileName);
+            Pinball.Setup(GlobalConfigFilename: fileName);
+
+            TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
+            TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
 
             PreviewController.DofSetup = DofConfigToolSetup;
             PreviewController.DofViewSetup = DofViewSetup;
