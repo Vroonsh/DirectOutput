@@ -71,7 +71,7 @@ namespace DirectOutputToolkit
 
             List<string> toynames = new List<string>();
             foreach(var remap in remaps) {
-                toynames.AddRange(remap.OutputMappings.Select(OM => OM.ToyName));
+                toynames.AddRange(remap.OutputMappings.Where(OM=>OM.DofOutput == ToyOutput).Select(OM => OM.ToyName));
             }
 
             return Pinball.Cabinet.Toys.Where(T => toynames.Contains(T.Name)).ToArray();
