@@ -13,6 +13,7 @@ using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +87,7 @@ namespace DirectOutputToolkit
         internal Table GetTable(ETableType tableType) => TableDescriptors[tableType].Table;
         internal Table GetTableByName(string text) => TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(text, StringComparison.InvariantCultureIgnoreCase));
 
-        private DofConfigToolFilesHandler DofFilesHandler = new DofConfigToolFilesHandler() { RootDirectory = "DofToolkit\\setups" };
+        private DofConfigToolFilesHandler DofFilesHandler = new DofConfigToolFilesHandler() {};
 
         public LedControlConfigList LedControlConfigList => DofFilesHandler.ConfigFiles;
 
@@ -121,6 +122,8 @@ namespace DirectOutputToolkit
             TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
             TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
 
+            var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
+            DofFilesHandler.RootDirectory = Path.Combine(new string[] { dir , "setups"});
             DofFilesHandler.DofSetup = DofConfigToolSetup;
             DofFilesHandler.UpdateConfigFiles();
 

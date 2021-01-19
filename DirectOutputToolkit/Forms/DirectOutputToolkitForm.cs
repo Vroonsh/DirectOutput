@@ -169,7 +169,12 @@ namespace DirectOutputToolkit
                 Dictionary<TableElement, List<TableConfigSetting>> TableConfigSettings = new Dictionary<TableElement, List<TableConfigSetting>>();
 
                 int TCCNumber = EditionTableNode.EditionTable.TableElements.Count;
-                foreach (var line in dlg.CommandLines) {
+
+                var cmdLines = dlg.CommandLines.ToList();
+                Handler.LedControlConfigList[0].ResolveTableVariables(cmdLines);
+                Handler.LedControlConfigList[0].ResolveVariables(cmdLines);
+
+                foreach (var line in cmdLines) {
                     CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, dlg.ToyName, Handler);
                     TCCNumber++;
                 }
