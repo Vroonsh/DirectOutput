@@ -110,7 +110,7 @@ namespace LedControlToolkit
                 EffectNode.Effect.SetAssignedToy(Handler.Pinball.Cabinet.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase)));
             }
 
-            var effectType = WrappedTCS.EffectType;
+            var effectType = WrappedTCS.AreaEffectType;
 
             PropertyDescriptors["ColorConfig2"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
             PropertyDescriptors["PlasmaSpeed"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
