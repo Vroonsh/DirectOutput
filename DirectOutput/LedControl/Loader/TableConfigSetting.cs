@@ -358,19 +358,19 @@ namespace DirectOutput.LedControl.Loader
                      "If it's not a matrix effect, it's Invalid\n" +
                      "It could be None if no specific effect is declared but an area was setup.")]
         [DefaultValue(EffectTypeMX.Invalid)]
-        public EffectTypeMX EffectType { get; set; } = EffectTypeMX.Invalid;
+        public EffectTypeMX AreaEffectType { get; set; } = EffectTypeMX.Invalid;
         [Browsable(false)]
-        public bool IsArea => EffectType != EffectTypeMX.Invalid;
+        public bool IsArea => AreaEffectType != EffectTypeMX.Invalid;
         [Browsable(false)]
-        public bool IsShape => EffectType == EffectTypeMX.Shape;
+        public bool IsShape => AreaEffectType == EffectTypeMX.Shape;
         [Browsable(false)]
-        public bool IsBitmap => EffectType == EffectTypeMX.Bitmap;
+        public bool IsBitmap => AreaEffectType == EffectTypeMX.Bitmap;
         [Browsable(false)]
-        public bool IsShift => EffectType == EffectTypeMX.Shift;
+        public bool IsShift => AreaEffectType == EffectTypeMX.Shift;
         [Browsable(false)]
-        public bool IsFlicker => EffectType == EffectTypeMX.Flicker;
+        public bool IsFlicker => AreaEffectType == EffectTypeMX.Flicker;
         [Browsable(false)]
-        public bool IsPlasma => EffectType == EffectTypeMX.Plasma;
+        public bool IsPlasma => AreaEffectType == EffectTypeMX.Plasma;
 
         [Category("Area")]
         [DisplayName("Left (%)")]
@@ -701,17 +701,17 @@ namespace DirectOutput.LedControl.Loader
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     PlasmaSpeed = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Plasma;
+                    AreaEffectType = EffectTypeMX.Plasma;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APD" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     PlasmaDensity = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Plasma;
+                    AreaEffectType = EffectTypeMX.Plasma;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC")
                 {
                     ColorName2 = Parts[PartNr].Substring(3).ToUpper();
-                    EffectType = EffectTypeMX.Plasma;
+                    AreaEffectType = EffectTypeMX.Plasma;
                 }
                 //else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC" && Parts[PartNr].Substring(3).IsInteger())
                 //{
@@ -724,109 +724,109 @@ namespace DirectOutput.LedControl.Loader
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "SHP" )
                 {
                     ShapeName = Parts[PartNr].Substring(3).Trim().ToUpper();
-                    EffectType = EffectTypeMX.Shape;
+                    AreaEffectType = EffectTypeMX.Shape;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABT" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapTop = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 }
                 else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABL" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapLeft = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABW" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapWidth = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABH" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapHeight = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABF" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapFrame = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationStepSize = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAC" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationStepCount = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAF" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaBitmapAnimationFrameDuration = 1000 / Parts[PartNr].Substring(3).ToInteger().Limit(10, int.MaxValue);
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAD" && Enum.IsDefined(typeof(MatrixAnimationStepDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaBitmapAnimationDirection = (MatrixAnimationStepDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAB" && Enum.IsDefined(typeof(AnimationBehaviourEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaBitmapAnimationBehaviour = (AnimationBehaviourEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    EffectType = EffectTypeMX.Bitmap;
+                    AreaEffectType = EffectTypeMX.Bitmap;
                 } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFDEN" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerDensity = Parts[PartNr].Substring(5).ToInteger();
-                    EffectType = EffectTypeMX.Flicker;
+                    AreaEffectType = EffectTypeMX.Flicker;
                 } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMIN" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerMinDurationMs = Parts[PartNr].Substring(5).ToInteger();
-                    EffectType = EffectTypeMX.Flicker;
+                    AreaEffectType = EffectTypeMX.Flicker;
                 } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMAX" && Parts[PartNr].Substring(5).IsInteger())
                 {
                     AreaFlickerMaxDurationMs = Parts[PartNr].Substring(5).ToInteger();
-                    EffectType = EffectTypeMX.Flicker;
+                    AreaEffectType = EffectTypeMX.Flicker;
                 } else if (Parts[PartNr].Length > 6 && Parts[PartNr].Substring(0, 6).ToUpper() == "AFFADE" && Parts[PartNr].Substring(6).IsInteger())
                 {
                     AreaFlickerFadeDurationMs = Parts[PartNr].Substring(6).ToInteger();
-                    EffectType = EffectTypeMX.Flicker;
+                    AreaEffectType = EffectTypeMX.Flicker;
                 } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AT" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaTop = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 }
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AL" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaLeft = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AW" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaWidth = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AH" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaHeight = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 }
                 //TODO: Remove parameter AA
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AA" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaAcceleration = Parts[PartNr].Substring(2).ToInteger();
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASA" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaAcceleration = Parts[PartNr].Substring(3).ToInteger();
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 }
 
                 //TODO:Remove AS para
                 else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AS" && Parts[PartNr].Substring(2).IsInteger())
                 {
                     AreaSpeed = Parts[PartNr].Substring(2).ToInteger().Limit(1, 10000);
-                    EffectType = EffectTypeMX.Shift;
+                    AreaEffectType = EffectTypeMX.Shift;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     AreaSpeed = Parts[PartNr].Substring(3).ToInteger().Limit(1, 10000);
-                    EffectType = EffectTypeMX.Shift;
+                    AreaEffectType = EffectTypeMX.Shift;
                 } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].ToUpper().Right(2) == "MS" && Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).IsInteger())
                 {
                     AreaSpeed = (int)((double)100000 / Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).ToInteger()).Limit(10, 100000);
-                    EffectType = EffectTypeMX.Shift;
+                    AreaEffectType = EffectTypeMX.Shift;
                 }
 
                 //TODO:Remove AD para
@@ -834,12 +834,12 @@ namespace DirectOutput.LedControl.Loader
                 {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(2, 1).ToUpper()[0];
-                    EffectType = EffectTypeMX.Shift;
+                    AreaEffectType = EffectTypeMX.Shift;
                 } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
                 {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
-                    EffectType = EffectTypeMX.Shift;
+                    AreaEffectType = EffectTypeMX.Shift;
                 } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "MAX" && Parts[PartNr].Substring(3).IsInteger())
                 {
                     MaxDurationMs = Parts[PartNr].Substring(3).ToInteger().Limit(0, int.MaxValue);
@@ -1040,7 +1040,7 @@ namespace DirectOutput.LedControl.Loader
                 } else if (currentFX is RGBAColorEffect rgbaColorFX) {
                     ColorName = rgbaColorFX.ActiveColor.ToString();
                 } else if (currentFX is IMatrixEffect matrixFX) {
-                    EffectType = IsArea ? EffectType : EffectTypeMX.None;
+                    AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
 
                     if (matrixFX.FixedLayerNr) {
                         Layer = matrixFX.LayerNr;
@@ -1052,14 +1052,14 @@ namespace DirectOutput.LedControl.Loader
                     AreaHeight = (int)matrixFX.Height;
 
                     if (currentFX is IMatrixShiftEffect matrixShiftFX) {
-                        EffectType = EffectTypeMX.Shift;
+                        AreaEffectType = EffectTypeMX.Shift;
                         AreaDirection = matrixShiftFX.ShiftDirection;
                         AreaAcceleration = (int)matrixShiftFX.ShiftAcceleration;
                         AreaSpeed = (int)matrixShiftFX.ShiftSpeed;
                     }
 
                     if (currentFX is IMatrixFlickerEffect matrixFlickerFX) {
-                        EffectType = EffectTypeMX.Flicker;
+                        AreaEffectType = EffectTypeMX.Flicker;
                         AreaFlickerDensity = matrixFlickerFX.Density;
                         AreaFlickerMinDurationMs = matrixFlickerFX.MinFlickerDurationMs;
                         AreaFlickerMaxDurationMs = matrixFlickerFX.MaxFlickerDurationMs;
@@ -1068,7 +1068,7 @@ namespace DirectOutput.LedControl.Loader
                     }
 
                     if (currentFX is IMatrixBitmapEffect matrixBitmapFX) {
-                        EffectType = EffectTypeMX.Bitmap;
+                        AreaEffectType = EffectTypeMX.Bitmap;
 
                         AreaBitmapTop = matrixBitmapFX.BitmapTop;
                         AreaBitmapLeft = matrixBitmapFX.BitmapLeft;
@@ -1097,16 +1097,16 @@ namespace DirectOutput.LedControl.Loader
                     }
 
                     if (currentFX is RGBAMatrixPlasmaEffect plasmaMatrixFX) {
-                        EffectType = EffectTypeMX.Plasma;
+                        AreaEffectType = EffectTypeMX.Plasma;
                         PlasmaDensity = plasmaMatrixFX.PlasmaDensity;
                         PlasmaSpeed = plasmaMatrixFX.PlasmaSpeed;
                     } else if (currentFX is RGBAMatrixShapeEffect || currentFX is RGBAMatrixColorScaleShapeEffect) {
                         if (currentFX is RGBAMatrixColorScaleShapeEffect rgbaShapeFX) {
-                            EffectType = EffectTypeMX.Shape;
+                            AreaEffectType = EffectTypeMX.Shape;
                             ShapeName = rgbaShapeFX.ShapeName;
                             ColorName = rgbaShapeFX.ActiveColor.ToString();
                         } else {
-                            EffectType = EffectTypeMX.Shape;
+                            AreaEffectType = EffectTypeMX.Shape;
                             ShapeName = (currentFX as RGBAMatrixShapeEffect).ShapeName;
                         }
                     }
