@@ -247,6 +247,7 @@
             this.treeViewEditionTable.Size = new System.Drawing.Size(947, 562);
             this.treeViewEditionTable.TabIndex = 23;
             this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
+            this.treeViewEditionTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             // 
             // comboBoxRefTableOutputFilter
