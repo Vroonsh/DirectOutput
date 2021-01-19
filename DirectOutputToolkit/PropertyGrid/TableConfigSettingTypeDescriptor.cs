@@ -1,5 +1,6 @@
 ﻿using DirectOutput.Cab.Toys;
 using DirectOutput.FX.MatrixFX;
+using DirectOutput.General.Analog;
 using DirectOutput.General.Color;
 using DirectOutput.LedControl.Loader;
 using DirectOutputControls;
@@ -52,6 +53,12 @@ namespace DirectOutputToolkit
             WrappedTCS = EffectNode.TCS;
             Handler = handler;
 
+            PropertyDescriptors["AreaEffectType"] = new PropertyDescriptorHandler() { };
+            PropertyDescriptors["AreaLeft"] = new PropertyDescriptorHandler() { };
+            PropertyDescriptors["AreaTop"] = new PropertyDescriptorHandler() { };
+            PropertyDescriptors["AreaWidth"] = new PropertyDescriptorHandler() { };
+            PropertyDescriptors["AreaHeight"] = new PropertyDescriptorHandler() { };
+
             PropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { Browsable = false };
@@ -60,6 +67,7 @@ namespace DirectOutputToolkit
             PropertyDescriptors["ColorName2"] = new PropertyDescriptorHandler() { Browsable = false };
 
             PropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { DisplayName = "Color", TypeConverter = typeof(ColorConfigTypeConverter), TypeEditor = typeof(ColorConfigEditor) };
+            PropertyDescriptors["Intensity"] = new PropertyDescriptorHandler() {};
 
             PropertyDescriptors["PlasmaSpeed"] = new PropertyDescriptorHandler();
             PropertyDescriptors["PlasmaDensity"] = new PropertyDescriptorHandler();
@@ -107,10 +115,29 @@ namespace DirectOutputToolkit
         {
             var toyName = (CustomFieldValues["ToyName"] as string);
             if (!toyName.Equals(EffectNode.Effect.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
-                EffectNode.Effect.SetAssignedToy(Handler.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase)));
+                var toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase));
+                EffectNode.Effect.SetAssignedToy(toy);
+
+                if (toy is IMatrixToy<RGBAColor> || toy is IMatrixToy<AnalogAlpha>) {
+                    if (WrappedTCS.AreaEffectType == TableConfigSetting.EffectTypeMX.Invalid) {
+                        WrappedTCS.AreaEffectType = TableConfigSetting.EffectTypeMX.None;
+                    }
+                } else {
+                    WrappedTCS.AreaEffectType = TableConfigSetting.EffectTypeMX.Invalid;
+                }
             }
 
-            var effectType = WrappedTCS.EffectType;
+            var effectType = WrappedTCS.AreaEffectType;
+            var assignedToy = EffectNode.Effect.GetAssignedToy();
+
+            PropertyDescriptors["ColorConfig"].Browsable = (assignedToy is IRGBAToy) || (assignedToy is IMatrixToy<RGBAColor>);
+            PropertyDescriptors["Intensity"].Browsable = (assignedToy is IAnalogAlphaToy) || (assignedToy is IMatrixToy<AnalogAlpha>);
+
+            PropertyDescriptors["AreaEffectType"].Browsable = (effectType != TableConfigSetting.EffectTypeMX.Invalid);
+            PropertyDescriptors["AreaLeft"].Browsable = (effectType != TableConfigSetting.EffectTypeMX.Invalid);
+            PropertyDescriptors["AreaTop"].Browsable = (effectType != TableConfigSetting.EffectTypeMX.Invalid);
+            PropertyDescriptors["AreaWidth"].Browsable = (effectType != TableConfigSetting.EffectTypeMX.Invalid);
+            PropertyDescriptors["AreaHeight"].Browsable = (effectType != TableConfigSetting.EffectTypeMX.Invalid);
 
             PropertyDescriptors["ColorConfig2"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
             PropertyDescriptors["PlasmaSpeed"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Plasma);
