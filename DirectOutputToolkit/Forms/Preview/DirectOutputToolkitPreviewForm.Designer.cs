@@ -105,6 +105,23 @@
             this.imageListIcons.Images.SetKeyName(8, "ExtraBall");
             this.imageListIcons.Images.SetKeyName(9, "Genre");
             this.imageListIcons.Images.SetKeyName(10, "HowToPlay");
+            this.imageListIcons.Images.SetKeyName(11, "BumperCap");
+            this.imageListIcons.Images.SetKeyName(12, "BumperCapKiss1");
+            this.imageListIcons.Images.SetKeyName(13, "BumperCapKiss2");
+            this.imageListIcons.Images.SetKeyName(14, "BumperCapKiss3");
+            this.imageListIcons.Images.SetKeyName(15, "BumperCapKiss4");
+            this.imageListIcons.Images.SetKeyName(16, "Bell");
+            this.imageListIcons.Images.SetKeyName(17, "Fan");
+            this.imageListIcons.Images.SetKeyName(18, "GyroBlue");
+            this.imageListIcons.Images.SetKeyName(19, "GyroRed");
+            this.imageListIcons.Images.SetKeyName(20, "SlingShotLeft");
+            this.imageListIcons.Images.SetKeyName(21, "SlingShotRight");
+            this.imageListIcons.Images.SetKeyName(22, "Gear");
+            this.imageListIcons.Images.SetKeyName(23, "LeftFlipper");
+            this.imageListIcons.Images.SetKeyName(24, "RightFlipper");
+            this.imageListIcons.Images.SetKeyName(25, "Shaker");
+            this.imageListIcons.Images.SetKeyName(26, "Knocker");
+            this.imageListIcons.Images.SetKeyName(27, "Chime");
             // 
             // DirectOutputToolkitPreviewForm
             // 
