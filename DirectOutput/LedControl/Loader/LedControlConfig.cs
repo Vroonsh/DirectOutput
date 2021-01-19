@@ -72,9 +72,9 @@ namespace DirectOutput.LedControl.Loader
             private set { _LedControlIniFile = value; }
         }
 
-
-
-
+    
+        private VariablesDictionary GlobalVariables = null;
+        private TableVariablesDictionary TableVariables = null;
 
 
         /// <summary>
@@ -276,13 +276,16 @@ namespace DirectOutput.LedControl.Loader
             //Resolve tables variables first in case they override global variables (like custom flasher mx shapes)
             if (TableVariableData != null) {
                 Log.Write("Resolving Tables Variables");
-                ResolveTableVariables(OutData, TableVariableData);
+
+                TableVariables = new TableVariablesDictionary(TableVariableData);
+                ResolveTableVariables(OutData);
             }
 
             if (VariableData != null)
             {
                 Log.Write("Resolving Global Variables");
-                ResolveVariables(OutData, VariableData);
+                GlobalVariables = new VariablesDictionary(VariableData);
+                ResolveVariables(OutData);
             }
 
             ColorConfigurations.ParseLedControlData(ColorData, ThrowExceptions);
@@ -308,13 +311,18 @@ namespace DirectOutput.LedControl.Loader
             return null;
         }
 
-
-        private void ResolveTableVariables(List<String> DataToResolve, List<string> VariableData)
+        public void InjectTableVariables(string RomName, List<String> DataToInject)
         {
+            VariablesDictionary variables = null;
+            if (!TableVariables.TryGetValue(RomName, out variables)) {
+                return;
+            }
 
-            TableVariablesDictionary VD = new TableVariablesDictionary(VariableData);
+            InjectVariables(DataToInject, variables);
+        }
 
-
+        public void ResolveTableVariables(List<String> DataToResolve)
+        {
             for (int i = 0; i < DataToResolve.Count ; i++)
             {
                 string D = DataToResolve[i].Trim();
@@ -325,9 +333,9 @@ namespace DirectOutput.LedControl.Loader
                     if (TP > 0)
                     {
                         string TableName = D.Substring(0, TP).Trim();
-                        if (VD.ContainsKey(TableName))
+                        if (TableVariables.ContainsKey(TableName))
                         {
-                            foreach (KeyValuePair<string, string> KV in VD[TableName])
+                            foreach (KeyValuePair<string, string> KV in TableVariables[TableName])
                             {
                                 string N = KV.Key;
                                 if (!N.StartsWith("@")) N = "@" + N;
@@ -347,11 +355,31 @@ namespace DirectOutput.LedControl.Loader
 
         }
 
-
-        private void ResolveVariables(List<String> DataToResolve, List<string> VariableData)
+        public void InjectVariables(List<String> DataToInject, VariablesDictionary VDict = null)
         {
-            VariablesDictionary VD = new VariablesDictionary(VariableData);
-            foreach (KeyValuePair<string, string> KV in VD)
+            var variables = VDict == null ? GlobalVariables : VDict;
+
+            Dictionary<string, List<string>> variableSplits = new Dictionary<string, List<string>>();
+            foreach (var variable in variables) {
+                variableSplits[variable.Key] = variable.Value.Split(' ').ToList();
+            }
+
+            for (var num = 0; num < DataToInject.Count; ++num) {
+                var data = DataToInject[num];
+                var split = data.Split(' ').ToList();
+                foreach (var vSplit in variableSplits) {
+                    if (ArrayExtensions.CompareContents(vSplit.Value.ToArray(), split.Intersect(vSplit.Value).ToArray())) {
+                        split = split.Except(vSplit.Value).ToList();
+                        split.Add($"@{vSplit.Key}@");
+                    }
+                }
+                DataToInject[num] = string.Join(" ", split);
+            }
+        }
+
+        public void ResolveVariables(List<String> DataToResolve)
+        {
+            foreach (KeyValuePair<string, string> KV in GlobalVariables)
             {
                 string N = KV.Key;
                 if (!N.StartsWith("@")) N = "@" + N;
