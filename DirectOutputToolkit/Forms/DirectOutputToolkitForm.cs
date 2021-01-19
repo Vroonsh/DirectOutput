@@ -252,13 +252,19 @@ namespace DirectOutputToolkit
         private void DeleteEffectNode(EffectTreeNode node, bool silent = false)
         {
             if (silent || MessageBox.Show($"Do you want to delete effect {node.Text} from {(node.Parent as TableElementTreeNode)?.TE.Name} ?", "Delete Effect", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                var TENode = (node.Parent as TableElementTreeNode);
-                if (TENode != null) {
+                if (node.Parent is TableElementTreeNode TENode) {
                     TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
                     Handler.RemoveEffects(new List<IEffect> { node.Effect }, (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
                     if (!silent) {
                         TENode.Rebuild(Handler);
                         SetCurrentSelectedNode(TENode);
+                    }
+                } else if (node.Parent is StaticEffectsTreeNode staticEffectsNode) {
+                    EditionTableNode.EditionTable.AssignedStaticEffects.RemoveAll(AE => AE.Effect == node.Effect);
+                    Handler.RemoveEffects(new List<IEffect> { node.Effect }, null, node.GetTableType());
+                    if (!silent) {
+                        staticEffectsNode.Rebuild(Handler);
+                        SetCurrentSelectedNode(staticEffectsNode);
                     }
                 }
             }
@@ -284,7 +290,7 @@ namespace DirectOutputToolkit
                     DeleteEffectNode(effectNode);
                 } else if (treeViewEditionTable.SelectedNode is TableElementTreeNode tableElementNode) {
                     DeleteTableElementNode(tableElementNode);
-                }
+                } 
 
                 e.Handled = true;
             }
@@ -293,6 +299,11 @@ namespace DirectOutputToolkit
         private void treeViewEditionTable_AfterSelect(object sender, TreeViewEventArgs e)
         {
             SetCurrentSelectedNode(treeViewEditionTable.SelectedNode);
+        }
+
+        private void treeViewEditionTable_MouseDown(object sender, MouseEventArgs e)
+        {
+
         }
 
         #endregion
@@ -697,6 +708,5 @@ namespace DirectOutputToolkit
             }
         }
         #endregion
-
     }
 }
