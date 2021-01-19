@@ -50,9 +50,13 @@ namespace DirectOutputToolkit
 
         public void UpdateFromTableElement(TableElement TE)
         {
-            if (TCS.OutputControl == OutputControlEnum.Controlled) {
+            if (TE == null) {
+                TCS.OutputControl = TCS.Invert ? OutputControlEnum.FixedOff : OutputControlEnum.FixedOn;
+            } else {
+                TCS.OutputControl = OutputControlEnum.Controlled;
                 TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
             }
+
             DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
             Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
         }
