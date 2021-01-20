@@ -56,7 +56,7 @@ namespace DirectOutputToolkit
                 Handler = new DirectOutputToolkitHandler(Settings);
 
                 DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Settings.LastDofConfigSetup);
-                DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDofViewSetup);
+                DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDirectOutputViewSetup);
 
                 Handler.DofConfigToolSetup = DofConfigToolSetup;
                 Handler.DofViewSetup = DofViewSetup;
@@ -65,19 +65,21 @@ namespace DirectOutputToolkit
                     return false;
                 }
 
-                PreviewForm.Show(this);
-                Screen current = Screen.FromControl(this);
-                PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
-                PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
-
+                RomNameComboBox.Text = Settings.LastRomName;
                 RomNameComboBox.Items.Clear();
                 RomNameComboBox.Items.Add("");
                 RomNameComboBox.Items.AddRange(Handler.LedControlConfigList[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
+                PopulateReferenceTable();
 
                 EditionTableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
                 EditionTableNode.Rebuild(Handler);
                 treeViewEditionTable.Nodes.Add(EditionTableNode);
                 treeViewEditionTable.Refresh();
+
+                PreviewForm.Show(this);
+                Screen current = Screen.FromControl(this);
+                PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
+                PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
                 return true;
             } else {
@@ -100,7 +102,9 @@ namespace DirectOutputToolkit
         private void DirectOutputToolkitForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Handler?.FinishPinball();
-            SaveSettings();
+            if (Settings.AutoSaveOnQuit) {
+                SaveSettings();
+            }
         }
 
         #region Main Menu
