@@ -1,4 +1,5 @@
 ﻿using DirectOutput.LedControl.Loader;
+using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +14,8 @@ namespace DirectOutputToolkit
 {
     public partial class DirectOutputToolkitDOFCommandsDialog : Form
     {
-        public string[] AvailableToys = new string[0];
         public string[] CommandLines = null;
-        public string ToyName => comboBoxOutput.Text;
+        public string OutputName => comboBoxOutput.Text;
         public DirectOutputToolkitHandler Handler { get; set; } = null;
 
         public DirectOutputToolkitDOFCommandsDialog()
@@ -24,7 +24,7 @@ namespace DirectOutputToolkit
         }
         private void LedControlToolkitDOFCommandsDialog_Load(object sender, EventArgs e)
         {
-            comboBoxOutput.DataSource = AvailableToys;
+            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames();
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)

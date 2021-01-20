@@ -30,7 +30,6 @@ namespace DirectOutputToolkit
 
         private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var ToyName = comboBoxOutput.Text;
             var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
