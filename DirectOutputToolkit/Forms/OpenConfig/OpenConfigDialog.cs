@@ -38,26 +38,26 @@ namespace DirectOutputToolkit
         private void LoadData()
         {
             DofConfigSetupFilename = Settings.LastDofConfigSetup;
-            DofViewSetupFilename = Settings.LastDofViewSetup;
+            DofViewSetupFilename = Settings.LastDirectOutputViewSetup;
 
             DofConfigSetupFilenameComboBox.Items.Clear();
             DofConfigSetupFilenameComboBox.Items.AddRange(Settings.DofConfigSetups.ToArray());
 
             DofViewSetupFilenameComboBox.Items.Clear();
             DofViewSetupFilenameComboBox.Items.Add("");
-            DofViewSetupFilenameComboBox.Items.AddRange(Settings.DofViewSetups.ToArray());
+            DofViewSetupFilenameComboBox.Items.AddRange(Settings.DirectOutputViewSetups.ToArray());
         }
 
         private void SaveData()
         {
             Settings.LastDofConfigSetup = DofConfigSetupFilename;
-            Settings.LastDofViewSetup = DofViewSetupFilename;
+            Settings.LastDirectOutputViewSetup = DofViewSetupFilename;
 
             Settings.DofConfigSetups.Remove(DofConfigSetupFilename);
             Settings.DofConfigSetups.Insert(0, DofConfigSetupFilename);
 
-            Settings.DofViewSetups.Remove(DofViewSetupFilename);
-            Settings.DofViewSetups.Insert(0, DofViewSetupFilename);
+            Settings.DirectOutputViewSetups.Remove(DofViewSetupFilename);
+            Settings.DirectOutputViewSetups.Insert(0, DofViewSetupFilename);
         }
 
 
