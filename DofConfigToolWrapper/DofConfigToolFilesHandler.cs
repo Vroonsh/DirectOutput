@@ -26,12 +26,10 @@ namespace DofConfigToolWrapper
             }
         }
 
-        public string UserDirectory => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), RootDirectory, string.Join("-", new string[] { DofSetup?.UserName, DofSetup?.APIKey }));
-
         public LedControlConfigList ConfigFiles { get; private set; } = new LedControlConfigList();
+        public string UserLocalPath { get; private set; } = string.Empty;
 
         private int DofConfigToolVersion = 0;
-        private string UserLocalPath = string.Empty;
         private List<string> MissingIniFiles = new List<string>();
 
         public void ParseConfigFiles()
@@ -41,12 +39,12 @@ namespace DofConfigToolWrapper
                 MissingIniFiles.Clear();
 
                 //Create directory if not already created
-                var basePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), RootDirectory);
-                new DirectoryInfo(basePath).CreateDirectoryPath();
+                var setupsPath = Path.Combine(RootDirectory, "setups");
+                new DirectoryInfo(RootDirectory).CreateDirectoryPath();
 
                 var userDir = string.Join("-", new string[] { DofSetup?.UserName, DofSetup?.APIKey });
                 if (!userDir.IsNullOrEmpty()) {
-                    UserLocalPath = Path.Combine(basePath, userDir);
+                    UserLocalPath = Path.Combine(setupsPath, userDir);
                     new DirectoryInfo(UserLocalPath).CreateDirectoryPath();
 
                     foreach(var controller in DofSetup.ControllerSetups) {
