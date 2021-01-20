@@ -1,0 +1,1184 @@
+<?xml version="1.0"?>
+<DirectOutputViewSetup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ViewAreas>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Strobe Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Strobe</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Strobe Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.8</Left>
+              <Top>0</Top>
+              <Width>0.199999988</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Strobe</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Strobes</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.2</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>Ring Mx Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>PFLeftEffectsMX</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>Adressable</ValueType>
+              <MxWidth>1</MxWidth>
+              <MxHeight>64</MxHeight>
+              <RenderType>Ring</RenderType>
+              <StartAngle>0</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>Ring Mx Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.8</Left>
+              <Top>0</Top>
+              <Width>0.199999988</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>PFRightEffectsMX</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>Adressable</ValueType>
+              <MxWidth>1</MxWidth>
+              <MxHeight>64</MxHeight>
+              <RenderType>Ring</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Rings Mx</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.3</Top>
+          <Width>1</Width>
+          <Height>0.7</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Fan</Name>
+          <Enabled>true</Enabled>
+          <Left>0.45</Left>
+          <Top>0.7</Top>
+          <Width>0.1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Fan</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-1</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Beacon Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0.2</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Beacon</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Beacon Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.6</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Beacon</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Beacons</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.2</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Topper Bell</Name>
+              <Enabled>true</Enabled>
+              <Left>0.15</Left>
+              <Top>0.3</Top>
+              <Width>0.1</Width>
+              <Height>0.4</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>TopperBell</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Shell Bell Small</Name>
+              <Enabled>true</Enabled>
+              <Left>0.35</Left>
+              <Top>0.3</Top>
+              <Width>0.1</Width>
+              <Height>0.3</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ShellBellSmall</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Shell Bell Large</Name>
+              <Enabled>true</Enabled>
+              <Left>0.55</Left>
+              <Top>0.3</Top>
+              <Width>0.1</Width>
+              <Height>0.4</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ShellBellLarge</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Repeating Bell</Name>
+              <Enabled>true</Enabled>
+              <Left>0.75</Left>
+              <Top>0.3</Top>
+              <Width>0.1</Width>
+              <Height>0.4</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>RepeatingBell</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Bells</Name>
+          <Enabled>true</Enabled>
+          <Left>0.1</Left>
+          <Top>0.2</Top>
+          <Width>0.8</Width>
+          <Height>0.5</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Backbox</Name>
+      <Enabled>true</Enabled>
+      <Left>0.1</Left>
+      <Top>0</Top>
+      <Width>0.8</Width>
+      <Height>0.1</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Left Flipper Coil</Name>
+              <Enabled>true</Enabled>
+              <Left>0</Left>
+              <Top>0.7</Top>
+              <Width>0.1</Width>
+              <Height>0.3</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>FlipperLeft</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Right Flipper Coil</Name>
+              <Enabled>true</Enabled>
+              <Left>0.9</Left>
+              <Top>0.7</Top>
+              <Width>0.1</Width>
+              <Height>0.3</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>FlipperRight</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Flipper Coils</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.8</Top>
+          <Width>1</Width>
+          <Height>0.199999988</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Left Slingshot Coil</Name>
+              <Enabled>true</Enabled>
+              <Left>0.1</Left>
+              <Top>0.2</Top>
+              <Width>0.1</Width>
+              <Height>0.5</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>SlingshotLeft</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Right Slingshot Coil</Name>
+              <Enabled>true</Enabled>
+              <Left>0.8</Left>
+              <Top>0.2</Top>
+              <Width>0.1</Width>
+              <Height>0.5</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>SlingshotRight</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Slingshot Coils</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.7</Top>
+          <Width>1</Width>
+          <Height>0.199999988</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Back Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0.1</Left>
+              <Top>0.1</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10BackLeft</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Back Center</Name>
+              <Enabled>true</Enabled>
+              <Left>0.425</Left>
+              <Top>0.1</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10BackCenter</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Back Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.75</Left>
+              <Top>0.1</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10BackRight</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Middle Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0.1</Left>
+              <Top>0.5</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10MiddleLeft</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Middle Center</Name>
+              <Enabled>true</Enabled>
+              <Left>0.425</Left>
+              <Top>0.5</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10MiddleCenter</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Middle Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.75</Left>
+              <Top>0.5</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper10MiddleRight</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>6 Bumpers Coils</Name>
+          <Enabled>true</Enabled>
+          <Left>0.05</Left>
+          <Top>0</Top>
+          <Width>0.9</Width>
+          <Height>0.5</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Back</Name>
+              <Enabled>true</Enabled>
+              <Left>0.425</Left>
+              <Top>0.1</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper8Back</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0.1</Left>
+              <Top>0.3</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper8Left</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.75</Left>
+              <Top>0.3</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper8Right</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Bumper Center</Name>
+              <Enabled>true</Enabled>
+              <Left>0.425</Left>
+              <Top>0.5</Top>
+              <Width>0.15</Width>
+              <Height>0.15</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Bumper8Center</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>4 Bumpers Coils</Name>
+          <Enabled>true</Enabled>
+          <Left>0.05</Left>
+          <Top>0</Top>
+          <Width>0.9</Width>
+          <Height>0.5</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Shaker</Name>
+          <Enabled>true</Enabled>
+          <Left>0.1</Left>
+          <Top>0.5</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Shaker</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-1</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Gear</Name>
+          <Enabled>true</Enabled>
+          <Left>0.35</Left>
+          <Top>0.5</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Gear</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-1</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Knocker</Name>
+          <Enabled>true</Enabled>
+          <Left>0.7</Left>
+          <Top>0.9</Top>
+          <Width>0.1</Width>
+          <Height>0.100000024</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Knocker</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>false</Squarred>
+          <BackColor>-1</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Chime HighTone</Name>
+              <Enabled>true</Enabled>
+              <Left>0.7</Left>
+              <Top>0.1</Top>
+              <Width>0.3</Width>
+              <Height>0.1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ChimeUnitHighTone</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Chime MidTone</Name>
+              <Enabled>true</Enabled>
+              <Left>0.6</Left>
+              <Top>0.25</Top>
+              <Width>0.399999976</Width>
+              <Height>0.1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ChimeUnitMidTone</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Chime LowTone</Name>
+              <Enabled>true</Enabled>
+              <Left>0.5</Left>
+              <Top>0.4</Top>
+              <Width>0.5</Width>
+              <Height>0.1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ChimeUnitLowTone</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Chime ExtraLowTone</Name>
+              <Enabled>true</Enabled>
+              <Left>0.4</Left>
+              <Top>0.55</Top>
+              <Width>0.6</Width>
+              <Height>0.1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>ChimeUnitExtraLowTone</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+              <Children />
+              <Name>Chime 5</Name>
+              <Enabled>true</Enabled>
+              <Left>0.3</Left>
+              <Top>0.7</Top>
+              <Width>0.7</Width>
+              <Height>0.1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Chime5</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>false</Squarred>
+              <BackColor>-1</BackColor>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>Chimes</Name>
+          <Enabled>true</Enabled>
+          <Left>0.5</Left>
+          <Top>0.45</Top>
+          <Width>0.5</Width>
+          <Height>0.3</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Playfield</Name>
+      <Enabled>true</Enabled>
+      <Left>0.2</Left>
+      <Top>0.2</Top>
+      <Width>0.6</Width>
+      <Height>0.5</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>3 Flashers Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>0.333</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher3_Left</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>3 Flashers Center</Name>
+              <Enabled>true</Enabled>
+              <Left>0.333</Left>
+              <Top>0</Top>
+              <Width>0.333</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher3_Center</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>3 Flashers Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.667</Left>
+              <Top>0</Top>
+              <Width>0.333</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher3_Right</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>3 Flashers</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>5 Flashers Out Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher5_OutsideLeft</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>5 Flashers Left</Name>
+              <Enabled>true</Enabled>
+              <Left>0.2</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher5_Left</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>5 Flashers Center</Name>
+              <Enabled>true</Enabled>
+              <Left>0.4</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher5_Center</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>5 Flashers Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.6</Left>
+              <Top>0</Top>
+              <Width>0.2</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher5_Right</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>5 Flashers Out Right</Name>
+              <Enabled>true</Enabled>
+              <Left>0.8</Left>
+              <Top>0</Top>
+              <Width>0.199999988</Width>
+              <Height>1</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>Flasher5_OutsideRight</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>false</ShowMatrixGrid>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>5 Flashers</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Backboard MX</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.3</Top>
+          <Width>1</Width>
+          <Height>0.7</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFBackFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackStrobeMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackBeaconMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackPBXMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>72</MxWidth>
+          <MxHeight>8</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Backboard</Name>
+      <Enabled>true</Enabled>
+      <Left>0.2</Left>
+      <Top>0.1</Top>
+      <Width>0.6</Width>
+      <Height>0.1</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Start</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>StartButton</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-65536</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Coin</Name>
+          <Enabled>true</Enabled>
+          <Left>0.4</Left>
+          <Top>0.45</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Coin</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-32768</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Launch</Name>
+          <Enabled>true</Enabled>
+          <Left>0.8</Left>
+          <Top>0</Top>
+          <Width>0.199999988</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>LaunchButton</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-10496</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Authentic Launch Ball</Name>
+          <Enabled>true</Enabled>
+          <Left>0.8</Left>
+          <Top>0.2</Top>
+          <Width>0.199999988</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>AuthenticLaunchBall</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-4177920</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>ZB Launch Ball</Name>
+          <Enabled>true</Enabled>
+          <Left>0.8</Left>
+          <Top>0.4</Top>
+          <Width>0.199999988</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>ZBLaunchBall</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-40121</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Extra Ball</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.2</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>ExtraBall</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-16728064</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>How To Play</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.4</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>HowToPlay</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-256</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Exit</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.8</Top>
+          <Width>0.2</Width>
+          <Height>0.199999988</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Exit</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-16776961</BackColor>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Genre</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.6</Top>
+          <Width>0.2</Width>
+          <Height>0.2</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>Genre</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-4194112</BackColor>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>FrontPanel</Name>
+      <Enabled>true</Enabled>
+      <Left>0.25</Left>
+      <Top>0.7</Top>
+      <Width>0.5</Width>
+      <Height>0.2</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Smart</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.2</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabSmart</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>SingleValue</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Frame</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Complex</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.6</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabComplex</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>SingleValue</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Frame</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Complex Mx</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabComplexMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Undercab</Name>
+      <Enabled>true</Enabled>
+      <Left>0</Left>
+      <Top>0.9</Top>
+      <Width>1</Width>
+      <Height>0.1</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Side Mx Left</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>0.1</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFLeftFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFLeftEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>144</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Side Mx Right</Name>
+          <Enabled>true</Enabled>
+          <Left>0.9</Left>
+          <Top>0</Top>
+          <Width>0.1</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFRightFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFRightEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>144</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Sides</Name>
+      <Enabled>true</Enabled>
+      <Left>0.1</Left>
+      <Top>0.2</Top>
+      <Width>0.8</Width>
+      <Height>0.5</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>LeftFlipper</Name>
+              <Enabled>true</Enabled>
+              <Left>0.085</Left>
+              <Top>0.6</Top>
+              <Width>0.04</Width>
+              <Height>0.399999976</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>RGBFlippers</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>true</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>RightFlipper</Name>
+              <Enabled>true</Enabled>
+              <Left>0.875</Left>
+              <Top>0.6</Top>
+              <Width>0.04</Width>
+              <Height>0.399999976</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>RGBFlippers</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>true</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>LeftMagna</Name>
+              <Enabled>true</Enabled>
+              <Left>0.085</Left>
+              <Top>0</Top>
+              <Width>0.04</Width>
+              <Height>0.4</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>RGBLeftMagnasave</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>true</ShowMatrixGrid>
+            </DirectOutputViewArea>
+            <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+              <Children />
+              <Name>RightMagna</Name>
+              <Enabled>true</Enabled>
+              <Left>0.875</Left>
+              <Top>0</Top>
+              <Width>0.04</Width>
+              <Height>0.4</Height>
+              <DofOutputs>
+                <DofConfigToolOutputEnum>RGBRightMagnasave</DofConfigToolOutputEnum>
+              </DofOutputs>
+              <Squarred>true</Squarred>
+              <ValueType>SingleValue</ValueType>
+              <MxWidth>0</MxWidth>
+              <MxHeight>0</MxHeight>
+              <RenderType>Simple</RenderType>
+              <StartAngle>90</StartAngle>
+              <ShowMatrixGrid>true</ShowMatrixGrid>
+            </DirectOutputViewArea>
+          </Children>
+          <Name>RGB Buttons</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>1</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+          <Children />
+          <Name>Mx Buttons</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>1</Height>
+          <Draw>false</Draw>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaAnalog">
+          <Children />
+          <Name>Fire Button</Name>
+          <Enabled>true</Enabled>
+          <Left>0.45</Left>
+          <Top>0.2</Top>
+          <Width>0.1</Width>
+          <Height>0.7</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>FireButton</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <BackColor>-65536</BackColor>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Apron</Name>
+      <Enabled>true</Enabled>
+      <Left>0.1</Left>
+      <Top>0.65</Top>
+      <Width>0.8</Width>
+      <Height>0.05</Height>
+      <Draw>false</Draw>
+    </DirectOutputViewArea>
+  </ViewAreas>
+</DirectOutputViewSetup>

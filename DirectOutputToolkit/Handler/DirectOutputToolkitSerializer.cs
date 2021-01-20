@@ -134,7 +134,7 @@ namespace DirectOutputToolkit
                         var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
                                                                                 , Toy
                                                                                 , Handler.GetToyLedwizNum(Toy.Name)
-                                                                                , Handler.InitFilesPath, TableNode.EditionTable.RomName);
+                                                                                , Handler.DofFilesHandler.UserLocalPath, TableNode.EditionTable.RomName);
                         var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
                         TableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
                         SettingNumber++;
@@ -171,7 +171,7 @@ namespace DirectOutputToolkit
                             var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, SettingNumber, TableNode.EditionTable
                                                                                     , Toy
                                                                                     , Handler.GetToyLedwizNum(Toy.Name)
-                                                                                    , Handler.InitFilesPath, TableNode.EditionTable.RomName);
+                                                                                    , Handler.DofFilesHandler.UserLocalPath, TableNode.EditionTable.RomName);
                             var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
                             SettingNumber++;
                         }

@@ -87,11 +87,9 @@ namespace DirectOutputToolkit
         internal Table GetTable(ETableType tableType) => TableDescriptors[tableType].Table;
         internal Table GetTableByName(string text) => TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(text, StringComparison.InvariantCultureIgnoreCase));
 
-        private DofConfigToolFilesHandler DofFilesHandler = new DofConfigToolFilesHandler() {};
+        public DofConfigToolFilesHandler DofFilesHandler { get; private set; } = new DofConfigToolFilesHandler() { };
 
-        public LedControlConfigList LedControlConfigList => DofFilesHandler.ConfigFiles;
-
-        public string InitFilesPath => DofFilesHandler.UserDirectory;
+        public LedControlConfigList LedControlConfigList => DofFilesHandler?.ConfigFiles;
 
         public ColorConfigList ColorConfigurations => LedControlConfigList.Count == 0 ? null : LedControlConfigList[0].ColorConfigurations;
 
@@ -117,7 +115,7 @@ namespace DirectOutputToolkit
             FinishPinball();
 
             var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
-            DofFilesHandler.RootDirectory = Path.Combine(new string[] { dir, "setups" });
+            DofFilesHandler.RootDirectory = dir;
             DofFilesHandler.DofSetup = DofConfigToolSetup;
             DofFilesHandler.UpdateConfigFiles();
             if (DofFilesHandler.ConfigFiles.Count == 0) {
@@ -127,12 +125,12 @@ namespace DirectOutputToolkit
 
             Pinball = new Pinball();
             var GlobalConfig = new GlobalConfig(){
-                IniFilesPath = DofFilesHandler.UserDirectory,
+                IniFilesPath = DofFilesHandler.UserLocalPath,
                 EnableLogging = true,
                 ClearLogOnSessionStart = true,
                 LedWizDefaultMinCommandIntervalMs = 10
             };
-            var fileName = Path.Combine(DofFilesHandler.UserDirectory, "GlobalConfig.xml");
+            var fileName = Path.Combine(DofFilesHandler.UserLocalPath, "GlobalConfig.xml");
             GlobalConfig.SaveGlobalConfig(fileName);
             Pinball.Setup(GlobalConfigFilename: fileName);
 
