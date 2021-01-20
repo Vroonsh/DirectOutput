@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<DofConfigToolSetup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <UserName>DOFToolkit</UserName>
+  <APIKey>yZDDAw8fW3J2ATQ0vvWf</APIKey>
+  <ControllerSetups>
+    <ControllerSetup>
+      <Name>Ledwiz</Name>
+      <Number>30</Number>
+      <OutputMappings>
+        <OutputMapping>
+          <Name>Undercab Complex MX</Name>
+          <PortNumber>1</PortNumber>
+          <Output>RGBUndercabComplexMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Left Flashers MX</Name>
+          <PortNumber>4</PortNumber>
+          <Output>PFLeftFlashersMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Left Effects MX</Name>
+          <PortNumber>7</PortNumber>
+          <Output>PFLeftEffectsMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Back Flashers MX</Name>
+          <PortNumber>10</PortNumber>
+          <Output>PFBackFlashersMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Back Effects MX</Name>
+          <PortNumber>13</PortNumber>
+          <Output>PFBackEffectsMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Back Strobe MX</Name>
+          <PortNumber>16</PortNumber>
+          <Output>PFBackStrobeMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Back Beacon MX</Name>
+          <PortNumber>19</PortNumber>
+          <Output>PFBackBeaconMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Back PBX MX</Name>
+          <PortNumber>22</PortNumber>
+          <Output>PFBackPBXMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Right Flashers MX</Name>
+          <PortNumber>25</PortNumber>
+          <Output>PFRightFlashersMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Right Effects MX</Name>
+          <PortNumber>28</PortNumber>
+          <Output>PFRightEffectsMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Flipper Button MX</Name>
+          <PortNumber>31</PortNumber>
+          <Output>FlipperButtonMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Flipper Button PBX MX</Name>
+          <PortNumber>34</PortNumber>
+          <Output>FlipperButtonPBXMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Magna Left MX</Name>
+          <PortNumber>37</PortNumber>
+          <Output>MagnasaveLeftMX</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Magna Right MX</Name>
+          <PortNumber>40</PortNumber>
+          <Output>MagnasaveRightMX</Output>
+        </OutputMapping>
+      </OutputMappings>
+    </ControllerSetup>
+    <ControllerSetup>
+      <Name>Pinscape</Name>
+      <Number>51</Number>
+      <OutputMappings>
+        <OutputMapping>
+          <Name>Start</Name>
+          <PortNumber>1</PortNumber>
+          <Output>StartButton</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Launch</Name>
+          <PortNumber>2</PortNumber>
+          <Output>LaunchButton</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Authentic Launch</Name>
+          <PortNumber>3</PortNumber>
+          <Output>AuthenticLaunchBall</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>ZB Launch</Name>
+          <PortNumber>4</PortNumber>
+          <Output>ZBLaunchBall</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Fire</Name>
+          <PortNumber>5</PortNumber>
+          <Output>FireButton</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Extra Ball</Name>
+          <PortNumber>6</PortNumber>
+          <Output>ExtraBall</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Back Left</Name>
+          <PortNumber>7</PortNumber>
+          <Output>Bumper10BackLeft</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Back Center</Name>
+          <PortNumber>8</PortNumber>
+          <Output>Bumper10BackCenter</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Back Right</Name>
+          <PortNumber>9</PortNumber>
+          <Output>Bumper10BackRight</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Mid Left</Name>
+          <PortNumber>10</PortNumber>
+          <Output>Bumper10MiddleLeft</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Mid Center</Name>
+          <PortNumber>11</PortNumber>
+          <Output>Bumper10MiddleCenter</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>10 Bumper Mid Right</Name>
+          <PortNumber>12</PortNumber>
+          <Output>Bumper10MiddleRight</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Slingshot Left</Name>
+          <PortNumber>13</PortNumber>
+          <Output>SlingshotLeft</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Slingshot Right</Name>
+          <PortNumber>14</PortNumber>
+          <Output>SlingshotRight</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Flipper Left</Name>
+          <PortNumber>15</PortNumber>
+          <Output>FlipperLeft</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Flipper Right</Name>
+          <PortNumber>16</PortNumber>
+          <Output>FlipperRight</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>8 Bumper Left</Name>
+          <PortNumber>17</PortNumber>
+          <Output>Bumper8Left</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>8 Bumper Center</Name>
+          <PortNumber>18</PortNumber>
+          <Output>Bumper8Center</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>8 Bumper Right</Name>
+          <PortNumber>19</PortNumber>
+          <Output>Bumper8Right</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>8 Bumper Back</Name>
+          <PortNumber>20</PortNumber>
+          <Output>Bumper8Back</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Knocker</Name>
+          <PortNumber>21</PortNumber>
+          <Output>Knocker</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Shaker</Name>
+          <PortNumber>22</PortNumber>
+          <Output>Shaker</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Gear</Name>
+          <PortNumber>23</PortNumber>
+          <Output>Gear</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Beacon</Name>
+          <PortNumber>24</PortNumber>
+          <Output>Beacon</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Fan</Name>
+          <PortNumber>25</PortNumber>
+          <Output>Fan</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Strobe</Name>
+          <PortNumber>26</PortNumber>
+          <Output>Strobe</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>5 Flashers Out Left</Name>
+          <PortNumber>27</PortNumber>
+          <Output>Flasher5_OutsideLeft</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>5 Flashers Left</Name>
+          <PortNumber>30</PortNumber>
+          <Output>Flasher5_Left</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>5 Flashers Center</Name>
+          <PortNumber>33</PortNumber>
+          <Output>Flasher5_Center</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>5 Flashers Right</Name>
+          <PortNumber>36</PortNumber>
+          <Output>Flasher5_Right</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>5 Flashers Out Right</Name>
+          <PortNumber>39</PortNumber>
+          <Output>Flasher5_OutsideRight</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>3 Flashers Left</Name>
+          <PortNumber>42</PortNumber>
+          <Output>Flasher3_Left</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>3 Flashers Center</Name>
+          <PortNumber>45</PortNumber>
+          <Output>Flasher3_Center</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>3 Flashers Right</Name>
+          <PortNumber>48</PortNumber>
+          <Output>Flasher3_Right</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>RGB Flippers</Name>
+          <PortNumber>51</PortNumber>
+          <Output>RGBFlippers</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>RGB Left Magna</Name>
+          <PortNumber>54</PortNumber>
+          <Output>RGBLeftMagnasave</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>RGB Right Magna</Name>
+          <PortNumber>57</PortNumber>
+          <Output>RGBRightMagnasave</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>RGB Undercab Smart</Name>
+          <PortNumber>60</PortNumber>
+          <Output>RGBUndercabSmart</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>RGB Undercab Complex</Name>
+          <PortNumber>63</PortNumber>
+          <Output>RGBUndercabComplex</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Coin</Name>
+          <PortNumber>66</PortNumber>
+          <Output>Coin</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>How to Play</Name>
+          <PortNumber>67</PortNumber>
+          <Output>HowToPlay</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Genre</Name>
+          <PortNumber>68</PortNumber>
+          <Output>Genre</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Exit</Name>
+          <PortNumber>69</PortNumber>
+          <Output>Exit</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Topper Bell</Name>
+          <PortNumber>70</PortNumber>
+          <Output>TopperBell</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Shell Bell Small</Name>
+          <PortNumber>71</PortNumber>
+          <Output>ShellBellSmall</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Shell Bell Large</Name>
+          <PortNumber>72</PortNumber>
+          <Output>ShellBellLarge</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Repeating Bell</Name>
+          <PortNumber>73</PortNumber>
+          <Output>RepeatingBell</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Chime High</Name>
+          <PortNumber>74</PortNumber>
+          <Output>ChimeUnitHighTone</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Chime Mid</Name>
+          <PortNumber>75</PortNumber>
+          <Output>ChimeUnitMidTone</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Chime Low</Name>
+          <PortNumber>76</PortNumber>
+          <Output>ChimeUnitLowTone</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Chime XLow</Name>
+          <PortNumber>77</PortNumber>
+          <Output>ChimeUnitExtraLowTone</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Chime 5</Name>
+          <PortNumber>78</PortNumber>
+          <Output>Chime5</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Hellball Motor</Name>
+          <PortNumber>79</PortNumber>
+          <Output>HellballMotor</Output>
+        </OutputMapping>
+        <OutputMapping>
+          <Name>Hellball Color</Name>
+          <PortNumber>80</PortNumber>
+          <Output>HellballColor</Output>
+        </OutputMapping>
+      </OutputMappings>
+    </ControllerSetup>
+  </ControllerSetups>
+</DofConfigToolSetup>
