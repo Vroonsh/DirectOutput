@@ -310,20 +310,53 @@ namespace DirectOutputToolkit
         private void treeViewEditionTable_MouseDown(object sender, MouseEventArgs e)
         {
 
+            if (e.Button == MouseButtons.Right) {
+                var hit = treeViewEditionTable.HitTest(e.X, e.Y);
+
+                if (hit.Node == null) {
+                    ContextMenu effMenu = new ContextMenu();
+
+                    var createMenu = new MenuItem("Create new effect");
+                    effMenu.MenuItems.Add(createMenu);
+                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+
+                    effMenu.Show(treeViewEditionTable, e.Location);
+                } 
+            }
+        }
+
+        private void OnCreateAnalogAlphaEffect(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnCreateRGBColorEffect(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnCreateMxAreaEffect(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
 
 
         #region Dof Table Effects
-        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void PopulateReferenceTable()
         {
-            var combo = (sender as ComboBox);
-            Settings.LastRomName = combo.Text;
+            Settings.LastRomName = RomNameComboBox.Text;
             treeViewTableEffects.Nodes.Clear();
             treeViewTableEffects.Refresh();
-
             PopulateReferenceTableElements();
+        }
+
+        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PopulateReferenceTable();
         }
 
         private void PopulateReferenceTableElements()
