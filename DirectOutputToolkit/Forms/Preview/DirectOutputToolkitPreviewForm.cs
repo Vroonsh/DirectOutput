@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -46,52 +47,54 @@ namespace DirectOutputToolkit
 
         private void InitDofResources()
         {
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.StartButton, imageListIcons.Images["StartButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.LaunchButton, imageListIcons.Images["LaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListIcons.Images["AuthLaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListIcons.Images["ZBLaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FireButton, imageListIcons.Images["FireButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Coin, imageListIcons.Images["Coin"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Exit, imageListIcons.Images["Exit"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ExtraBall, imageListIcons.Images["ExtraBall"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Genre, imageListIcons.Images["Genre"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.HowToPlay, imageListIcons.Images["HowToPlay"]);
+            var imagePath = ".\\DOTK\\images";
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackLeft, imageListIcons.Images["BumperCap"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackCenter, imageListIcons.Images["BumperCap"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackRight, imageListIcons.Images["BumperCap"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleLeft, imageListIcons.Images["BumperCap"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleCenter, imageListIcons.Images["BumperCap"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleRight, imageListIcons.Images["BumperCap"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.StartButton, Image.FromFile(Path.Combine(imagePath, "StartButton.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.LaunchButton, Image.FromFile(Path.Combine(imagePath, "LaunchButton.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, Image.FromFile(Path.Combine(imagePath, "AuthLaunchButton.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, Image.FromFile(Path.Combine(imagePath, "ZBLaunchButton.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FireButton, Image.FromFile(Path.Combine(imagePath, "FireButton.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Coin, Image.FromFile(Path.Combine(imagePath, "Coin.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Exit, Image.FromFile(Path.Combine(imagePath, "Exit.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ExtraBall, Image.FromFile(Path.Combine(imagePath, "ExtraBall.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Genre, Image.FromFile(Path.Combine(imagePath, "Genre.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.HowToPlay, Image.FromFile(Path.Combine(imagePath, "HowToPlay.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Back, imageListIcons.Images["BumperCapKiss4"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Left, imageListIcons.Images["BumperCapKiss2"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Right, imageListIcons.Images["BumperCapKiss1"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Center, imageListIcons.Images["BumperCapKiss3"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackLeft, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackCenter, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10BackRight, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleLeft, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleCenter, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper10MiddleRight, Image.FromFile(Path.Combine(imagePath, "BumperCap.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotLeft, imageListIcons.Images["SlingshotLeft"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotRight, imageListIcons.Images["SlingshotRight"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Back, Image.FromFile(Path.Combine(imagePath, "BumperCapKiss4.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Left, Image.FromFile(Path.Combine(imagePath, "BumperCapKiss2.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Right, Image.FromFile(Path.Combine(imagePath, "BumperCapKiss1.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Bumper8Center, Image.FromFile(Path.Combine(imagePath, "BumperCapKiss3.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperLeft, imageListIcons.Images["LeftFlipper"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperRight, imageListIcons.Images["RightFlipper"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotLeft, Image.FromFile(Path.Combine(imagePath, "SlingshotLeft.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.SlingshotRight, Image.FromFile(Path.Combine(imagePath, "SlingshotRight.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Shaker, imageListIcons.Images["Shaker"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Gear, imageListIcons.Images["Gear"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Fan, imageListIcons.Images["Fan"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Knocker, imageListIcons.Images["Knocker"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperLeft, Image.FromFile(Path.Combine(imagePath, "LeftFlipper.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FlipperRight, Image.FromFile(Path.Combine(imagePath, "RightFlipper.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Beacon, imageListIcons.Images["GyroRed"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Shaker, Image.FromFile(Path.Combine(imagePath, "Shaker.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Gear, Image.FromFile(Path.Combine(imagePath, "Gear.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Fan, Image.FromFile(Path.Combine(imagePath, "Fan.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Knocker, Image.FromFile(Path.Combine(imagePath, "Knocker.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitHighTone, imageListIcons.Images["Chime"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitMidTone, imageListIcons.Images["Chime"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitLowTone, imageListIcons.Images["Chime"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitExtraLowTone, imageListIcons.Images["Chime"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Chime5, imageListIcons.Images["Chime"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Beacon, Image.FromFile(Path.Combine(imagePath, "GyroRed.png")));
 
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.TopperBell, imageListIcons.Images["Bell"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellLarge, imageListIcons.Images["Bell"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellSmall, imageListIcons.Images["Bell"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.RepeatingBell, imageListIcons.Images["Bell"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitHighTone, Image.FromFile(Path.Combine(imagePath, "Chime.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitMidTone, Image.FromFile(Path.Combine(imagePath, "Chime.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitLowTone, Image.FromFile(Path.Combine(imagePath, "Chime.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ChimeUnitExtraLowTone, Image.FromFile(Path.Combine(imagePath, "Chime.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Chime5, Image.FromFile(Path.Combine(imagePath, "Chime.png")));
+
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.TopperBell, Image.FromFile(Path.Combine(imagePath, "Bell.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellLarge, Image.FromFile(Path.Combine(imagePath, "Bell.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ShellBellSmall, Image.FromFile(Path.Combine(imagePath, "Bell.png")));
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.RepeatingBell, Image.FromFile(Path.Combine(imagePath, "Bell.png")));
         }
 
         private void HierarchyFunc(DirectOutputViewArea Parent, DirectOutputViewArea Child)
@@ -127,6 +130,12 @@ namespace DirectOutputToolkit
                 }
                 PreviewControl.Refresh();
             }
+        }
+
+        private void checkBoxDisplayAreas_CheckedChanged(object sender, EventArgs e)
+        {
+            PreviewControl.DrawViewAreasInfos = checkBoxDisplayAreas.Checked;
+            PreviewControl.Invalidate();
         }
     }
 }

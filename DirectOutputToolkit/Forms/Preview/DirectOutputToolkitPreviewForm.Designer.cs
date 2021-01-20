@@ -27,13 +27,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectOutputToolkitPreviewForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewVisibility = new System.Windows.Forms.TreeView();
             this.directOutputPreviewControl1 = new DirectOutputControls.DirectOutputPreviewControl();
-            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.checkBoxDisplayAreas = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,14 +46,15 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.checkBoxDisplayAreas);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.treeViewVisibility);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.directOutputPreviewControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(778, 999);
-            this.splitContainer1.SplitterDistance = 183;
+            this.splitContainer1.Size = new System.Drawing.Size(687, 926);
+            this.splitContainer1.SplitterDistance = 141;
             this.splitContainer1.TabIndex = 0;
             // 
             // label1
@@ -75,7 +74,7 @@
             this.treeViewVisibility.CheckBoxes = true;
             this.treeViewVisibility.Location = new System.Drawing.Point(12, 25);
             this.treeViewVisibility.Name = "treeViewVisibility";
-            this.treeViewVisibility.Size = new System.Drawing.Size(168, 971);
+            this.treeViewVisibility.Size = new System.Drawing.Size(125, 874);
             this.treeViewVisibility.TabIndex = 0;
             this.treeViewVisibility.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewVisibility_AfterCheck);
             // 
@@ -87,47 +86,26 @@
             this.directOutputPreviewControl1.DrawViewAreasInfos = false;
             this.directOutputPreviewControl1.Location = new System.Drawing.Point(0, 0);
             this.directOutputPreviewControl1.Name = "directOutputPreviewControl1";
-            this.directOutputPreviewControl1.Size = new System.Drawing.Size(591, 999);
+            this.directOutputPreviewControl1.Size = new System.Drawing.Size(542, 926);
             this.directOutputPreviewControl1.TabIndex = 0;
             // 
-            // imageListIcons
+            // checkBoxDisplayAreas
             // 
-            this.imageListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIcons.ImageStream")));
-            this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListIcons.Images.SetKeyName(0, "ButtonBackground");
-            this.imageListIcons.Images.SetKeyName(1, "StartButton");
-            this.imageListIcons.Images.SetKeyName(2, "LaunchButton");
-            this.imageListIcons.Images.SetKeyName(3, "AuthLaunchButton");
-            this.imageListIcons.Images.SetKeyName(4, "ZBLaunchButton");
-            this.imageListIcons.Images.SetKeyName(5, "FireButton");
-            this.imageListIcons.Images.SetKeyName(6, "Coin");
-            this.imageListIcons.Images.SetKeyName(7, "Exit");
-            this.imageListIcons.Images.SetKeyName(8, "ExtraBall");
-            this.imageListIcons.Images.SetKeyName(9, "Genre");
-            this.imageListIcons.Images.SetKeyName(10, "HowToPlay");
-            this.imageListIcons.Images.SetKeyName(11, "BumperCap");
-            this.imageListIcons.Images.SetKeyName(12, "BumperCapKiss1");
-            this.imageListIcons.Images.SetKeyName(13, "BumperCapKiss2");
-            this.imageListIcons.Images.SetKeyName(14, "BumperCapKiss3");
-            this.imageListIcons.Images.SetKeyName(15, "BumperCapKiss4");
-            this.imageListIcons.Images.SetKeyName(16, "Bell");
-            this.imageListIcons.Images.SetKeyName(17, "Fan");
-            this.imageListIcons.Images.SetKeyName(18, "GyroBlue");
-            this.imageListIcons.Images.SetKeyName(19, "GyroRed");
-            this.imageListIcons.Images.SetKeyName(20, "SlingShotLeft");
-            this.imageListIcons.Images.SetKeyName(21, "SlingShotRight");
-            this.imageListIcons.Images.SetKeyName(22, "Gear");
-            this.imageListIcons.Images.SetKeyName(23, "LeftFlipper");
-            this.imageListIcons.Images.SetKeyName(24, "RightFlipper");
-            this.imageListIcons.Images.SetKeyName(25, "Shaker");
-            this.imageListIcons.Images.SetKeyName(26, "Knocker");
-            this.imageListIcons.Images.SetKeyName(27, "Chime");
+            this.checkBoxDisplayAreas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxDisplayAreas.AutoSize = true;
+            this.checkBoxDisplayAreas.Location = new System.Drawing.Point(12, 905);
+            this.checkBoxDisplayAreas.Name = "checkBoxDisplayAreas";
+            this.checkBoxDisplayAreas.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxDisplayAreas.TabIndex = 2;
+            this.checkBoxDisplayAreas.Text = "Display areas infos";
+            this.checkBoxDisplayAreas.UseVisualStyleBackColor = true;
+            this.checkBoxDisplayAreas.CheckedChanged += new System.EventHandler(this.checkBoxDisplayAreas_CheckedChanged);
             // 
             // DirectOutputToolkitPreviewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 999);
+            this.ClientSize = new System.Drawing.Size(687, 926);
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
             this.DoubleBuffered = true;
@@ -149,6 +127,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TreeView treeViewVisibility;
         private DirectOutputControls.DirectOutputPreviewControl directOutputPreviewControl1;
-        private System.Windows.Forms.ImageList imageListIcons;
+        private System.Windows.Forms.CheckBox checkBoxDisplayAreas;
     }
 }

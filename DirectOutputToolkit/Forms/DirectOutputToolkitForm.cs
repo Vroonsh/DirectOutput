@@ -167,7 +167,7 @@ namespace DirectOutputToolkit
 
         private void importFromDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { Handler = Handler, AvailableToys = Handler.Toys.Select(T=>T.Name).ToArray() };
+            DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { Handler = Handler };
             dlg.ShowDialog(this);
 
             if (dlg.CommandLines != null) {
@@ -181,8 +181,11 @@ namespace DirectOutputToolkit
                 Handler.LedControlConfigList[0].ResolveVariables(cmdLines);
 
                 foreach (var line in cmdLines) {
-                    CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, dlg.ToyName, Handler);
-                    TCCNumber++;
+                    var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(dlg.OutputName));
+                    foreach(var toy in Toys) {
+                        CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, toy.Name, Handler);
+                        TCCNumber++;
+                    }
                 }
             }
             EditionTableNode.Rebuild(Handler);
@@ -688,7 +691,7 @@ namespace DirectOutputToolkit
             var newEffect = Handler.RebuildConfigurator.CreateEffect(TCS, TCCNumber, TCCNumber, TableNode.EditionTable
                                                                         , Toy
                                                                         , Handler.GetToyLedwizNum(ToyName)
-                                                                        , Handler.InitFilesPath
+                                                                        , Handler.DofFilesHandler.UserLocalPath
                                                                         , TableNode.EditionTable.RomName);
 
             for (var num = LastEffectsCount; num < EditionTableNode.EditionTable.Effects.Count; ++num) {
