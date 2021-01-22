@@ -40,7 +40,12 @@ namespace DirectOutputToolkit
 
         ~EffectTreeNode()
         {
+            TCS = null;
+            Effect = null;
+            TableTE = null;
+            TestTE.AssignedEffects.Clear();
             TestTE.ValueChanged -= TestTE_ValueChanged;
+            Handler = null;
         }
 
         private void TestTE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
