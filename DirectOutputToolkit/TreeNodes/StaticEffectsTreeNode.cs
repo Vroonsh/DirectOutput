@@ -1,4 +1,5 @@
-﻿using DirectOutput.Table;
+﻿using DirectOutput.Cab.Toys;
+using DirectOutput.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +31,15 @@ namespace DirectOutputToolkit
             Text = ToString();
         }
 
-        internal void Rebuild(DirectOutputToolkitHandler Handler)
+        internal void Rebuild(DirectOutputToolkitHandler Handler, IToy[] ToysFilter = null)
         {
             Nodes.Clear();
             foreach (var eff in Table.AssignedStaticEffects) {
-                Handler.InitEffect(eff, _TableType);
-                var effNode = new EffectTreeNode(null, _TableType, eff.Effect, Handler);
-                Nodes.Add(effNode);
+                if (ToysFilter == null || ToysFilter.Contains(eff.Effect.GetAssignedToy())) {
+                    Handler.InitEffect(eff, _TableType);
+                    var effNode = new EffectTreeNode(null, _TableType, eff.Effect, Handler);
+                    Nodes.Add(effNode);
+                }
             }
             Refresh();
         }

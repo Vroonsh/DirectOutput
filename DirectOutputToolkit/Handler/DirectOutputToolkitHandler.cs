@@ -106,7 +106,7 @@ namespace DirectOutputToolkit
             Settings = settings;
             RebuildConfigurator.EffectMinDurationMs = Settings.EffectMinDurationMs;
             RebuildConfigurator.EffectRGBMinDurationMs = Settings.EffectRGBMinDurationMs;
-            ResetEditionTable();
+            ResetEditionTable(null);
         }
 
         #region Pinball
@@ -155,31 +155,35 @@ namespace DirectOutputToolkit
             }
         }
 
-        internal void ResetPinball()
+        internal void ResetPinball(bool ReInit)
         {
             if (Pinball != null) {
                 foreach (var tdesc in TableDescriptors) {
                     foreach (var TE in tdesc.Value.Table.TableElements) {
                         TE.Value = 0;
                     }
-                    tdesc.Value.Table.Finish();
-                    tdesc.Value.Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
+                    if (ReInit) {
+                        tdesc.Value.Table.Finish();
+                        tdesc.Value.Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
+                    }
                     tdesc.Value.RunnigTableElements.Clear();
                 }
-                Pinball.Finish();
-                foreach (var tdesc in TableDescriptors) {
-                    tdesc.Value.Table.Init(Pinball);
+                if (ReInit) {
+                    Pinball.Finish();
+                    foreach (var tdesc in TableDescriptors) {
+                        tdesc.Value.Table.Init(Pinball);
+                    }
+                    Pinball.Init();
                 }
-                Pinball.Init();
             }
         }
         #endregion
 
         #region Tables
-        internal void ResetEditionTable()
+        internal void ResetEditionTable(string RefRomName)
         {
-            ResetPinball();
-            TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = "Edition Table", RomName = "romname" };
+            ResetPinball(true);
+            TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = RefRomName.IsNullOrEmpty() ? "Edition Table" : $"Table copied from {RefRomName}", RomName = RefRomName.IsNullOrEmpty() ? "romname" : RefRomName };
             if (Pinball != null) {
                 TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
                 TableDescriptors[ETableType.EditionTable].Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
@@ -190,7 +194,7 @@ namespace DirectOutputToolkit
 
         internal void SetupTable(ETableType TableType, string RomName)
         {
-            ResetPinball();
+            ResetPinball(true);
             TableDescriptors[TableType].Table = new Table();
             var table = TableDescriptors[TableType].Table;
             RebuildConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
@@ -224,7 +228,7 @@ namespace DirectOutputToolkit
             var effects = TE.AssignedEffects.Select(AE => AE.Effect).ToArray();
             foreach (var tdesc in TableDescriptors) {
                 if (tdesc.Value.RunnigTableElements.Contains(TE) || tdesc.Value.RunnigTableElements.Any(E => E.AssignedEffects.Any(AE => effects.Contains(AE.Effect)))) {
-                    ResetPinball();
+                    ResetPinball(false);
                     break;
                 }
             }
@@ -271,6 +275,30 @@ namespace DirectOutputToolkit
         #endregion
 
         #region Effects 
+        internal IEffect CreateEffect(IEffect refEffect, TableElement TE, ETableType tableType)
+        {
+            TableConfigSetting TCS = new TableConfigSetting();
+            TCS.FromEffect(refEffect);
+
+            if (TE != null) {
+                TCS.OutputControl = OutputControlEnum.Controlled;
+                TCS.TableElement = $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}";
+            } else {
+                TCS.OutputControl = TCS.Invert ? OutputControlEnum.FixedOff : OutputControlEnum.FixedOn;
+            }
+
+            //Retrieve necessary data for the Configurator directly from the effect name
+            int LedWizNumber, TCCNumber, SettingNumber;
+            string Suffix = string.Empty;
+            Configurator.RetrieveEffectSettings(refEffect.Name, out LedWizNumber, out TCCNumber, out SettingNumber, out Suffix);
+
+            //Retrieve Toy & TCCNumber from Chosen Output
+            var Toy = refEffect.GetAssignedToy();
+
+            // The create effect will add the effects to the provided Table & TebleElements' assigned effects
+            return CreateEffect(TCS, TCCNumber, SettingNumber, DirectOutputToolkitHandler.ETableType.EditionTable, Toy, LedWizNumber);
+        }
+
         internal IEffect CreateEffect(TableConfigSetting tCS, int tCCNumber, int settingNumber, ETableType tableType, IToy toy, int ledWizNumber)
         {
             var Table = TableDescriptors[tableType].Table;

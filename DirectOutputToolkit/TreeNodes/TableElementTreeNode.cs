@@ -31,6 +31,7 @@ namespace DirectOutputToolkit
         ~TableElementTreeNode()
         {
             TE.ValueChanged -= TE_ValueChanged;
+            TE = null;
         }
 
         private void TE_ValueChanged(object sender, TableElementValueChangedEventArgs e)
