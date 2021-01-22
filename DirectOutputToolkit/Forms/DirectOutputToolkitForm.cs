@@ -1,6 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.FX;
 using DirectOutput.LedControl.Loader;
+using DirectOutput.LedControl.Setup;
 using DirectOutput.Table;
 using DirectOutputControls;
 using DofConfigToolWrapper;
@@ -38,11 +39,11 @@ namespace DirectOutputToolkit
 
             var privateDoubleBuffered = typeof(TreeView).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
             privateDoubleBuffered.SetValue(treeViewEditionTable, true);
-            privateDoubleBuffered.SetValue(treeViewTableEffects, true);
+            privateDoubleBuffered.SetValue(treeViewReferenceTable, true);
 
-            treeViewTableEffects.ImageList = imageListIcons;
-            treeViewTableEffects.FullRowSelect = true;
-            treeViewTableEffects.HideSelection = false;
+            treeViewReferenceTable.ImageList = imageListIcons;
+            treeViewReferenceTable.FullRowSelect = true;
+            treeViewReferenceTable.HideSelection = false;
             treeViewEditionTable.ImageList = imageListIcons;
             treeViewEditionTable.FullRowSelect = true;
             treeViewEditionTable.HideSelection = false;
@@ -70,6 +71,11 @@ namespace DirectOutputToolkit
                 RomNameComboBox.Items.Add("");
                 RomNameComboBox.Items.AddRange(Handler.LedControlConfigList[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
                 PopulateReferenceTable();
+
+                comboBoxEditionTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput();
+                comboBoxEditionTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
+                comboBoxRefTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput();
+                comboBoxRefTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
 
                 EditionTableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
                 EditionTableNode.Rebuild(Handler);
@@ -116,7 +122,7 @@ namespace DirectOutputToolkit
                                 "Create New Table",
                                 MessageBoxButtons.YesNo,
                                 MessageBoxIcon.Warning) == DialogResult.Yes) {
-                ResetEditionTable();
+                ResetEditionTable(null);
                 SetCurrentSelectedNode(EditionTableNode);
             }
         }
@@ -131,7 +137,7 @@ namespace DirectOutputToolkit
 
             fd.ShowDialog();
             if (!fd.FileName.IsNullOrEmpty()) {
-                ResetEditionTable();
+                ResetEditionTable(null);
                 var serializer = new DirectOutputToolkitSerializer();
                 if (serializer.Deserialize(EditionTableNode, fd.FileName, Handler)) {
                     SetCurrentSelectedNode(EditionTableNode);
@@ -211,9 +217,9 @@ namespace DirectOutputToolkit
         #endregion
 
         #region Effect Editor
-        private void ResetEditionTable()
+        private void ResetEditionTable(string RefRomName)
         {
-            Handler.ResetEditionTable();
+            Handler.ResetEditionTable(RefRomName);
             EditionTableNode.EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
             EditionTableNode.Rebuild(Handler);
             ResetAllTableElements();
@@ -221,6 +227,8 @@ namespace DirectOutputToolkit
             UpdateActivationButton(buttonActivationTable, 0);
             UpdatePulseButton(buttonPulseEdition, 0);
             UpdatePulseButton(buttonPulseTable, 0);
+            treeViewEditionTable.Refresh();
+            propertyGridMain.SelectedObject = null;
         }
 
         private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -345,71 +353,112 @@ namespace DirectOutputToolkit
             throw new NotImplementedException();
         }
 
+        private void comboBoxEditionTableOutputFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (EditionTableNode != null) {
+                PopulateTableElements(DirectOutputToolkitHandler.ETableType.EditionTable, comboBoxEditionTableOutputFilter.Text);
+            }
+        }
+
+        private void buttonEditionTableClearFilter_Click(object sender, EventArgs e)
+        {
+            if (EditionTableNode != null) {
+                comboBoxEditionTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
+                PopulateTableElements(DirectOutputToolkitHandler.ETableType.EditionTable);
+            }
+        }
+
         #endregion
 
 
         #region Dof Table Effects
         private void PopulateReferenceTable()
         {
-            Settings.LastRomName = RomNameComboBox.Text;
-            treeViewTableEffects.Nodes.Clear();
-            treeViewTableEffects.Refresh();
-            PopulateReferenceTableElements();
-        }
-
-        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            PopulateReferenceTable();
-        }
-
-        private void PopulateReferenceTableElements()
-        {
-            //Resetup the Reference Table
             Handler.SetupTable(DirectOutputToolkitHandler.ETableType.ReferenceTable, Settings.LastRomName);
-
-            var table = Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable);
-
-            treeViewTableEffects.Nodes.Clear();
-
-            var staticEffectsNode = new StaticEffectsTreeNode(table, DirectOutputToolkitHandler.ETableType.ReferenceTable);
-            staticEffectsNode.Rebuild(Handler);
-            treeViewTableEffects.Nodes.Add(staticEffectsNode);
-
-            foreach (TableElement tableElement in table.TableElements) {
-                var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
-                var listNode = new TableElementTreeNode(tableElement, DirectOutputToolkitHandler.ETableType.ReferenceTable);
-
-                foreach (var effect in tableElement.AssignedEffects) {
-                    var effectNode = new EffectTreeNode(tableElement, DirectOutputToolkitHandler.ETableType.ReferenceTable, effect.Effect, Handler);
-                    listNode.Nodes.Add(effectNode);
-                }
-
-                listNode.Refresh();
-                treeViewTableEffects.Nodes.Add(listNode);
-            }
-
+            PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable);
             Handler.LaunchTable(DirectOutputToolkitHandler.ETableType.ReferenceTable);
             PreviewForm.Invalidate();
         }
 
+        private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Settings.LastRomName = RomNameComboBox.Text;
+            PopulateReferenceTable();
+        }
+
+        private void PopulateTableElements(DirectOutputToolkitHandler.ETableType TableType, string OutputFilter = "Invalid")
+        {
+            Handler.ResetPinball(false);
+
+            var table = Handler.GetTable(TableType);
+
+            var treeView = TableType == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable;
+
+            var outputFilter = DofConfigToolOutputs.GetOutput(OutputFilter);
+            var ToysFromOutputFilter = Handler.GetToysFromOutput(outputFilter);
+
+            TreeNodeCollection rootNodes = treeView.Nodes;
+            if (TableType == DirectOutputToolkitHandler.ETableType.EditionTable) {
+                rootNodes = EditionTableNode.Nodes;
+            }
+
+            treeView.BeginUpdate();
+            treeView.SelectedNode = null;
+
+            rootNodes.Clear();
+
+            var staticEffectsNode = new StaticEffectsTreeNode(table, TableType);
+            staticEffectsNode.Rebuild(Handler, outputFilter != DofConfigToolOutputEnum.Invalid ? ToysFromOutputFilter : null);
+            rootNodes.Add(staticEffectsNode);
+
+            foreach (TableElement tableElement in table.TableElements) {
+
+                if (outputFilter == DofConfigToolOutputEnum.Invalid ||
+                    tableElement.AssignedEffects.Any(AE=>ToysFromOutputFilter.Contains(AE.Effect.GetAssignedToy()))) {
+
+                    var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
+                    var listNode = new TableElementTreeNode(tableElement, TableType);
+
+                    foreach (var effect in tableElement.AssignedEffects) {
+                        if (outputFilter == DofConfigToolOutputEnum.Invalid ||
+                            ToysFromOutputFilter.Contains(effect.Effect.GetAssignedToy())) {
+                            var effectNode = new EffectTreeNode(tableElement, TableType, effect.Effect, Handler);
+                            listNode.Nodes.Add(effectNode);
+                        }
+                    }
+
+                    listNode.Refresh();
+                    rootNodes.Add(listNode);
+                }
+
+            }
+
+            if (TableType == DirectOutputToolkitHandler.ETableType.EditionTable) {
+                EditionTableNode.Refresh();
+            }
+
+            treeView.EndUpdate();
+            treeView.Refresh();
+        }
+
         private void buttonActivationTable_Click(object sender, EventArgs e)
         {
-            if (treeViewTableEffects.SelectedNode is ITableElementTreeNode nodeWithTE) {
-                var value = Handler.SwitchTableElement(treeViewTableEffects.SelectedNode);
-                SetEffectTreeNodeActive(treeViewTableEffects.SelectedNode, value > 0 ? 1 : 0);
+            if (treeViewReferenceTable.SelectedNode is ITableElementTreeNode nodeWithTE) {
+                var value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationTable, value);
             }
         }
 
         private void buttonPulseTable_Click(object sender, EventArgs e)
         {
-            if (treeViewTableEffects.SelectedNode is ITableElementTreeNode nodeWithTE) {
-                var value = Handler.SwitchTableElement(treeViewTableEffects.SelectedNode);
-                SetEffectTreeNodeActive(treeViewTableEffects.SelectedNode, value > 0 ? 1 : 0);
+            if (treeViewReferenceTable.SelectedNode is ITableElementTreeNode nodeWithTE) {
+                var value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
                 Thread.Sleep(Settings.PulseDurationMs);
-                value = Handler.SwitchTableElement(treeViewTableEffects.SelectedNode);
-                SetEffectTreeNodeActive(treeViewTableEffects.SelectedNode, value > 0 ? 1 : 0);
+                value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
+                SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
             }
         }
@@ -425,7 +474,51 @@ namespace DirectOutputToolkit
 
         private void treeViewTableLedEffects_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SetCurrentSelectedNode(treeViewTableEffects.SelectedNode);
+            SetCurrentSelectedNode(treeViewReferenceTable.SelectedNode);
+        }
+
+        private void comboBoxRefTableOutputFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable, comboBoxRefTableOutputFilter.Text);
+        }
+
+        private void buttonClearRefTableFilter_Click(object sender, EventArgs e)
+        {
+            comboBoxRefTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
+            PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable, comboBoxRefTableOutputFilter.Text);
+        }
+
+        private void buttonCopyTable_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Do you really want to copy all {RomNameComboBox.Text} elements & effects to edition table ?", "Copy reference table", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) {
+                return;
+            }
+
+            ResetEditionTable(RomNameComboBox.Text);
+
+            var refTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable);
+
+            foreach(var eff in refTable.AssignedStaticEffects) {
+                Handler.CreateEffect(eff.Effect, null, DirectOutputToolkitHandler.ETableType.EditionTable);
+            }
+
+            foreach(var te in refTable.TableElements) {
+                var newTE = new TableElement() {
+                    Name = te.Name,
+                    Number = te.Number,
+                    TableElementType = te.TableElementType
+                };
+                EditionTableNode.EditionTable.TableElements.Add(newTE);
+
+                foreach(var eff in te.AssignedEffects) {
+                    Handler.CreateEffect(eff.Effect, newTE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                }
+            }
+
+            PopulateTableElements(DirectOutputToolkitHandler.ETableType.EditionTable, comboBoxEditionTableOutputFilter.Text);
+            treeViewEditionTable.SelectedNode = EditionTableNode;
+            propertyGridMain.SelectedObject = null;
+            EditionTableNode.Expand();
         }
         #endregion
 
@@ -515,8 +608,8 @@ namespace DirectOutputToolkit
                 } else {
                     UpdateActivationButton(buttonActivationTable, value);
                     UpdatePulseButton(buttonPulseTable, value);
-                    treeViewTableEffects.SelectedNode = node;
-                    treeViewTableEffects.Refresh();
+                    treeViewReferenceTable.SelectedNode = node;
+                    treeViewReferenceTable.Refresh();
                 }
             } else {
                 treeViewEditionTable.SelectedNode = node;
@@ -568,7 +661,7 @@ namespace DirectOutputToolkit
 
         private void ResetAllTableElements()
         {
-            foreach (var node in treeViewTableEffects.Nodes) {
+            foreach (var node in treeViewReferenceTable.Nodes) {
                 ResetTreeNodeRecursive(node as TreeNode);
             }
             ResetTreeNodeRecursive(EditionTableNode);
@@ -725,7 +818,7 @@ namespace DirectOutputToolkit
                     addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
                 }
 
-                effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewTableEffects, e.Location);
+                effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, e.Location);
             } else if (e.Node is TableElementTreeNode tableElementNode) {
                 ContextMenu teMenu = new ContextMenu();
 
@@ -746,9 +839,10 @@ namespace DirectOutputToolkit
                         }
                     }
                 }
-                teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewTableEffects, e.Location);
+                teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, e.Location);
             }
         }
         #endregion
+
     }
 }
