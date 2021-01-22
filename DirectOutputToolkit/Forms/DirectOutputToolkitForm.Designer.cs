@@ -42,15 +42,20 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.buttonEditionTableClearFilter = new System.Windows.Forms.Button();
+            this.comboBoxEditionTableOutputFilter = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonPulseEdition = new System.Windows.Forms.Button();
             this.buttonActivationEdition = new System.Windows.Forms.Button();
             this.treeViewEditionTable = new System.Windows.Forms.TreeView();
+            this.buttonClearRefTableFilter = new System.Windows.Forms.Button();
+            this.buttonCopyTable = new System.Windows.Forms.Button();
             this.comboBoxRefTableOutputFilter = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonPulseTable = new System.Windows.Forms.Button();
             this.buttonActivationTable = new System.Windows.Forms.Button();
-            this.treeViewTableEffects = new System.Windows.Forms.TreeView();
+            this.treeViewReferenceTable = new System.Windows.Forms.TreeView();
             this.labelRomName = new System.Windows.Forms.Label();
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -76,7 +81,7 @@
             this.aboutToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Size = new System.Drawing.Size(1291, 24);
+            this.menuStripMain.Size = new System.Drawing.Size(1190, 24);
             this.menuStripMain.TabIndex = 0;
             this.menuStripMain.Text = "menuStrip1";
             // 
@@ -171,8 +176,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.propertyGridMain);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
-            this.splitContainer1.Size = new System.Drawing.Size(1291, 889);
-            this.splitContainer1.SplitterDistance = 975;
+            this.splitContainer1.Size = new System.Drawing.Size(1190, 877);
+            this.splitContainer1.SplitterDistance = 898;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -185,6 +190,9 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.buttonEditionTableClearFilter);
+            this.splitContainer2.Panel1.Controls.Add(this.comboBoxEditionTableOutputFilter);
+            this.splitContainer2.Panel1.Controls.Add(this.label3);
             this.splitContainer2.Panel1.Controls.Add(this.label2);
             this.splitContainer2.Panel1.Controls.Add(this.buttonPulseEdition);
             this.splitContainer2.Panel1.Controls.Add(this.buttonActivationEdition);
@@ -193,17 +201,50 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer2.Panel2.Controls.Add(this.buttonClearRefTableFilter);
+            this.splitContainer2.Panel2.Controls.Add(this.buttonCopyTable);
             this.splitContainer2.Panel2.Controls.Add(this.comboBoxRefTableOutputFilter);
             this.splitContainer2.Panel2.Controls.Add(this.label4);
             this.splitContainer2.Panel2.Controls.Add(this.buttonPulseTable);
             this.splitContainer2.Panel2.Controls.Add(this.buttonActivationTable);
-            this.splitContainer2.Panel2.Controls.Add(this.treeViewTableEffects);
+            this.splitContainer2.Panel2.Controls.Add(this.treeViewReferenceTable);
             this.splitContainer2.Panel2.Controls.Add(this.labelRomName);
             this.splitContainer2.Panel2.Controls.Add(this.RomNameComboBox);
             this.splitContainer2.Panel2.Controls.Add(this.label1);
-            this.splitContainer2.Size = new System.Drawing.Size(969, 883);
-            this.splitContainer2.SplitterDistance = 622;
+            this.splitContainer2.Size = new System.Drawing.Size(892, 871);
+            this.splitContainer2.SplitterDistance = 612;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // buttonEditionTableClearFilter
+            // 
+            this.buttonEditionTableClearFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEditionTableClearFilter.Location = new System.Drawing.Point(818, 7);
+            this.buttonEditionTableClearFilter.Name = "buttonEditionTableClearFilter";
+            this.buttonEditionTableClearFilter.Size = new System.Drawing.Size(69, 23);
+            this.buttonEditionTableClearFilter.TabIndex = 35;
+            this.buttonEditionTableClearFilter.Text = "Clear filter";
+            this.buttonEditionTableClearFilter.UseVisualStyleBackColor = true;
+            this.buttonEditionTableClearFilter.Click += new System.EventHandler(this.buttonEditionTableClearFilter_Click);
+            // 
+            // comboBoxEditionTableOutputFilter
+            // 
+            this.comboBoxEditionTableOutputFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxEditionTableOutputFilter.FormattingEnabled = true;
+            this.comboBoxEditionTableOutputFilter.Location = new System.Drawing.Point(671, 7);
+            this.comboBoxEditionTableOutputFilter.Name = "comboBoxEditionTableOutputFilter";
+            this.comboBoxEditionTableOutputFilter.Size = new System.Drawing.Size(141, 21);
+            this.comboBoxEditionTableOutputFilter.TabIndex = 34;
+            this.comboBoxEditionTableOutputFilter.SelectedIndexChanged += new System.EventHandler(this.comboBoxEditionTableOutputFilter_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(604, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 13);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "Output filter";
             // 
             // label2
             // 
@@ -217,7 +258,7 @@
             // buttonPulseEdition
             // 
             this.buttonPulseEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPulseEdition.Location = new System.Drawing.Point(889, 594);
+            this.buttonPulseEdition.Location = new System.Drawing.Point(812, 584);
             this.buttonPulseEdition.Name = "buttonPulseEdition";
             this.buttonPulseEdition.Size = new System.Drawing.Size(75, 23);
             this.buttonPulseEdition.TabIndex = 25;
@@ -228,7 +269,7 @@
             // buttonActivationEdition
             // 
             this.buttonActivationEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonActivationEdition.Location = new System.Drawing.Point(808, 594);
+            this.buttonActivationEdition.Location = new System.Drawing.Point(731, 584);
             this.buttonActivationEdition.Name = "buttonActivationEdition";
             this.buttonActivationEdition.Size = new System.Drawing.Size(75, 23);
             this.buttonActivationEdition.TabIndex = 24;
@@ -242,36 +283,61 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeViewEditionTable.FullRowSelect = true;
-            this.treeViewEditionTable.Location = new System.Drawing.Point(17, 26);
+            this.treeViewEditionTable.Location = new System.Drawing.Point(17, 38);
             this.treeViewEditionTable.Name = "treeViewEditionTable";
-            this.treeViewEditionTable.Size = new System.Drawing.Size(947, 562);
+            this.treeViewEditionTable.Size = new System.Drawing.Size(870, 540);
             this.treeViewEditionTable.TabIndex = 23;
             this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
             this.treeViewEditionTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             this.treeViewEditionTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseDown);
             // 
+            // buttonClearRefTableFilter
+            // 
+            this.buttonClearRefTableFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClearRefTableFilter.Location = new System.Drawing.Point(686, 29);
+            this.buttonClearRefTableFilter.Name = "buttonClearRefTableFilter";
+            this.buttonClearRefTableFilter.Size = new System.Drawing.Size(69, 23);
+            this.buttonClearRefTableFilter.TabIndex = 34;
+            this.buttonClearRefTableFilter.Text = "Clear filter";
+            this.buttonClearRefTableFilter.UseVisualStyleBackColor = true;
+            this.buttonClearRefTableFilter.Click += new System.EventHandler(this.buttonClearRefTableFilter_Click);
+            // 
+            // buttonCopyTable
+            // 
+            this.buttonCopyTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCopyTable.Location = new System.Drawing.Point(761, 29);
+            this.buttonCopyTable.Name = "buttonCopyTable";
+            this.buttonCopyTable.Size = new System.Drawing.Size(126, 23);
+            this.buttonCopyTable.TabIndex = 33;
+            this.buttonCopyTable.Text = "Copy table to edition";
+            this.buttonCopyTable.UseVisualStyleBackColor = true;
+            this.buttonCopyTable.Click += new System.EventHandler(this.buttonCopyTable_Click);
+            // 
             // comboBoxRefTableOutputFilter
             // 
+            this.comboBoxRefTableOutputFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxRefTableOutputFilter.FormattingEnabled = true;
-            this.comboBoxRefTableOutputFilter.Location = new System.Drawing.Point(694, 31);
+            this.comboBoxRefTableOutputFilter.Location = new System.Drawing.Point(520, 31);
             this.comboBoxRefTableOutputFilter.Name = "comboBoxRefTableOutputFilter";
-            this.comboBoxRefTableOutputFilter.Size = new System.Drawing.Size(270, 21);
+            this.comboBoxRefTableOutputFilter.Size = new System.Drawing.Size(160, 21);
             this.comboBoxRefTableOutputFilter.TabIndex = 32;
+            this.comboBoxRefTableOutputFilter.SelectedIndexChanged += new System.EventHandler(this.comboBoxRefTableOutputFilter_SelectedIndexChanged);
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(614, 34);
+            this.label4.Location = new System.Drawing.Point(455, 34);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 31;
-            this.label4.Text = "Output Filter";
+            this.label4.Text = "Output filter";
             // 
             // buttonPulseTable
             // 
             this.buttonPulseTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPulseTable.Location = new System.Drawing.Point(889, 229);
+            this.buttonPulseTable.Location = new System.Drawing.Point(812, 227);
             this.buttonPulseTable.Name = "buttonPulseTable";
             this.buttonPulseTable.Size = new System.Drawing.Size(75, 23);
             this.buttonPulseTable.TabIndex = 29;
@@ -282,7 +348,7 @@
             // buttonActivationTable
             // 
             this.buttonActivationTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonActivationTable.Location = new System.Drawing.Point(808, 229);
+            this.buttonActivationTable.Location = new System.Drawing.Point(731, 227);
             this.buttonActivationTable.Name = "buttonActivationTable";
             this.buttonActivationTable.Size = new System.Drawing.Size(75, 23);
             this.buttonActivationTable.TabIndex = 28;
@@ -290,36 +356,36 @@
             this.buttonActivationTable.UseVisualStyleBackColor = true;
             this.buttonActivationTable.Click += new System.EventHandler(this.buttonActivationTable_Click);
             // 
-            // treeViewTableEffects
+            // treeViewReferenceTable
             // 
-            this.treeViewTableEffects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.treeViewReferenceTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewTableEffects.FullRowSelect = true;
-            this.treeViewTableEffects.Location = new System.Drawing.Point(17, 58);
-            this.treeViewTableEffects.Name = "treeViewTableEffects";
-            this.treeViewTableEffects.Size = new System.Drawing.Size(947, 165);
-            this.treeViewTableEffects.TabIndex = 27;
-            this.treeViewTableEffects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTableLedEffects_AfterSelect);
-            this.treeViewTableEffects.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
+            this.treeViewReferenceTable.FullRowSelect = true;
+            this.treeViewReferenceTable.Location = new System.Drawing.Point(17, 58);
+            this.treeViewReferenceTable.Name = "treeViewReferenceTable";
+            this.treeViewReferenceTable.Size = new System.Drawing.Size(870, 163);
+            this.treeViewReferenceTable.TabIndex = 27;
+            this.treeViewReferenceTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTableLedEffects_AfterSelect);
+            this.treeViewReferenceTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
             // 
             // labelRomName
             // 
             this.labelRomName.AutoSize = true;
             this.labelRomName.Location = new System.Drawing.Point(13, 34);
             this.labelRomName.Name = "labelRomName";
-            this.labelRomName.Size = new System.Drawing.Size(60, 13);
+            this.labelRomName.Size = new System.Drawing.Size(57, 13);
             this.labelRomName.TabIndex = 26;
-            this.labelRomName.Text = "RomName:";
+            this.labelRomName.Text = "RomName";
             // 
             // RomNameComboBox
             // 
             this.RomNameComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.RomNameComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.RomNameComboBox.FormattingEnabled = true;
-            this.RomNameComboBox.Location = new System.Drawing.Point(79, 31);
+            this.RomNameComboBox.Location = new System.Drawing.Point(76, 31);
             this.RomNameComboBox.Name = "RomNameComboBox";
-            this.RomNameComboBox.Size = new System.Drawing.Size(528, 21);
+            this.RomNameComboBox.Size = new System.Drawing.Size(317, 21);
             this.RomNameComboBox.TabIndex = 25;
             this.RomNameComboBox.SelectedIndexChanged += new System.EventHandler(this.RomNameComboBox_SelectedIndexChanged);
             // 
@@ -337,7 +403,7 @@
             this.propertyGridMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridMain.Location = new System.Drawing.Point(3, 3);
             this.propertyGridMain.Name = "propertyGridMain";
-            this.propertyGridMain.Size = new System.Drawing.Size(306, 883);
+            this.propertyGridMain.Size = new System.Drawing.Size(282, 871);
             this.propertyGridMain.TabIndex = 0;
             this.propertyGridMain.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridMain_PropertyValueChanged);
             // 
@@ -352,7 +418,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1291, 913);
+            this.ClientSize = new System.Drawing.Size(1190, 901);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStripMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -399,7 +465,7 @@
         private System.Windows.Forms.ComboBox RomNameComboBox;
         private System.Windows.Forms.Button buttonPulseTable;
         private System.Windows.Forms.Button buttonActivationTable;
-        private System.Windows.Forms.TreeView treeViewTableEffects;
+        private System.Windows.Forms.TreeView treeViewReferenceTable;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonPulseEdition;
         private System.Windows.Forms.Button buttonActivationEdition;
@@ -407,6 +473,11 @@
         private System.Windows.Forms.ImageList imageListIcons;
         private System.Windows.Forms.ComboBox comboBoxRefTableOutputFilter;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonCopyTable;
+        private System.Windows.Forms.ComboBox comboBoxEditionTableOutputFilter;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonClearRefTableFilter;
+        private System.Windows.Forms.Button buttonEditionTableClearFilter;
     }
 }
 

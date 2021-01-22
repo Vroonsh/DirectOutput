@@ -22,7 +22,7 @@ namespace DirectOutputToolkit
 
         public override string ToString()
         {
-            return $"{EditionTable?.TableName} [{EditionTable?.RomName}] [{Nodes.OfType<TableElementTreeNode>().Count()} table elements]";
+            return $"{EditionTable?.TableName} [{EditionTable?.RomName}] [{EditionTable?.AssignedStaticEffects.Count} static effects, {Nodes.OfType<TableElementTreeNode>().Count()} table elements]";
         }
 
         public Table EditionTable { get; set; }
