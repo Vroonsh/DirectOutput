@@ -195,6 +195,7 @@ namespace DirectOutputToolkit
         internal void SetupTable(ETableType TableType, string RomName)
         {
             ResetPinball(true);
+            TableDescriptors[TableType].Table = null;
             TableDescriptors[TableType].Table = new Table();
             var table = TableDescriptors[TableType].Table;
             RebuildConfigurator.Setup(LedControlConfigList, table, Pinball.Cabinet, RomName);
