@@ -421,7 +421,7 @@ namespace DofConfigToolWrapper
             RemapSetup();
 
 
-            (dataGridViewOutputMappings.Columns[OutputColumnNum] as DataGridViewComboBoxColumn).DataSource = DofConfigToolOutputs.GetPublicDofOutput();
+            (dataGridViewOutputMappings.Columns[OutputColumnNum] as DataGridViewComboBoxColumn).DataSource = DofConfigToolOutputs.GetPublicDofOutput(true);
         }
 
         private void RemapSetup()
