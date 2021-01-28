@@ -112,6 +112,7 @@
             this.propertyGridViewArea.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridViewArea.Location = new System.Drawing.Point(3, 3);
             this.propertyGridViewArea.Name = "propertyGridViewArea";
+            this.propertyGridViewArea.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.propertyGridViewArea.Size = new System.Drawing.Size(361, 840);
             this.propertyGridViewArea.TabIndex = 0;
             this.propertyGridViewArea.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridViewArea_PropertyValueChanged);
