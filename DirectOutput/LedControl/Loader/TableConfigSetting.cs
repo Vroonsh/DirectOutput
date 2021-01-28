@@ -1149,7 +1149,7 @@ namespace DirectOutput.LedControl.Loader
         /// 
         /// </summary>
         /// <returns></returns>
-        public string ToConfigToolCommand(ColorList colorList = null, bool exportTE = true)
+        public string ToConfigToolCommand(ColorList colorList = null, bool exportTE = true, bool fullRangeIntensity = true)
         {
             string configToolStr = string.Empty;
 
@@ -1213,7 +1213,13 @@ namespace DirectOutput.LedControl.Loader
             }
 
             //Intensity
-            configToolStr += GetConfigToolCommand(Intensity, -1, "I#");
+            if (Intensity < 255) {
+                if (fullRangeIntensity) {
+                    configToolStr += GetConfigToolCommand(Intensity, -1, "I#");
+                } else if (Intensity != -1) {
+                    configToolStr += $"I{(int)((((float)Intensity / 255.0f) * 48.0f) + 0.5f)}";
+                }
+            }
 
             //Layer
             configToolStr += GetConfigToolCommand(Layer, 0, "L");
