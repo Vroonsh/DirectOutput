@@ -27,7 +27,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectOutputToolkitForm));
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.DofEditionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +59,7 @@
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
-            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.imageListIcons = new System.Windows.Forms.ImageList();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -403,6 +402,7 @@
             this.propertyGridMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridMain.Location = new System.Drawing.Point(3, 3);
             this.propertyGridMain.Name = "propertyGridMain";
+            this.propertyGridMain.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.propertyGridMain.Size = new System.Drawing.Size(282, 871);
             this.propertyGridMain.TabIndex = 0;
             this.propertyGridMain.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridMain_PropertyValueChanged);

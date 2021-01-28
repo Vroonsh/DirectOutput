@@ -203,16 +203,18 @@ namespace DofConfigToolWrapper
                                                                                                     .Cast<DofConfigToolOutputEnum>()
                                                                                                     .FirstOrDefault(x => x.ToString().Equals(OutputName, StringComparison.InvariantCultureIgnoreCase));
 
-        public static DofConfigToolOutputEnum[] GetPublicDofOutput() => Enum.GetValues(typeof(DofConfigToolOutputEnum))
+        public static DofConfigToolOutputEnum[] GetPublicDofOutput(bool includeInvalid) => Enum.GetValues(typeof(DofConfigToolOutputEnum))
                                                                                                     .Cast<DofConfigToolOutputEnum>()
                                                                                                     .Where(x => {
                                                                                                         return !(typeof(DofConfigToolOutputEnum)
                                                                                                             .GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x))
                                                                                                             .GetCustomAttributes(typeof(BrowsableAttribute), false)
-                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || attribute.Browsable == true;
+                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || 
+                                                                                                            (attribute.Browsable == true && 
+                                                                                                            (includeInvalid || !includeInvalid && x != DofConfigToolOutputEnum.Invalid));
                                                                                                     }
                                                                                                     ).ToArray();
 
-        public static string[] GetPublicDofOutputNames() => GetPublicDofOutput().Select(O => O.ToString()).ToArray();
+        public static string[] GetPublicDofOutputNames(bool includeInvalid) => GetPublicDofOutput(includeInvalid).Select(O => O.ToString()).ToArray();
     }
 }

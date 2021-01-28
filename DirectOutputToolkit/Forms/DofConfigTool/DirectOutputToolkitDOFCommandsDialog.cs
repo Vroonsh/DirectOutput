@@ -24,7 +24,7 @@ namespace DirectOutputToolkit
         }
         private void LedControlToolkitDOFCommandsDialog_Load(object sender, EventArgs e)
         {
-            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames();
+            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames(false);
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
