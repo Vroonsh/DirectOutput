@@ -31,6 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxOutput = new System.Windows.Forms.ComboBox();
             this.richTextBoxDOFCommand = new System.Windows.Forms.RichTextBox();
+            this.checkBoxFullRangeIntensity = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -58,17 +59,31 @@
             this.richTextBoxDOFCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxDOFCommand.Location = new System.Drawing.Point(12, 34);
+            this.richTextBoxDOFCommand.Location = new System.Drawing.Point(4, 63);
             this.richTextBoxDOFCommand.Name = "richTextBoxDOFCommand";
-            this.richTextBoxDOFCommand.Size = new System.Drawing.Size(467, 402);
+            this.richTextBoxDOFCommand.Size = new System.Drawing.Size(475, 384);
             this.richTextBoxDOFCommand.TabIndex = 3;
             this.richTextBoxDOFCommand.Text = "";
+            // 
+            // checkBoxFullRangeIntensity
+            // 
+            this.checkBoxFullRangeIntensity.AutoSize = true;
+            this.checkBoxFullRangeIntensity.Checked = true;
+            this.checkBoxFullRangeIntensity.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxFullRangeIntensity.Location = new System.Drawing.Point(4, 40);
+            this.checkBoxFullRangeIntensity.Name = "checkBoxFullRangeIntensity";
+            this.checkBoxFullRangeIntensity.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxFullRangeIntensity.TabIndex = 4;
+            this.checkBoxFullRangeIntensity.Text = "Use full range intensities";
+            this.checkBoxFullRangeIntensity.UseVisualStyleBackColor = true;
+            this.checkBoxFullRangeIntensity.CheckedChanged += new System.EventHandler(this.checkBoxFullRangeIntensity_CheckedChanged);
             // 
             // DirectOutputToolkitDOFOutputs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(485, 448);
+            this.Controls.Add(this.checkBoxFullRangeIntensity);
             this.Controls.Add(this.richTextBoxDOFCommand);
             this.Controls.Add(this.comboBoxOutput);
             this.Controls.Add(this.label1);
@@ -87,5 +102,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxOutput;
         private System.Windows.Forms.RichTextBox richTextBoxDOFCommand;
+        private System.Windows.Forms.CheckBox checkBoxFullRangeIntensity;
     }
 }

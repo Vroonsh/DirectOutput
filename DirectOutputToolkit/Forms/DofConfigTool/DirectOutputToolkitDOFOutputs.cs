@@ -25,41 +25,64 @@ namespace DirectOutputToolkit
 
         private void LedControlToolkitDOFOutputs_Load(object sender, EventArgs e)
         {
-            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames();
+            comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames(false);
         }
 
-        private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateOutputCommands()
         {
             var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
-            Dictionary<string, List<TableElement>> TCSDict = new Dictionary<string, List<TableElement>>();
-            foreach(var TE in TableNode.EditionTable.TableElements) {
-                foreach(var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
+            Dictionary<TableConfigSetting, List<TableElement>> TCSDict = new Dictionary<TableConfigSetting, List<TableElement>>();
+
+            foreach (var eff in TableNode.EditionTable.AssignedStaticEffects.Select(AE => AE.Effect).ToArray()) {
+                if (Toys.Contains(eff.GetAssignedToy())) {
+                    TableConfigSetting TCS = new TableConfigSetting();
+                    TCS.FromEffect(eff);
+                    if (!TCSDict.Keys.Any(T => T == TCS)) {
+                        TCSDict[TCS] = new List<TableElement>();
+                    }
+                }
+            }
+
+            foreach (var TE in TableNode.EditionTable.TableElements) {
+                foreach (var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
                     if (Toys.Contains(eff.GetAssignedToy())) {
                         TableConfigSetting TCS = new TableConfigSetting();
                         TCS.FromEffect(eff);
-
-                        var TCSCommand = TCS.ToConfigToolCommand(ColorList, false);
-                        if (!TCSDict.Keys.Any(C=>C.Equals(TCSCommand, StringComparison.InvariantCultureIgnoreCase))) {
-                            TCSDict[TCSCommand] = new List<TableElement>();
+                        if (!TCSDict.Keys.Any(T => T == TCS)) {
+                            TCSDict[TCS] = new List<TableElement>();
                         }
-                        TCSDict[TCSCommand].Add(TE);
+                        TCSDict[TCS].Add(TE);
                     }
                 }
             }
 
             richTextBoxDOFCommand.Text = string.Empty;
 
-            foreach(var pair in TCSDict) {
+            foreach (var pair in TCSDict) {
                 if (!richTextBoxDOFCommand.Text.IsNullOrEmpty()) {
                     richTextBoxDOFCommand.Text += "/";
                 }
-                richTextBoxDOFCommand.Text += string.Join("|", pair.Value.Where(TE => !TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)).Select(TE => TE.ToString()).ToArray());
-                richTextBoxDOFCommand.Text += $" {pair.Key}";
+                if (pair.Value.Count > 0) {
+                    richTextBoxDOFCommand.Text += string.Join("|", pair.Value.Where(TE => !TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)).Select(TE => TE.ToString()).ToArray());
+                } else {
+                    richTextBoxDOFCommand.Text += pair.Key.OutputControl == OutputControlEnum.FixedOn ? "ON" : "OFF";
+                }
+                richTextBoxDOFCommand.Text += $" {pair.Key.ToConfigToolCommand(ColorList, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked)}";
             }
 
             richTextBoxDOFCommand.Refresh();
+        }
+
+        private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateOutputCommands();
+        }
+
+        private void checkBoxFullRangeIntensity_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateOutputCommands();
         }
     }
 }

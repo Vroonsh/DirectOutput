@@ -72,9 +72,9 @@ namespace DirectOutputToolkit
                 RomNameComboBox.Items.AddRange(Handler.LedControlConfigList[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
                 PopulateReferenceTable();
 
-                comboBoxEditionTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput();
+                comboBoxEditionTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput(true);
                 comboBoxEditionTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
-                comboBoxRefTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput();
+                comboBoxRefTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput(true);
                 comboBoxRefTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
 
                 EditionTableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
