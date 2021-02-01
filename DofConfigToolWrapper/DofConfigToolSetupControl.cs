@@ -151,6 +151,7 @@ namespace DofConfigToolWrapper
             this.dataGridViewControllers.Location = new System.Drawing.Point(12, 103);
             this.dataGridViewControllers.MultiSelect = false;
             this.dataGridViewControllers.Name = "dataGridViewControllers";
+            this.dataGridViewControllers.RowHeadersVisible = false;
             this.dataGridViewControllers.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridViewControllers.Size = new System.Drawing.Size(944, 137);
             this.dataGridViewControllers.TabIndex = 8;
@@ -202,6 +203,7 @@ namespace DofConfigToolWrapper
             this.dataGridViewOutputMappings.Location = new System.Drawing.Point(15, 275);
             this.dataGridViewOutputMappings.MultiSelect = false;
             this.dataGridViewOutputMappings.Name = "dataGridViewOutputMappings";
+            this.dataGridViewOutputMappings.RowHeadersVisible = false;
             this.dataGridViewOutputMappings.Size = new System.Drawing.Size(941, 376);
             this.dataGridViewOutputMappings.TabIndex = 10;
             this.dataGridViewOutputMappings.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewOutputMappings_CellMouseClick);
@@ -567,6 +569,12 @@ namespace DofConfigToolWrapper
         private void LoadSetup(string Filename)
         {
             DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Filename);
+            SelectedController = DofConfigToolSetup.ControllerSetups.FirstOrDefault();
+            if (SelectedController != null) {
+                dataGridViewOutputMappings.DataSource = SelectedController.OutputMappings.ToArray();
+                SelectedMapping = null;
+                dataGridViewOutputMappings.Refresh();
+            }
         }
 
         private void ButtonLoadSetup_Click(object sender, EventArgs e)
