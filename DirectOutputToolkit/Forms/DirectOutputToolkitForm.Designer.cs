@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectOutputToolkitForm));
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.DofEditionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +60,8 @@
             this.RomNameComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
-            this.imageListIcons = new System.Windows.Forms.ImageList();
+            this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.buttonLoadRefTable = new System.Windows.Forms.Button();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -200,6 +202,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer2.Panel2.Controls.Add(this.buttonLoadRefTable);
             this.splitContainer2.Panel2.Controls.Add(this.buttonClearRefTableFilter);
             this.splitContainer2.Panel2.Controls.Add(this.buttonCopyTable);
             this.splitContainer2.Panel2.Controls.Add(this.comboBoxRefTableOutputFilter);
@@ -384,7 +387,7 @@
             this.RomNameComboBox.FormattingEnabled = true;
             this.RomNameComboBox.Location = new System.Drawing.Point(76, 31);
             this.RomNameComboBox.Name = "RomNameComboBox";
-            this.RomNameComboBox.Size = new System.Drawing.Size(317, 21);
+            this.RomNameComboBox.Size = new System.Drawing.Size(168, 21);
             this.RomNameComboBox.TabIndex = 25;
             this.RomNameComboBox.SelectedIndexChanged += new System.EventHandler(this.RomNameComboBox_SelectedIndexChanged);
             // 
@@ -393,9 +396,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(136, 13);
+            this.label1.Size = new System.Drawing.Size(118, 13);
             this.label1.TabIndex = 24;
-            this.label1.Text = "DofConfigTool table effects";
+            this.label1.Text = "Reference table effects";
             // 
             // propertyGridMain
             // 
@@ -413,6 +416,16 @@
             this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
             this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
+            // 
+            // buttonLoadRefTable
+            // 
+            this.buttonLoadRefTable.Location = new System.Drawing.Point(250, 29);
+            this.buttonLoadRefTable.Name = "buttonLoadRefTable";
+            this.buttonLoadRefTable.Size = new System.Drawing.Size(159, 23);
+            this.buttonLoadRefTable.TabIndex = 35;
+            this.buttonLoadRefTable.Text = "Load Reference DOTK file";
+            this.buttonLoadRefTable.UseVisualStyleBackColor = true;
+            this.buttonLoadRefTable.Click += new System.EventHandler(this.buttonLoadRefTable_Click);
             // 
             // DirectOutputToolkitForm
             // 
@@ -478,6 +491,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonClearRefTableFilter;
         private System.Windows.Forms.Button buttonEditionTableClearFilter;
+        private System.Windows.Forms.Button buttonLoadRefTable;
     }
 }
 
