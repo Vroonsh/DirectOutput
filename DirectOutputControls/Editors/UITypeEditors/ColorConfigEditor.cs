@@ -73,10 +73,18 @@ namespace DirectOutputControls
                 }
                 if (edSvc != null) {
                     var colorList = colorListProvider.GetColorList();
+                    colorList.Insert(0, new RGBAColorNamed("Custom Color", new RGBColor(255, 255, 255)));
                     ColorConfigListBoxEditor dropdown = new ColorConfigListBoxEditor(colorConfig.Name, colorList, edSvc);
                     dropdown.Items.AddRange(colorList.Select(CN => CN.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
-                    return colorListProvider.GetColorConfig(dropdown.Selection as string);
+                    if (dropdown.SelectedIndex == 0) {
+                        ColorDialog dlg = new ColorDialog();
+                        dlg.ShowDialog();
+                        RGBAColor customColor = new RGBAColor(dlg.Color.R, dlg.Color.G, dlg.Color.B) ;
+                        return new ColorConfig() { Name = $"{customColor.ToString()}", Red = customColor.Red, Green = customColor.Green, Blue = customColor.Blue, Alpha = 255 };
+                    } else {
+                        return colorListProvider.GetColorConfig(dropdown.Selection as string);
+                    }
                 }
             }
 
@@ -105,7 +113,7 @@ namespace DirectOutputControls
                 if (colorConfig != null) {
                     Rectangle rect = e.Bounds;
                     rect.Inflate(-2, -2);
-                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(colorConfig.GetCabinetColor().ToARGB())), rect);
+                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(colorConfig.Red, colorConfig.Green, colorConfig.Blue)), rect);
                 }
             }
         }
