@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<DirectOutputViewSetup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ViewAreas>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Backboard MX</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFBackFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackStrobeMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackBeaconMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackPBXMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>72</MxWidth>
+          <MxHeight>8</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Backboard</Name>
+      <Enabled>true</Enabled>
+      <Left>0.1</Left>
+      <Top>0</Top>
+      <Width>0.8</Width>
+      <Height>0.2</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Smart</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.2</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabSmart</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>SingleValue</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Frame</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Complex</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0.6</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabComplex</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>SingleValue</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Frame</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Undercab Complex Mx</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>1</Width>
+          <Height>0.3</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>RGBUndercabComplexMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>144</MxWidth>
+          <MxHeight>1</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>false</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Undercab</Name>
+      <Enabled>true</Enabled>
+      <Left>0</Left>
+      <Top>0.9</Top>
+      <Width>1</Width>
+      <Height>0.1</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Side Mx Left</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>0.1</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFLeftFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFLeftEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>144</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Side Mx Right</Name>
+          <Enabled>true</Enabled>
+          <Left>0.9</Left>
+          <Top>0</Top>
+          <Width>0.1</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFRightFlashersMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFRightEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>144</MxHeight>
+          <RenderType>Matrix</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Sides</Name>
+      <Enabled>true</Enabled>
+      <Left>0.05</Left>
+      <Top>0.2</Top>
+      <Width>0.9</Width>
+      <Height>0.7</Height>
+      <Draw>true</Draw>
+    </DirectOutputViewArea>
+    <DirectOutputViewArea xsi:type="DirectOutputViewAreaVirtual">
+      <Children>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Left Speaker</Name>
+          <Enabled>true</Enabled>
+          <Left>0</Left>
+          <Top>0</Top>
+          <Width>0.5</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFLeftEffectsMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>64</MxHeight>
+          <RenderType>Ring</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+        <DirectOutputViewArea xsi:type="DirectOutputViewAreaRGB">
+          <Children />
+          <Name>Right Speaker</Name>
+          <Enabled>true</Enabled>
+          <Left>0.5</Left>
+          <Top>0</Top>
+          <Width>0.5</Width>
+          <Height>1</Height>
+          <DofOutputs>
+            <DofConfigToolOutputEnum>PFRightEffectsMX</DofConfigToolOutputEnum>
+            <DofConfigToolOutputEnum>PFBackEffectsMX</DofConfigToolOutputEnum>
+          </DofOutputs>
+          <Squarred>true</Squarred>
+          <ValueType>Adressable</ValueType>
+          <MxWidth>1</MxWidth>
+          <MxHeight>64</MxHeight>
+          <RenderType>Ring</RenderType>
+          <StartAngle>90</StartAngle>
+          <ShowMatrixGrid>true</ShowMatrixGrid>
+        </DirectOutputViewArea>
+      </Children>
+      <Name>Rings</Name>
+      <Enabled>true</Enabled>
+      <Left>0.2</Left>
+      <Top>0.2</Top>
+      <Width>0.6</Width>
+      <Height>0.1</Height>
+      <Draw>false</Draw>
+    </DirectOutputViewArea>
+  </ViewAreas>
+</DirectOutputViewSetup>
