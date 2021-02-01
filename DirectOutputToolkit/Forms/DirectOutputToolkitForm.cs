@@ -70,7 +70,7 @@ namespace DirectOutputToolkit
                 RomNameComboBox.Items.Clear();
                 RomNameComboBox.Items.Add("");
                 RomNameComboBox.Items.AddRange(Handler.LedControlConfigList[0].TableConfigurations.Select(TC => TC.ShortRomName).ToArray());
-                PopulateReferenceTable();
+                PopulateReferenceTable(Settings.LastRomName);
 
                 comboBoxEditionTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput(true);
                 comboBoxEditionTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
@@ -372,9 +372,9 @@ namespace DirectOutputToolkit
 
 
         #region Dof Table Effects
-        private void PopulateReferenceTable()
+        private void PopulateReferenceTable(string romName)
         {
-            Handler.SetupTable(DirectOutputToolkitHandler.ETableType.ReferenceTable, Settings.LastRomName);
+            Handler.SetupTable(DirectOutputToolkitHandler.ETableType.ReferenceTable, romName);
             PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable);
             Handler.LaunchTable(DirectOutputToolkitHandler.ETableType.ReferenceTable);
             PreviewForm.Invalidate();
@@ -383,7 +383,7 @@ namespace DirectOutputToolkit
         private void RomNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.LastRomName = RomNameComboBox.Text;
-            PopulateReferenceTable();
+            PopulateReferenceTable(Settings.LastRomName);
         }
 
         private void PopulateTableElements(DirectOutputToolkitHandler.ETableType TableType, string OutputFilter = "Invalid")
@@ -519,6 +519,26 @@ namespace DirectOutputToolkit
             treeViewEditionTable.SelectedNode = EditionTableNode;
             propertyGridMain.SelectedObject = null;
             EditionTableNode.Expand();
+        }
+
+        private void buttonLoadRefTable_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog() {
+                Filter = "DirectOutput Toolkit Files|*.dotk|DOTK XML Files|*.xml|All Files|*.*",
+                DefaultExt = "dotk",
+                Title = "Load Table Effects"
+            };
+
+            fd.ShowDialog();
+            if (!fd.FileName.IsNullOrEmpty()) {
+                PopulateReferenceTable(string.Empty);
+                var serializer = new DirectOutputToolkitSerializer();
+                EditionTableTreeNode tableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable));
+                tableNode.Rebuild(Handler);
+                if (serializer.Deserialize(tableNode, fd.FileName, Handler)) {
+                    PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable);
+                }
+            }
         }
         #endregion
 
