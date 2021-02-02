@@ -1,5 +1,6 @@
 ﻿using DirectOutput.Cab.Toys;
 using DirectOutput.Table;
+using DirectOutputControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,14 +34,21 @@ namespace DirectOutputToolkit
 
         internal void Rebuild(DirectOutputToolkitHandler Handler, IToy[] ToysFilter = null)
         {
-            Nodes.Clear();
-            foreach (var eff in Table.AssignedStaticEffects) {
+            var effectsNodes = Nodes.Cast<EffectTreeNode>().ToList();
+            var missingEffects = Table.AssignedStaticEffects.Where(AE => !effectsNodes.Any(N => N.Effect == AE.Effect));
+
+            foreach(var node in effectsNodes) {
+                node.Rebuild(Handler, null);
+            }
+
+            foreach (var eff in missingEffects) {
                 if (ToysFilter == null || ToysFilter.Contains(eff.Effect.GetAssignedToy())) {
                     Handler.InitEffect(eff, _TableType);
                     var effNode = new EffectTreeNode(null, _TableType, eff.Effect, Handler);
                     Nodes.Add(effNode);
                 }
             }
+
             Refresh();
         }
 

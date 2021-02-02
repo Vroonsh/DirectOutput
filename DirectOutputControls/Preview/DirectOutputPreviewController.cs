@@ -5,6 +5,7 @@ using DirectOutput.Cab.Toys;
 using DirectOutput.Cab.Toys.Hardware;
 using DirectOutput.Cab.Toys.Layer;
 using DirectOutput.Cab.Toys.LWEquivalent;
+using DirectOutput.LedControl.Loader;
 using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,8 @@ namespace DirectOutputControls
             public int OutputSize { get; set; } = -1;
             public int LedWizNum { get; set; } = -1;
             public DofConfigToolOutputEnum DofOutput { get; set; } = DofConfigToolOutputEnum.Invalid;
-            public string ToyName { get; set; } = string.Empty;
+            public IToy Toy { get; set; } = null;
+            public List<IToy> SplitToys { get; set; } = new List<IToy>();
         }
 
         public class AreaMapping
@@ -45,6 +47,7 @@ namespace DirectOutputControls
         }
 
         private List<AreaMapping> AreaMappings = new List<AreaMapping>();
+        private List<OutputRemap> OutputMappings = new List<OutputRemap>();
 
         public Action Refresh = null;
 
@@ -86,42 +89,41 @@ namespace DirectOutputControls
                                                 .ToArray();
 
                         if (areas != null && areas.Length > 0) {
-                            int maxWidth = areas.Max(A=>A.MxWidth);
-                            int maxHeight = areas.Max(A=>A.MxHeight);
+                            var biggestArea = areas.FirstOrDefault(A=>A.OutputSize == areas.Max(area => area.OutputSize));
 
-                            if (maxWidth > 0 && maxHeight > 0) {
+                            if (biggestArea != null) {
                                 var ledstrip = new LedStrip() {
                                     ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RGB,
                                     FadingCurveName = "SwissLizardsLedCurve",
                                     Name = $"{o.Output} (Mx)",
                                     OutputControllerName = this.Name,
                                     LedStripArrangement = DirectOutput.Cab.Toys.Layer.LedStripArrangementEnum.LeftRightTopDown,
-                                    Width = maxWidth,
-                                    Height = maxHeight,
+                                    Width = biggestArea.MxWidth,
+                                    Height = biggestArea.MxHeight,
                                     FirstLedNumber = firstAdressableLedNumber
                                 };
 
-                                firstAdressableLedNumber += maxWidth * maxHeight;
+                                firstAdressableLedNumber += biggestArea.MxWidth * biggestArea.MxHeight;
                                 p.Cabinet.Toys.Add(ledstrip);
 
                                 LedWizEquivalentOutput LWEO = new LedWizEquivalentOutput() { OutputName = ledstrip.Name, LedWizEquivalentOutputNumber = o.PortNumber };
                                 LWE.Outputs.Add(LWEO);
                                 Outputs.Add(new Output() { Name = LWEO.OutputName, Number = NbOutputs + 1, Value = 0 });
 
+                                var outputRemap = new OutputRemap() { Toy = ledstrip, LedWizNum = LWE.LedWizNumber, DofOutput = o.Output, OutputIndex = NbOutputs, OutputSize = ledstrip.Width * ledstrip.Height * o.PortRange };
+                                OutputMappings.Add(outputRemap);
                                 foreach(var area in areas) {
-                                    AddAreaMapping(area, new OutputRemap() { ToyName = ledstrip.Name, LedWizNum = LWE.LedWizNumber, DofOutput = o.Output, OutputIndex = NbOutputs, OutputSize = area.MxWidth * area.MxHeight * o.PortRange });
+                                    AddAreaMapping(area, outputRemap);
                                 }
 
-                                NbOutputs += maxWidth * maxHeight * o.PortRange;
-                            }
-
-                            foreach (var area in areas) {
+                                NbOutputs += biggestArea.OutputSize;
                             }
                         }
                     } else {
 
                         //Create Toy regarding the Output range
                         IToy toy = null;
+                        List<IToy> splitToys = new List<IToy>();
                         switch (o.PortRange) {
                             case 1: {
                                 toy = new AnalogAlphaToy() {
@@ -142,9 +144,10 @@ namespace DirectOutputControls
                                 p.Cabinet.Toys.Add(toy);
 
                                 //Create 3 analog Toys for rgbsplit
-                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
-                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 1:00}" });
-                                p.Cabinet.Toys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 2:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 1:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 2:00}" });
+                                p.Cabinet.Toys.AddRange(splitToys);
                                 break;
                             }
 
@@ -160,10 +163,16 @@ namespace DirectOutputControls
                             Outputs.Add(new Output() { Name = outputName, Number = NbOutputs + num + 1 - o.PortNumber, Value = 0 });
                         }
 
-                        var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewAreaUpdatable>(A => A is DirectOutputViewAreaUpdatable && (A as DirectOutputViewAreaUpdatable).HasOutput(o.Output));
-                        if (matchingAreas.Length > 0) {
-                            foreach (var area in matchingAreas) {
-                                AddAreaMapping(area, new OutputRemap() { ToyName = toy?.Name, LedWizNum = LWE.LedWizNumber, DofOutput = o.Output, OutputIndex = NbOutputs, OutputSize = o.PortRange });
+                        if (toy != null) {
+                            var outputRemap = new OutputRemap() { Toy = toy, LedWizNum = LWE.LedWizNumber, DofOutput = o.Output, OutputIndex = NbOutputs, OutputSize = o.PortRange };
+                            outputRemap.SplitToys.AddRange(splitToys);
+                            OutputMappings.Add(outputRemap);
+
+                            var matchingAreas = DofViewSetup.GetViewAreas<DirectOutputViewAreaUpdatable>(A => A is DirectOutputViewAreaUpdatable && (A as DirectOutputViewAreaUpdatable).HasOutput(o.Output));
+                            if (matchingAreas.Length > 0) {
+                                foreach (var area in matchingAreas) {
+                                    AddAreaMapping(area, outputRemap);
+                                }
                             }
                         }
 
@@ -173,6 +182,10 @@ namespace DirectOutputControls
                 }
                 p.Cabinet.Toys.Add(LWE);
             }
+
+            p.Cabinet.Toys.Add(DummyAnalogToy);
+            p.Cabinet.Toys.Add(DummyRGBAToy);
+            p.Cabinet.Toys.Add(DummyMatrixToy);
 
             p.Cabinet.OutputControllers.Add(this);
         }
@@ -185,15 +198,9 @@ namespace DirectOutputControls
             AreaMappings.First(AM=>AM.Area == area).OutputMappings.Add(outputRemap);
         }
 
-        public OutputRemap GetToyOutputRemap(Func<OutputRemap, bool> Match)
+        public OutputRemap[] GetToyOutputRemaps(Func<OutputRemap, bool> Match)
         {
-            foreach (var areaRemap in AreaMappings) {
-                var remap = areaRemap.OutputMappings.FirstOrDefault(M => Match(M));
-                if (remap != null) {
-                    return remap;
-                }
-            }
-            return null;
+            return OutputMappings.Where(M => Match(M)).ToArray();
         }
 
         public AreaMapping[] GetToyAreaMappings(Func<AreaMapping, bool> Match)
@@ -232,6 +239,23 @@ namespace DirectOutputControls
         protected override bool VerifySettings()
         {
             return true;
+        }
+
+        private DirectOutputToolkitDummyAnalogToy DummyAnalogToy = new DirectOutputToolkitDummyAnalogToy();
+        private DirectOutputToolkitDummyRGBAToy DummyRGBAToy = new DirectOutputToolkitDummyRGBAToy();
+        private DirectOutputToolkitDummyMatrixToy DummyMatrixToy = new DirectOutputToolkitDummyMatrixToy();
+
+        internal IToy GetCompatibleDummyToy(TableConfigSetting TCS)
+        {
+            if (TCS.IsArea) {
+                return DummyMatrixToy;
+            } else {
+                if (TCS.OutputType == OutputTypeEnum.AnalogOutput) {
+                    return DummyAnalogToy;
+                } else {
+                    return DummyRGBAToy;
+                }
+            }
         }
 
     }
