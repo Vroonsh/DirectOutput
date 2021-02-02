@@ -31,11 +31,13 @@ namespace DirectOutputToolkit
             SelectedImageIndex = ImageIndex;
             Handler = handler;
             TCS.FromEffect(Effect);
-            TCS.ResolveColorConfigs(Handler.ColorConfigurations);
-            TCS.OutputControl = (TableTE != null) ? OutputControlEnum.Controlled : OutputControlEnum.FixedOn;
-            if (Effect != null) {
-                UpdateFromTableElement(TableTE);
+            if (TCS.OutputType == OutputTypeEnum.AnalogOutput && TCS.MinDurationMs == Handler.Settings.EffectMinDurationMs) {
+                TCS.MinDurationMs = 0;
+            } else if (TCS.OutputType == OutputTypeEnum.RGBOutput && TCS.MinDurationMs == Handler.Settings.EffectRGBMinDurationMs) {
+                TCS.MinDurationMs = 0;
             }
+            TCS.ResolveColorConfigs(Handler.ColorConfigurations);
+            UpdateFromTableElement(TableTE);
         }
 
         ~EffectTreeNode()
@@ -63,7 +65,7 @@ namespace DirectOutputToolkit
             }
 
             DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
-            Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
+            Text = $"[{Effect?.GetAssignedToy()?.Name}] {DofConfigCommand}";
         }
 
         public void Rebuild(DirectOutputToolkitHandler Handler, IEffect SrcEffect)
@@ -80,7 +82,7 @@ namespace DirectOutputToolkit
             Configurator.RetrieveEffectSettings(RefEffect.Name, out LedWizNumber, out TCCNumber, out SettingNumber, out Suffix);
 
             //Retrieve Toy & TCCNumber from Chosen Output
-            var Toy = Effect.GetAssignedToy();
+            var Toy = RefEffect.GetAssignedToy();
 
             //Remove all effects from Table & AssignedEffects before rebuilding
             Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
@@ -102,7 +104,7 @@ namespace DirectOutputToolkit
 
         public void Refresh()
         {
-            Text = $"[{Effect.GetAssignedToy()?.Name}] {DofConfigCommand}";
+            Text = $"[{Effect?.GetAssignedToy()?.Name}] {DofConfigCommand}";
             ImageIndex = TestTE.Value > 0 ? 1 : 0;
         }
 

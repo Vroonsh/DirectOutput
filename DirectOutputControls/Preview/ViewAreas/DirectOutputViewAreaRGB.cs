@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace DirectOutputControls
 {
@@ -42,6 +43,9 @@ namespace DirectOutputControls
 
         [Category("RGB")]
         public bool ShowMatrixGrid { get; set; } = true;
+
+        [XmlIgnore]
+        public override int OutputSize => ValueType == ValueTypeEnum.SingleValue ? 3 : MxWidth * MxHeight * 3;
 
         private byte[] Values = null;
 

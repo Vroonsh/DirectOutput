@@ -140,6 +140,7 @@ namespace DirectOutputToolkit
                 ResetEditionTable(null);
                 var serializer = new DirectOutputToolkitSerializer();
                 if (serializer.Deserialize(EditionTableNode, fd.FileName, Handler)) {
+                    PopulateTableElements(DirectOutputToolkitHandler.ETableType.EditionTable);
                     SetCurrentSelectedNode(EditionTableNode);
                     //MessageBox.Show($"Table [{EditionTableNode.EditionTable.TableName}] loaded", "Load Table Effects", MessageBoxButtons.OK);
                 }
@@ -447,6 +448,9 @@ namespace DirectOutputToolkit
                 var value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
                 SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdateActivationButton(buttonActivationTable, value);
+            } else if (treeViewReferenceTable.SelectedNode is StaticEffectsTreeNode) {
+                Handler.TriggerStaticEffects(DirectOutputToolkitHandler.ETableType.ReferenceTable);
+                PreviewForm.Invalidate();
             }
         }
 
@@ -638,7 +642,7 @@ namespace DirectOutputToolkit
 
             //Update property grid
             if (node is EffectTreeNode effectNode) {
-                propertyGridMain.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, node.TreeView == treeViewEditionTable, Handler);
+                propertyGridMain.SelectedObject = new TableConfigSettingTypeDescriptor(effectNode, effectNode.Effect != null && node.TreeView == treeViewEditionTable, Handler);
             } else if (node is TableElementTreeNode TENode) {
                 propertyGridMain.SelectedObject = new TableElementTypeDescriptor(TENode.TE, node.TreeView == treeViewEditionTable);
             } else if (node is EditionTableTreeNode editionTableNode) {
