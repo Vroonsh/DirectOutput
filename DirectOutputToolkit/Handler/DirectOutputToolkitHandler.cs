@@ -164,10 +164,10 @@ namespace DirectOutputToolkit
                 }
                 if (ReInit) {
                     Pinball.Finish();
-                    foreach (var tdesc in TableDescriptors) {
-                        tdesc.Value.Table.Init(Pinball);
-                    }
                     Pinball.Init();
+                }
+                foreach (var tdesc in TableDescriptors) {
+                    tdesc.Value.Table.Init(Pinball);
                 }
             }
         }
