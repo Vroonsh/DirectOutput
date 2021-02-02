@@ -23,7 +23,7 @@ namespace DirectOutputToolkit
 {
     public class DirectOutputToolkitHandler
     {
-        private Settings Settings;
+        public Settings Settings { get; private set; }
 
         private Pinball Pinball { get; set; }
 
@@ -60,27 +60,20 @@ namespace DirectOutputToolkit
 
         internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
         {
-            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
-            return (remap != null ? remap.DofOutput : DofConfigToolOutputEnum.Invalid);
+            var remap = PreviewController.GetToyOutputRemaps(M => M.Toy.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            return (remap != null && remap.Length > 0 ? remap.First().DofOutput : DofConfigToolOutputEnum.Invalid);
         }
 
         internal IToy[] GetToysFromOutput(DofConfigToolOutputEnum ToyOutput)
         {
-            var remaps = PreviewController.GetToyAreaMappings(M => M.Area is DirectOutputViewAreaUpdatable && 
-                                                                (M.Area as DirectOutputViewAreaUpdatable).HasOutput(ToyOutput));
-
-            List<string> toynames = new List<string>();
-            foreach(var remap in remaps) {
-                toynames.AddRange(remap.OutputMappings.Where(OM=>OM.DofOutput == ToyOutput).Select(OM => OM.ToyName));
-            }
-
-            return Pinball.Cabinet.Toys.Where(T => toynames.Contains(T.Name)).ToArray();
+            var toys = PreviewController.GetToyOutputRemaps(M => M.DofOutput == ToyOutput).Select(M => M.Toy).ToList();
+            return toys.ToArray();
         }
 
         internal int GetToyLedwizNum(string ToyName)
         {
-            var remap = PreviewController.GetToyOutputRemap(M => M.ToyName.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
-            return (remap != null ? remap.LedWizNum : 0);
+            var remap = PreviewController.GetToyOutputRemaps(M => M.Toy.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
+            return (remap != null && remap.Length > 0 ? remap.First().LedWizNum : 0);
         }
 
         internal string[] GetTableNames() => TableDescriptors.Select(TD => $"{TD.Value.Table.TableName}").ToArray();
@@ -143,6 +136,7 @@ namespace DirectOutputToolkit
             PreviewController.Setup(Pinball);
 
             Pinball.Init();
+
             return true;
         }
 
@@ -337,7 +331,8 @@ namespace DirectOutputToolkit
             ResetRunnigTableElement(parentTE);
             var Table = TableDescriptors[tableType].Table;
             foreach (var eff in allEffects) {
-                Table.Effects.Remove(eff);
+                Table.Effects.RemoveAll(E=> E == eff);
+                Table.AssignedStaticEffects.RemoveAll(AE => AE.Effect == eff);
                 foreach (var TE in Table.TableElements) {
                     if (TE.AssignedEffects.RemoveAll(AE => AE.Effect == eff) > 0) {
                         ResetRunnigTableElement(TE);

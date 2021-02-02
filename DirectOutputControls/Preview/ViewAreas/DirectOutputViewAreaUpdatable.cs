@@ -17,6 +17,8 @@ namespace DirectOutputControls
     {
         public List<DofConfigToolOutputEnum> DofOutputs { get; set; } = new List<DofConfigToolOutputEnum>();
 
+        public virtual int OutputSize => 0;
+
         public bool Squarred { get; set; } = true;
 
         [Browsable(false)]
