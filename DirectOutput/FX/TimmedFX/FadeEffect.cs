@@ -109,6 +109,7 @@
             }
             else
             {
+                Table.Pinball.Alarms.UnregisterIntervalAlarm(FadingStep);
                 CurrentValue = TargetValue;
             }
 
