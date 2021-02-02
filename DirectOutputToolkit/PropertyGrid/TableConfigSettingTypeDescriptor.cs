@@ -102,19 +102,19 @@ namespace DirectOutputToolkit
         protected override void GenerateCustomFields()
         {
             CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, string>(this,
-                new CustomField<string>("ToyName", EffectNode.Effect.GetAssignedToy()?.Name), 
+                new CustomField<string>("ToyName", EffectNode.Effect?.GetAssignedToy()?.Name),
                 new Attribute[]
                 {
-                    new DisplayNameAttribute("Toy Name"),
-                    new ReadOnlyAttribute(!Editable),
-                    new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
+                new DisplayNameAttribute("Toy Name"),
+                new ReadOnlyAttribute(!Editable),
+                new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
                 }));
         }
 
         public override void Refresh()
         {
-            var toyName = (CustomFieldValues["ToyName"] as string);
-            if (!toyName.Equals(EffectNode.Effect.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
+            var toyName = CustomFieldValues["ToyName"] as string;
+            if (!toyName.Equals(EffectNode.Effect?.GetAssignedToy()?.Name, StringComparison.InvariantCultureIgnoreCase)) {
                 var toy = Handler.Toys.FirstOrDefault(T => T.Name.Equals(toyName, StringComparison.InvariantCultureIgnoreCase));
                 EffectNode.Effect.SetAssignedToy(toy);
 
