@@ -25,6 +25,9 @@ namespace DirectOutputControls
             set { BackColor = Color.FromArgb(value); }
         }
 
+        [XmlIgnore]
+        public override int OutputSize => 1;
+
         private int Value = -1;
 
         public override bool SetValues(byte[] values)
