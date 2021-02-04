@@ -21,7 +21,6 @@ namespace DirectOutputToolkit
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            numericUpDownPulseDuration.Value = Settings.PulseDurationMs;
             numericUpDownMinDuration.Value = Settings.EffectMinDurationMs;
             numericUpDownMatrixMinDuration.Value = Settings.EffectRGBMinDurationMs;
 
@@ -38,11 +37,6 @@ namespace DirectOutputToolkit
         private void checkBoxAutoSave_CheckedChanged(object sender, EventArgs e)
         {
             Settings.AutoSaveOnQuit = checkBoxAutoSave.Checked;
-        }
-
-        private void numericUpDownPulseDuration_ValueChanged(object sender, EventArgs e)
-        {
-            Settings.PulseDurationMs = (int)numericUpDownPulseDuration.Value;
         }
 
         private void numericUpDownMinDuration_ValueChanged(object sender, EventArgs e)
