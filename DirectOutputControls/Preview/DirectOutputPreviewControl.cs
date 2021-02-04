@@ -91,7 +91,18 @@ namespace DirectOutputControls
 
         public void OnControllerRefresh()
         {
-            Parent?.Invoke((Action)(() => this.Refresh()));
+            try {
+                if (Parent != null && Parent.Created && !(Parent.Disposing || Parent.IsDisposed)) {
+                    Parent?.Invoke((Action)(() =>
+                    {
+                        try {
+                            if (this.Created && !this.IsDisposed && !this.Disposing) {
+                                this.Refresh();
+                            }
+                        } catch { }
+                    }));
+                }
+            } catch { }
         }
 
         private void DirectOutputPreviewControl_MouseMove(object sender, MouseEventArgs e)
