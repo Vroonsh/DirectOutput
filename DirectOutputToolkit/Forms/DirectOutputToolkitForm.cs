@@ -232,12 +232,13 @@ namespace DirectOutputToolkit
             propertyGridMain.SelectedObject = null;
         }
 
-        private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeViewEditionTable_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                SetCurrentSelectedNode(e.Node);
+                var hit = treeViewEditionTable.HitTest(e.X, e.Y);
+                SetCurrentSelectedNode(hit.Node);
                 if (e.Button == MouseButtons.Right) {
-                    ShowContextMenu(e);
+                    ShowContextMenu(treeViewEditionTable, hit.Node, e.Location);
                 }
             }
         }
@@ -318,40 +319,6 @@ namespace DirectOutputToolkit
 
                 e.Handled = true;
             }
-        }
-
-        private void treeViewEditionTable_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right) {
-                var hit = treeViewEditionTable.HitTest(e.X, e.Y);
-
-                if (hit.Node == null) {
-                    ContextMenu effMenu = new ContextMenu();
-
-                    var createMenu = new MenuItem("Create new effect");
-                    effMenu.MenuItems.Add(createMenu);
-                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-
-                    effMenu.Show(treeViewEditionTable, e.Location);
-                } 
-            }
-        }
-
-        private void OnCreateAnalogAlphaEffect(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnCreateRGBColorEffect(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnCreateMxAreaEffect(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void comboBoxEditionTableOutputFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -472,12 +439,13 @@ namespace DirectOutputToolkit
             }
         }
 
-        private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeViewReferenceTable_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                SetCurrentSelectedNode(e.Node);
+                var hit = treeViewReferenceTable.HitTest(e.X, e.Y);
+                SetCurrentSelectedNode(hit.Node);
                 if (e.Button == MouseButtons.Right) {
-                    ShowContextMenu(e);
+                    ShowContextMenu(treeViewReferenceTable, hit.Node, e.Location);
                 }
             }
         }
@@ -694,6 +662,21 @@ namespace DirectOutputToolkit
 
         private static string NewTableElementName = "Table_Element_";
 
+        private void OnCreateAnalogAlphaEffect(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not Yet ;)");
+        }
+
+        private void OnCreateRGBColorEffect(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not Yet ;)");
+        }
+
+        private void OnCreateMxAreaEffect(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not Yet ;)");
+        }
+
         private void OnCopyEffectToEditor(object sender, EventArgs e)
         {
             var item = (sender as MenuItem);
@@ -830,41 +813,55 @@ namespace DirectOutputToolkit
         }
 
 
-        private void ShowContextMenu(TreeNodeMouseClickEventArgs e)
+        private void ShowContextMenu(TreeView treeview, TreeNode treeNode, Point location)
         {
-            if (e.Node is EffectTreeNode effectNode) {
+            if (treeNode is EffectTreeNode effectNode) {
                 ContextMenu effectMenu = new ContextMenu();
 
                 var addMenu = new MenuItem("Add effect to");
                 effectMenu.MenuItems.Add(addMenu);
 
-                addMenu.MenuItems.Add(new MenuItem("New Table Element", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
+                addMenu.MenuItems.Add(new MenuItem("New Table Element", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = null } });
                 foreach (var node in EditionTableNode.Nodes) {
-                    addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                    addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
                 }
 
-                effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, e.Location);
-            } else if (e.Node is TableElementTreeNode tableElementNode) {
+                effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
+            } else if (treeNode is TableElementTreeNode tableElementNode) {
                 ContextMenu teMenu = new ContextMenu();
 
-                teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = null } });
+                teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = null } });
 
                 if (EditionTableNode.Nodes.Count > 0) {
                     var insertMenu = new MenuItem($"Copy [{tableElementNode.ToString()}] into");
                     teMenu.MenuItems.Add(insertMenu);
                     foreach (var node in EditionTableNode.Nodes) {
-                        insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                        insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
                     }
 
                     insertMenu = new MenuItem($"Insert [{tableElementNode.ToString()}] before");
                     teMenu.MenuItems.Add(insertMenu);
                     foreach (var node in EditionTableNode.Nodes) {
                         if (node is TableElementTreeNode) {
-                            insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = e.Node, Target = (node as TreeNode) } });
+                            insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
                         }
                     }
                 }
-                teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, e.Location);
+                teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
+            } else if (treeNode is StaticEffectsTreeNode staticNode) {
+
+            } else if (treeNode == null) {
+                if (treeview == treeViewEditionTable) {
+                    ContextMenu effMenu = new ContextMenu();
+
+                    var createMenu = new MenuItem("Create new effect");
+                    effMenu.MenuItems.Add(createMenu);
+                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+
+                    effMenu.Show(treeViewEditionTable, location);
+                }
             }
         }
         #endregion
