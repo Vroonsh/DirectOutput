@@ -49,8 +49,8 @@ namespace DirectOutputToolkit
         {
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.StartButton, imageListDefaultIcons.Images["StartButton"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.LaunchButton, imageListDefaultIcons.Images["LaunchButton"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListDefaultIcons.Images["AuthenticLaunchBall"]);
-            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListDefaultIcons.Images["ZBLaunchBall"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.AuthenticLaunchBall, imageListDefaultIcons.Images["AuthLaunchButton"]);
+            DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.ZBLaunchBall, imageListDefaultIcons.Images["ZBLaunchButton"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.FireButton, imageListDefaultIcons.Images["FireButton"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Coin, imageListDefaultIcons.Images["Coin"]);
             DofConfigToolResources.AddDofOutputIcon(DofConfigToolOutputEnum.Exit, imageListDefaultIcons.Images["Exit"]);

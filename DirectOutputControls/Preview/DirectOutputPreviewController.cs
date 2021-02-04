@@ -223,16 +223,20 @@ namespace DirectOutputControls
 
         protected override void UpdateOutputs(byte[] OutputValues)
         {
-            bool needRefresh = false;
-            foreach (var mapping in AreaMappings) {
-                mapping.Area.StartUpdate();
-                foreach (var outputRemap in mapping.OutputMappings) {
-                    var pValues = OutputValues.Skip(outputRemap.OutputIndex).Take(outputRemap.OutputSize).ToArray();
-                    needRefresh |= mapping.Area.SetValues(pValues);
+            try {
+                bool needRefresh = false;
+                foreach (var mapping in AreaMappings) {
+                    mapping.Area.StartUpdate();
+                    foreach (var outputRemap in mapping.OutputMappings) {
+                        var pValues = OutputValues.Skip(outputRemap.OutputIndex).Take(outputRemap.OutputSize).ToArray();
+                        needRefresh |= mapping.Area.SetValues(pValues);
+                    }
                 }
-            }
-            if (needRefresh && Refresh != null) {
-                Refresh.Invoke();
+                if (needRefresh && Refresh != null) {
+                    Refresh.Invoke();
+                }
+            } catch (Exception E) {
+                throw E;
             }
         }
 
