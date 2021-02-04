@@ -40,6 +40,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+	<DisableFody>true</DisableFody>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -187,10 +188,13 @@
     <None Include="DOTK\DofConfigSetup_DofToolkit.dofsetup">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="DOTK\DofViewSetup_Adressables.dovs" />
+    <None Include="DOTK\DofViewSetup_Adressables.dovs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="DOTK\DofViewSetup_AllToys.dovs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -208,90 +212,35 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DirectOutputIcon_32.ico" />
-    <Content Include="DOTK\images\AuthLaunchButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Bell.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\BumperCap.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\BumperCapKiss1.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\BumperCapKiss2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\BumperCapKiss3.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\BumperCapKiss4.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\ButtonBackground.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Chime.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Coin.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Exit.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\ExtraBall.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Fan.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\FireButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Gear.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Genre.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\GyroBlue.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\GyroRed.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\HowToPlay.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Knocker.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\LaunchButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\LeftFlipper.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\RightFlipper.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\Shaker.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\SlingShotLeft.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\SlingShotRight.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\StartButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DOTK\images\ZBLaunchButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="DOTK\images\AuthLaunchButton.png" />
+    <Content Include="DOTK\images\Bell.png" />
+    <Content Include="DOTK\images\BumperCap.png" />
+    <Content Include="DOTK\images\BumperCapKiss1.png" />
+    <Content Include="DOTK\images\BumperCapKiss2.png" />
+    <Content Include="DOTK\images\BumperCapKiss3.png" />
+    <Content Include="DOTK\images\BumperCapKiss4.png" />
+    <Content Include="DOTK\images\ButtonBackground.png" />
+    <Content Include="DOTK\images\Chime.png" />
+    <Content Include="DOTK\images\Coin.png" />
+    <Content Include="DOTK\images\Exit.png" />
+    <Content Include="DOTK\images\ExtraBall.png" />
+    <Content Include="DOTK\images\Fan.png" />
+    <Content Include="DOTK\images\FireButton.png" />
+    <Content Include="DOTK\images\Gear.png" />
+    <Content Include="DOTK\images\Genre.png" />
+    <Content Include="DOTK\images\GyroBlue.png" />
+    <Content Include="DOTK\images\GyroRed.png" />
+    <Content Include="DOTK\images\HowToPlay.png" />
+    <Content Include="DOTK\images\Knocker.png" />
+    <Content Include="DOTK\images\LaunchButton.png" />
+    <Content Include="DOTK\images\LeftFlipper.png" />
+    <Content Include="DOTK\images\RightFlipper.png" />
+    <Content Include="DOTK\images\Shaker.png" />
+    <Content Include="DOTK\images\SlingShotLeft.png" />
+    <Content Include="DOTK\images\SlingShotRight.png" />
+    <Content Include="DOTK\images\StartButton.png" />
+    <Content Include="DOTK\images\ZBLaunchButton.png" />
+    <Content Include="FodyWeavers.xml" />
     <None Include="Resources\red_cross.png" />
     <None Include="Resources\green_gears.png" />
   </ItemGroup>
@@ -329,4 +278,13 @@
     <Folder Include="DOTK\sounds\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Fody.3.1.7\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.7\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.3.1.7\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.1.7\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" />
 </Project>
