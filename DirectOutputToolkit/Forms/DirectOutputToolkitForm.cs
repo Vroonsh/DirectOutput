@@ -235,7 +235,7 @@ namespace DirectOutputToolkit
         private void treeViewEffect_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
-                //Right mouse
+                SetCurrentSelectedNode(e.Node);
                 if (e.Button == MouseButtons.Right) {
                     ShowContextMenu(e);
                 }
@@ -254,18 +254,24 @@ namespace DirectOutputToolkit
             }
         }
 
-        private void buttonPulseEdition_Click(object sender, EventArgs e)
+        private void buttonPulseEdition_MouseDown(object sender, MouseEventArgs e)
         {
             if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
-                var value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
-                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
-                UpdatePulseButton(buttonPulseEdition, value);
-                Thread.Sleep(Settings.PulseDurationMs);
-                value = Handler.SwitchTableElement(treeViewEditionTable.SelectedNode);
+                var value = Handler.SetTableElementValue(treeViewEditionTable.SelectedNode, 255);
                 SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseEdition, value);
             }
         }
+
+        private void buttonPulseEdition_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (treeViewEditionTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SetTableElementValue(treeViewEditionTable.SelectedNode, 0);
+                SetEffectTreeNodeActive(treeViewEditionTable.SelectedNode, value > 0 ? 1 : 0);
+                UpdatePulseButton(buttonPulseEdition, value);
+            }
+        }
+
 
         private void DeleteEffectNode(EffectTreeNode node, bool silent = false)
         {
@@ -314,14 +320,8 @@ namespace DirectOutputToolkit
             }
         }
 
-        private void treeViewEditionTable_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            SetCurrentSelectedNode(treeViewEditionTable.SelectedNode);
-        }
-
         private void treeViewEditionTable_MouseDown(object sender, MouseEventArgs e)
         {
-
             if (e.Button == MouseButtons.Right) {
                 var hit = treeViewEditionTable.HitTest(e.X, e.Y);
 
@@ -454,14 +454,19 @@ namespace DirectOutputToolkit
             }
         }
 
-        private void buttonPulseTable_Click(object sender, EventArgs e)
+        private void buttonPulseTable_MouseDown(object sender, MouseEventArgs e)
         {
-            if (treeViewReferenceTable.SelectedNode is ITableElementTreeNode nodeWithTE) {
-                var value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
+            if (treeViewReferenceTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SetTableElementValue(treeViewReferenceTable.SelectedNode, 255);
                 SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
-                Thread.Sleep(Settings.PulseDurationMs);
-                value = Handler.SwitchTableElement(treeViewReferenceTable.SelectedNode);
+            }
+        }
+
+        private void buttonPulseTable_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (treeViewReferenceTable.SelectedNode is ITableElementTreeNode) {
+                var value = Handler.SetTableElementValue(treeViewReferenceTable.SelectedNode, 0);
                 SetEffectTreeNodeActive(treeViewReferenceTable.SelectedNode, value > 0 ? 1 : 0);
                 UpdatePulseButton(buttonPulseTable, value);
             }
@@ -470,15 +475,11 @@ namespace DirectOutputToolkit
         private void treeViewTableLedEffects_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.None) {
+                SetCurrentSelectedNode(e.Node);
                 if (e.Button == MouseButtons.Right) {
                     ShowContextMenu(e);
                 }
             }
-        }
-
-        private void treeViewTableLedEffects_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            SetCurrentSelectedNode(treeViewReferenceTable.SelectedNode);
         }
 
         private void comboBoxRefTableOutputFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -714,14 +715,14 @@ namespace DirectOutputToolkit
 
             if (TENode != null) {
                 var newEffectNode = new EffectTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
-                newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
+                newEffectNode.Rebuild(Handler, null);
                 parentTE.AssignedEffects.Init(EditionTable);
                 TENode.Nodes.Add(newEffectNode);
                 TENode.Rebuild(Handler);
                 SetCurrentSelectedNode(TENode);
             } else {
                 var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
-                newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
+                newEffectNode.Rebuild(Handler, null);
                 EditionTable.AssignedStaticEffects.Init(EditionTable);
                 EditionTableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
                 EditionTableNode.StaticEffectsNode.Rebuild(Handler);
