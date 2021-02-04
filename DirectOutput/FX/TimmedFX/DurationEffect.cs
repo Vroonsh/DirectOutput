@@ -39,7 +39,6 @@ namespace DirectOutput.FX.TimmedFX
             set { _DurationMs = value; }
         }
 
-
         /// <summary>
         /// Gets a value indicating whether this <see cref="DurationEffect"/> is currently active.
         /// </summary>
@@ -95,5 +94,17 @@ namespace DirectOutput.FX.TimmedFX
             base.Finish();
         }
 
+    }
+
+    /// <summary>
+    /// BlinkDurationEffect are basically DurationEffect which was setup from blink TableConfigSetting data.<br/>
+    /// It is used to recreate TableConfigSetting from effect (used in DirectOutput Toolkit)
+    /// </summary>
+    public class BlinkDurationEffect : DurationEffect
+    {
+        [XmlIgnoreAttribute]
+        public int Blink = 0;
+        [XmlIgnoreAttribute]
+        public int BlinkInterval = 0;
     }
 }
