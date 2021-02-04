@@ -208,12 +208,16 @@ namespace DirectOutputControls
             return AreaMappings.Where(AM => Match(AM)).ToArray();
         }
 
+        private bool Connected = false;
+
         protected override void ConnectToController()
         {
+            Connected = true;
         }
 
         protected override void DisconnectFromController()
         {
+            Connected = false;
         }
 
         protected override int GetNumberOfConfiguredOutputs()
@@ -223,6 +227,8 @@ namespace DirectOutputControls
 
         protected override void UpdateOutputs(byte[] OutputValues)
         {
+            if (!Connected) return;
+
             try {
                 bool needRefresh = false;
                 foreach (var mapping in AreaMappings) {
@@ -236,8 +242,8 @@ namespace DirectOutputControls
                     Refresh.Invoke();
                 }
             } catch (Exception E) {
-                throw E;
-            }
+            } finally { }
+
         }
 
         protected override bool VerifySettings()
