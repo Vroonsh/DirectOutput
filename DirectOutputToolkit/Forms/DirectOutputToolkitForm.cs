@@ -107,6 +107,8 @@ namespace DirectOutputToolkit
 
         private void DirectOutputToolkitForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            PreviewForm.Close();
+            while (PreviewForm.Disposing) { Application.DoEvents(); }
             Handler?.FinishPinball();
             if (Settings.AutoSaveOnQuit) {
                 SaveSettings();
