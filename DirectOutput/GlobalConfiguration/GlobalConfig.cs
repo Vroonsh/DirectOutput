@@ -726,7 +726,8 @@ namespace DirectOutput.GlobalConfiguration
         /// Before saving the current global config file is backed up.
         /// </summary>
         /// <param name="GlobalConfigFilename">(Optional)Global config filename. If no value is supplied the value of the property GlobalConfigFilename will be used.</param>
-        public void SaveGlobalConfig(string GlobalConfigFilename = "")
+        /// <param name="backupPrevious">(Optional)Tells if we have to backup the previous GlobalConfig file if present.</param>
+        public void SaveGlobalConfig(string GlobalConfigFilename = "", bool backupPrevious = true)
         {
             string GCFileName = (GlobalConfigFilename.IsNullOrWhiteSpace() ? this.GlobalConfigFilename : GlobalConfigFilename);
             if (GCFileName.IsNullOrWhiteSpace())
@@ -734,7 +735,7 @@ namespace DirectOutput.GlobalConfiguration
                 ArgumentException Ex = new ArgumentException("No filename for GlobalConfig file has been supplied. Looking up the filename from the property GlobalConfigFilename failed as well");
                 throw Ex;
             }
-            if (File.Exists(GCFileName))
+            if (backupPrevious && File.Exists(GCFileName))
             {
                 //Create a backup of the current global config file
                 File.Copy(GCFileName, Path.Combine(Path.GetDirectoryName(GCFileName), "{1} old (replaced {0}){2}".Build(DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), Path.GetFileNameWithoutExtension(GCFileName), Path.GetExtension(GCFileName))));

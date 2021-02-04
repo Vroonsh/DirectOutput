@@ -124,7 +124,7 @@ namespace DirectOutputToolkit
                 LedWizDefaultMinCommandIntervalMs = 10
             };
             var fileName = Path.Combine(DofFilesHandler.UserLocalPath, "GlobalConfig.xml");
-            GlobalConfig.SaveGlobalConfig(fileName);
+            GlobalConfig.SaveGlobalConfig(fileName, false);
             Pinball.Setup(GlobalConfigFilename: fileName);
 
             TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);

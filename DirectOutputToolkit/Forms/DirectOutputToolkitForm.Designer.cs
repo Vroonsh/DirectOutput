@@ -285,12 +285,10 @@
             this.treeViewEditionTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewEditionTable.FullRowSelect = true;
             this.treeViewEditionTable.Location = new System.Drawing.Point(17, 38);
             this.treeViewEditionTable.Name = "treeViewEditionTable";
             this.treeViewEditionTable.Size = new System.Drawing.Size(870, 540);
             this.treeViewEditionTable.TabIndex = 23;
-            this.treeViewEditionTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             this.treeViewEditionTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseDown);
             // 
@@ -374,12 +372,11 @@
             this.treeViewReferenceTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewReferenceTable.FullRowSelect = true;
             this.treeViewReferenceTable.Location = new System.Drawing.Point(17, 58);
             this.treeViewReferenceTable.Name = "treeViewReferenceTable";
             this.treeViewReferenceTable.Size = new System.Drawing.Size(870, 163);
             this.treeViewReferenceTable.TabIndex = 27;
-            this.treeViewReferenceTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
+            this.treeViewReferenceTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewReferenceTable_MouseDown);
             // 
             // labelRomName
             // 
