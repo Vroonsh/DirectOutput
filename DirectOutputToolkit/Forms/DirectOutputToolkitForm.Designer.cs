@@ -49,6 +49,7 @@
             this.buttonPulseEdition = new System.Windows.Forms.Button();
             this.buttonActivationEdition = new System.Windows.Forms.Button();
             this.treeViewEditionTable = new System.Windows.Forms.TreeView();
+            this.buttonLoadRefTable = new System.Windows.Forms.Button();
             this.buttonClearRefTableFilter = new System.Windows.Forms.Button();
             this.buttonCopyTable = new System.Windows.Forms.Button();
             this.comboBoxRefTableOutputFilter = new System.Windows.Forms.ComboBox();
@@ -61,7 +62,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.propertyGridMain = new System.Windows.Forms.PropertyGrid();
             this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
-            this.buttonLoadRefTable = new System.Windows.Forms.Button();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -266,7 +266,8 @@
             this.buttonPulseEdition.TabIndex = 25;
             this.buttonPulseEdition.Text = "Pulse";
             this.buttonPulseEdition.UseVisualStyleBackColor = true;
-            this.buttonPulseEdition.Click += new System.EventHandler(this.buttonPulseEdition_Click);
+            this.buttonPulseEdition.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonPulseEdition_MouseDown);
+            this.buttonPulseEdition.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonPulseEdition_MouseUp);
             // 
             // buttonActivationEdition
             // 
@@ -289,10 +290,19 @@
             this.treeViewEditionTable.Name = "treeViewEditionTable";
             this.treeViewEditionTable.Size = new System.Drawing.Size(870, 540);
             this.treeViewEditionTable.TabIndex = 23;
-            this.treeViewEditionTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewEditionTable_AfterSelect);
             this.treeViewEditionTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewEffect_NodeMouseClick);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             this.treeViewEditionTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseDown);
+            // 
+            // buttonLoadRefTable
+            // 
+            this.buttonLoadRefTable.Location = new System.Drawing.Point(250, 29);
+            this.buttonLoadRefTable.Name = "buttonLoadRefTable";
+            this.buttonLoadRefTable.Size = new System.Drawing.Size(159, 23);
+            this.buttonLoadRefTable.TabIndex = 35;
+            this.buttonLoadRefTable.Text = "Load Reference DOTK file";
+            this.buttonLoadRefTable.UseVisualStyleBackColor = true;
+            this.buttonLoadRefTable.Click += new System.EventHandler(this.buttonLoadRefTable_Click);
             // 
             // buttonClearRefTableFilter
             // 
@@ -345,7 +355,8 @@
             this.buttonPulseTable.TabIndex = 29;
             this.buttonPulseTable.Text = "Pulse";
             this.buttonPulseTable.UseVisualStyleBackColor = true;
-            this.buttonPulseTable.Click += new System.EventHandler(this.buttonPulseTable_Click);
+            this.buttonPulseTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonPulseTable_MouseDown);
+            this.buttonPulseTable.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonPulseTable_MouseUp);
             // 
             // buttonActivationTable
             // 
@@ -368,7 +379,6 @@
             this.treeViewReferenceTable.Name = "treeViewReferenceTable";
             this.treeViewReferenceTable.Size = new System.Drawing.Size(870, 163);
             this.treeViewReferenceTable.TabIndex = 27;
-            this.treeViewReferenceTable.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTableLedEffects_AfterSelect);
             this.treeViewReferenceTable.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTableLedEffects_NodeMouseClick);
             // 
             // labelRomName
@@ -416,16 +426,6 @@
             this.imageListIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListIcons.Images.SetKeyName(0, "red_cross.png");
             this.imageListIcons.Images.SetKeyName(1, "green_gears.png");
-            // 
-            // buttonLoadRefTable
-            // 
-            this.buttonLoadRefTable.Location = new System.Drawing.Point(250, 29);
-            this.buttonLoadRefTable.Name = "buttonLoadRefTable";
-            this.buttonLoadRefTable.Size = new System.Drawing.Size(159, 23);
-            this.buttonLoadRefTable.TabIndex = 35;
-            this.buttonLoadRefTable.Text = "Load Reference DOTK file";
-            this.buttonLoadRefTable.UseVisualStyleBackColor = true;
-            this.buttonLoadRefTable.Click += new System.EventHandler(this.buttonLoadRefTable_Click);
             // 
             // DirectOutputToolkitForm
             // 
