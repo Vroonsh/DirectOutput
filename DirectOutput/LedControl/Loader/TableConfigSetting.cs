@@ -997,10 +997,9 @@ namespace DirectOutput.LedControl.Loader
                     MaxDurationMs = maxDurationFX.MaxDurationMs;
                 } else if (currentFX is DurationEffect durationFX) {
                     //TargetEffect is a blink effect, Blink will be > 0 based on Duration & BlinkDuration
-                    if (durationFX.TargetEffect is BlinkEffect blinkFX) {
-                        var duration = durationFX.DurationMs;
-                        BlinkIntervalMs = blinkFX.DurationActiveMs + blinkFX.DurationInactiveMs;
-                        Blink = durationFX.DurationMs / BlinkIntervalMs;
+                    if (currentFX is BlinkDurationEffect durationBlinkFX) {
+                        BlinkIntervalMs = durationBlinkFX.BlinkInterval;
+                        Blink = durationBlinkFX.Blink;
                         DurationMs = 0;
                     } else {
                         DurationMs = durationFX.DurationMs;
@@ -1025,7 +1024,7 @@ namespace DirectOutput.LedControl.Loader
                     FadingDownDurationMs = fadeFX.FadeDownDuration;
                     FadingUpDurationMs = fadeFX.FadeUpDuration;
                 } else if (currentFX is AnalogToyValueEffect analogToyValueFX) {
-                    Intensity = analogToyValueFX.ActiveValue.Alpha;
+                    Intensity = analogToyValueFX.ActiveValue.Value;
                 } else if (currentFX is RGBAColorEffect rgbaColorFX) {
                     ColorName = rgbaColorFX.ActiveColor.ToString();
                 } else if (currentFX is IMatrixEffect matrixFX) {
