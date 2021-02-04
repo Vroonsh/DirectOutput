@@ -32,8 +32,6 @@
             this.numericUpDownMatrixMinDuration = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownMinDuration = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPulseDuration = new System.Windows.Forms.NumericUpDown();
-            this.labelPulseDelay = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxDofAutoUpdate = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -41,7 +39,6 @@
             this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatrixMinDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinDuration)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -49,7 +46,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 67);
+            this.label3.Location = new System.Drawing.Point(17, 47);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(147, 13);
             this.label3.TabIndex = 17;
@@ -58,7 +55,7 @@
             // numericUpDownMatrixMinDuration
             // 
             this.numericUpDownMatrixMinDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMatrixMinDuration.Location = new System.Drawing.Point(302, 65);
+            this.numericUpDownMatrixMinDuration.Location = new System.Drawing.Point(302, 45);
             this.numericUpDownMatrixMinDuration.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -72,7 +69,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 41);
+            this.label2.Location = new System.Drawing.Point(17, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(116, 13);
             this.label2.TabIndex = 15;
@@ -81,7 +78,7 @@
             // numericUpDownMinDuration
             // 
             this.numericUpDownMinDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMinDuration.Location = new System.Drawing.Point(302, 39);
+            this.numericUpDownMinDuration.Location = new System.Drawing.Point(302, 19);
             this.numericUpDownMinDuration.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -92,47 +89,12 @@
             this.numericUpDownMinDuration.TabIndex = 14;
             this.numericUpDownMinDuration.ValueChanged += new System.EventHandler(this.numericUpDownMinDuration_ValueChanged);
             // 
-            // numericUpDownPulseDuration
-            // 
-            this.numericUpDownPulseDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPulseDuration.Location = new System.Drawing.Point(302, 14);
-            this.numericUpDownPulseDuration.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.numericUpDownPulseDuration.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownPulseDuration.Name = "numericUpDownPulseDuration";
-            this.numericUpDownPulseDuration.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownPulseDuration.TabIndex = 20;
-            this.numericUpDownPulseDuration.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDownPulseDuration.ValueChanged += new System.EventHandler(this.numericUpDownPulseDuration_ValueChanged);
-            // 
-            // labelPulseDelay
-            // 
-            this.labelPulseDelay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelPulseDelay.AutoSize = true;
-            this.labelPulseDelay.Location = new System.Drawing.Point(17, 16);
-            this.labelPulseDelay.Name = "labelPulseDelay";
-            this.labelPulseDelay.Size = new System.Drawing.Size(76, 13);
-            this.labelPulseDelay.TabIndex = 19;
-            this.labelPulseDelay.Text = "Pulse Duration";
-            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.checkBoxDofAutoUpdate);
-            this.groupBox2.Location = new System.Drawing.Point(15, 119);
+            this.groupBox2.Location = new System.Drawing.Point(15, 92);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(428, 52);
             this.groupBox2.TabIndex = 22;
@@ -154,15 +116,13 @@
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.labelPulseDelay);
             this.groupBox3.Controls.Add(this.numericUpDownMinDuration);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Controls.Add(this.numericUpDownPulseDuration);
             this.groupBox3.Controls.Add(this.numericUpDownMatrixMinDuration);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Location = new System.Drawing.Point(15, 13);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(428, 100);
+            this.groupBox3.Size = new System.Drawing.Size(428, 73);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pinball";
@@ -206,7 +166,6 @@
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatrixMinDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinDuration)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPulseDuration)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -222,8 +181,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMatrixMinDuration;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownMinDuration;
-        private System.Windows.Forms.NumericUpDown numericUpDownPulseDuration;
-        private System.Windows.Forms.Label labelPulseDelay;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBoxDofAutoUpdate;
         private System.Windows.Forms.GroupBox groupBox3;
