@@ -13,12 +13,6 @@ namespace DirectOutputToolkit
         public List<string> DirectOutputViewSetups { get; set; } = new List<string>();
         public string LastRomName { get; set; } = "";
 
-        private int _PulseDurationMs = 50;
-        public int PulseDurationMs
-        {
-            get { return _PulseDurationMs; }
-            set { _PulseDurationMs = value.Limit(10, 5000); }
-        }
         public int EffectMinDurationMs { get; set; } = 60;
         public int EffectRGBMinDurationMs { get; set; } = 120;
 

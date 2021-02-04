@@ -136,6 +136,7 @@ namespace DirectOutputToolkit
             PreviewController.Setup(Pinball);
 
             Pinball.Init();
+            GC.Collect(6, GCCollectionMode.Forced);
 
             return true;
         }
@@ -170,6 +171,7 @@ namespace DirectOutputToolkit
                     tdesc.Value.Table.Init(Pinball);
                 }
             }
+            GC.Collect(6, GCCollectionMode.Forced);
         }
         #endregion
 
@@ -179,11 +181,12 @@ namespace DirectOutputToolkit
             ResetPinball(true);
             TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = RefRomName.IsNullOrEmpty() ? "Edition Table" : $"Table copied from {RefRomName}", RomName = RefRomName.IsNullOrEmpty() ? "romname" : RefRomName };
             if (Pinball != null) {
+                Pinball.Init();
                 TableDescriptors[ETableType.ReferenceTable].Table.Init(Pinball);
                 TableDescriptors[ETableType.EditionTable].Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
                 TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
-                Pinball.Init();
             }
+            GC.Collect(6, GCCollectionMode.Forced);
         }
 
         internal void SetupTable(ETableType TableType, string RomName)
@@ -248,6 +251,37 @@ namespace DirectOutputToolkit
 
             TableElementData D = tableElement.GetTableElementData();
             D.Value = TEData.Value > 0 ? 0 : 255;
+            if (D.Value == 0) {
+                TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
+            } else {
+                if (!TableDesc.RunnigTableElements.Contains(tableElement)) {
+                    TableDesc.RunnigTableElements.Add(tableElement);
+                }
+            }
+            Pinball.Table = Table;
+            Pinball.ReceiveData(D);
+            return D.Value;
+        }
+
+        internal int SetTableElementValue(TreeNode TreeNode, int value)
+        {
+            var tableElementTreeNode = (TreeNode as ITableElementTreeNode);
+            if (tableElementTreeNode == null) return 0;
+
+            var TableDesc = TableDescriptors[tableElementTreeNode.GetTableType()];
+            var Table = TableDesc.Table;
+            var tableElement = tableElementTreeNode.GetTableElement();
+            var TEData = tableElement.GetTableElementData();
+
+            if (TreeNode is EffectTreeNode effectTreeNode) {
+                //Inject the one from the EffectNode
+                if (!Table.TableElements.Contains(effectTreeNode.GetTableElement())) {
+                    Table.TableElements.Add(effectTreeNode.GetTableElement());
+                }
+            }
+
+            TableElementData D = tableElement.GetTableElementData();
+            D.Value = value;
             if (D.Value == 0) {
                 TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
             } else {
