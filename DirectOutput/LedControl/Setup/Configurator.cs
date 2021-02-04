@@ -350,7 +350,11 @@ namespace DirectOutput.LedControl.Setup
                 if (TCS.DurationMs > 0 || TCS.Blink > 0) {
                     string N = TCS.DurationMs > 0 ? "DurationEffect" : $"BlinkDurationEffect({TCS.Blink},{TCS.BlinkIntervalMs})";
                     int Duration = (TCS.DurationMs > 0 ? TCS.DurationMs : (TCS.Blink * 2 - 1) * TCS.BlinkIntervalMs / 2 + 1);
-                    Effect = new DurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, DurationMs = Duration, RetriggerBehaviour = RetriggerBehaviourEnum.Restart };
+                    if (TCS.DurationMs > 0) {
+                        Effect = new DurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, DurationMs = Duration, RetriggerBehaviour = RetriggerBehaviourEnum.Restart };
+                    } else {
+                        Effect = new BlinkDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, DurationMs = Duration, RetriggerBehaviour = RetriggerBehaviourEnum.Restart, Blink = TCS.Blink, BlinkInterval = TCS.BlinkIntervalMs };
+                    }
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }
