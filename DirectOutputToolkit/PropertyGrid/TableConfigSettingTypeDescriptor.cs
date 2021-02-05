@@ -61,7 +61,7 @@ namespace DirectOutputToolkit
 
             PropertyDescriptors["OutputControl"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["TableElement"] = new PropertyDescriptorHandler() { Browsable = false };
-            PropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["Condition"] = new PropertyDescriptorHandler() { Browsable = WrappedTCS.OutputControl == OutputControlEnum.Condition };
             PropertyDescriptors["OutputType"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["ColorName"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["ColorName2"] = new PropertyDescriptorHandler() { Browsable = false };
