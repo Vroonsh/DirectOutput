@@ -60,7 +60,9 @@ namespace DirectOutputToolkit
             if (TE == null) {
                 TCS.OutputControl = TCS.Invert ? OutputControlEnum.FixedOff : OutputControlEnum.FixedOn;
             } else {
-                TCS.OutputControl = OutputControlEnum.Controlled;
+                if (TCS.OutputControl != OutputControlEnum.Condition) {
+                    TCS.OutputControl = OutputControlEnum.Controlled;
+                }
                 TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
             }
 

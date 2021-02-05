@@ -250,7 +250,7 @@ namespace DirectOutputToolkit
             }
 
             TableElementData D = tableElement.GetTableElementData();
-            D.Value = TEData.Value > 0 ? 0 : 255;
+            D.Value = TEData.Value > 0 ? 0 : 1;
             if (D.Value == 0) {
                 TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
             } else {
