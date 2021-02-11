@@ -1231,17 +1231,13 @@ namespace DirectOutput.LedControl.Loader
 
                 if (IsShape) {
                     configToolStr += GetConfigToolCommand(ShapeName, "SHP");
-                }
-
-                if (IsPlasma) {
+                } else if (IsPlasma) {
                     configToolStr += GetConfigToolCommand(PlasmaSpeed, 0,"APS");
                     configToolStr += GetConfigToolCommand(PlasmaDensity, 0, "APD");
                     configToolStr += GetConfigToolCommand(ColorName2, "APC");
-                }
-
-                if (IsBitmap) {
-                    configToolStr += GetConfigToolCommand(AreaBitmapTop, 0, "ABT");
-                    configToolStr += GetConfigToolCommand(AreaBitmapLeft, 0, "ABL");
+                }else if (IsBitmap) {
+                    configToolStr += GetConfigToolCommand(AreaBitmapTop, -1, "ABT");
+                    configToolStr += GetConfigToolCommand(AreaBitmapLeft, -1, "ABL");
                     configToolStr += GetConfigToolCommand(AreaBitmapWidth, -1, "ABW");
                     configToolStr += GetConfigToolCommand(AreaBitmapHeight, -1, "ABH");
                     configToolStr += GetConfigToolCommand(AreaBitmapFrame, 0, "ABF");
@@ -1249,21 +1245,21 @@ namespace DirectOutput.LedControl.Loader
                     //BitmapAnimation
                     configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepSize, 1, "AAS");
                     configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepCount, 0, "AAC");
-                    configToolStr += GetConfigToolCommand(AreaBitmapAnimationFrameDuration, 30, "AAF");
+                    configToolStr += GetConfigToolCommand((int)((1000.0f / AreaBitmapAnimationFrameDuration) + 0.5f), 30, "AAF");
                     configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationDirection, (char)MatrixAnimationStepDirectionEnum.Frame, "AAD");
                     configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationBehaviour, (char)AnimationBehaviourEnum.Loop, "AAB");
+                } else if ((AreaFlickerDensity != 0) || (AreaFlickerMinDurationMs != 0) || (AreaFlickerMaxDurationMs != 0) || (AreaFlickerFadeDurationMs != 0)) {
+                    //Flicker
+                    configToolStr += GetConfigToolCommand(AreaFlickerDensity, 0, "AFDEN");
+                    configToolStr += GetConfigToolCommand(AreaFlickerMinDurationMs, 0, "AFMIN");
+                    configToolStr += GetConfigToolCommand(AreaFlickerMaxDurationMs, 0, "AFMAX");
+                    configToolStr += GetConfigToolCommand(AreaFlickerFadeDurationMs, 0, "AFFADE");
+                } else {
+                    //Shift
+                    configToolStr += GetConfigToolCommand(AreaAcceleration, 0, "ASA");
+                    configToolStr += GetConfigToolCommand(AreaSpeed, 100, "ASS");
+                    configToolStr += GetConfigToolCommand((char)AreaDirection, (char)MatrixShiftDirectionEnum.Invalid, "ASD");
                 }
-
-                //Flicker
-                configToolStr += GetConfigToolCommand(AreaFlickerDensity, 0, "AFDEN");
-                configToolStr += GetConfigToolCommand(AreaFlickerMinDurationMs, 0, "AFMIN");
-                configToolStr += GetConfigToolCommand(AreaFlickerMaxDurationMs, 0, "AFMAX");
-                configToolStr += GetConfigToolCommand(AreaFlickerFadeDurationMs, 0, "AFFADE");
-
-                //Shift
-                configToolStr += GetConfigToolCommand(AreaAcceleration, 0, "ASA");
-                configToolStr += GetConfigToolCommand(AreaSpeed, 100, "ASS");
-                configToolStr += GetConfigToolCommand((char)AreaDirection, (char)MatrixShiftDirectionEnum.Invalid, "ASD"); 
             }
 
             if (colorList != null) {
