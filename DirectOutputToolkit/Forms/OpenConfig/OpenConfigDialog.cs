@@ -19,6 +19,8 @@ namespace DirectOutputToolkit
         private DofConfigToolSetup DofSetup = new DofConfigToolSetup();
         private DirectOutputViewSetup ViewSetup = new DirectOutputViewSetup();
 
+        public bool ForceDofConfigToolUpdate { get; private set; } = false;
+
         public OpenConfigDialog(Settings Settings = null)
         {
             if (Settings != null)
@@ -106,6 +108,11 @@ namespace DirectOutputToolkit
             DofViewSetupEditForm editForm = new DofViewSetupEditForm(DofViewSetupFilename);
             editForm.ShowDialog(this);
             DofViewSetupFilename = editForm.FileName;
+        }
+
+        private void checkBoxForceDownload_CheckedChanged(object sender, EventArgs e)
+        {
+            ForceDofConfigToolUpdate = checkBoxForceDownload.Checked;
         }
     }
 }

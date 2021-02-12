@@ -2,6 +2,7 @@
 using DirectOutput.Cab.Out;
 using DirectOutput.Cab.Toys;
 using DirectOutput.FX;
+using DirectOutput.General;
 using DirectOutput.General.Analog;
 using DirectOutput.General.Color;
 using DirectOutput.GlobalConfiguration;
@@ -13,6 +14,7 @@ using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -58,6 +60,19 @@ namespace DirectOutputToolkit
                 }
             };
 
+        internal IEnumerable<Image> GetBitmapList(TableConfigSetting wrappedTCS)
+        {
+            FilePattern BitmapFilePattern = new FilePattern($"{DofFilesHandler.UserLocalPath}\\{TableDescriptors[ETableType.EditionTable].Table.RomName}.*");
+            var Files = BitmapFilePattern.GetMatchingFiles();
+            List<Image> images = new List<Image>();
+            foreach(var file in Files) {
+                var image = Image.FromFile(file.FullName);
+                image.Tag = file.Name;
+                images.Add(image);
+            }
+            return images;
+        }
+
         internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
         {
             var remap = PreviewController.GetToyOutputRemaps(M => M.Toy.Name.Equals(ToyName, StringComparison.InvariantCultureIgnoreCase));
@@ -76,11 +91,21 @@ namespace DirectOutputToolkit
             return (remap != null && remap.Length > 0 ? remap.First().LedWizNum : 0);
         }
 
+        internal void ReinitEditionTable()
+        {
+            var table = TableDescriptors[ETableType.EditionTable].Table;
+            table.Bitmaps.Clear();
+            foreach(var eff in table.Effects) {
+                eff.Init(table);
+            }
+        }
+
         internal string[] GetTableNames() => TableDescriptors.Select(TD => $"{TD.Value.Table.TableName}").ToArray();
         internal Table GetTable(ETableType tableType) => TableDescriptors[tableType].Table;
         internal Table GetTableByName(string text) => TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(text, StringComparison.InvariantCultureIgnoreCase));
 
         public DofConfigToolFilesHandler DofFilesHandler { get; private set; } = new DofConfigToolFilesHandler() { };
+        public bool ForceDofConfigToolUpdate { get; set; } = false;
 
         public LedControlConfigList LedControlConfigList => DofFilesHandler?.ConfigFiles;
 
@@ -110,7 +135,7 @@ namespace DirectOutputToolkit
             var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
             DofFilesHandler.RootDirectory = dir;
             DofFilesHandler.DofSetup = DofConfigToolSetup;
-            DofFilesHandler.UpdateConfigFiles();
+            DofFilesHandler.UpdateConfigFiles(ForceDofConfigToolUpdate);
             if (DofFilesHandler.ConfigFiles.Count == 0) {
                 MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -178,7 +203,7 @@ namespace DirectOutputToolkit
         #region Tables
         internal void ResetEditionTable(string RefRomName)
         {
-            ResetPinball(true);
+            ResetPinball(false);
             TableDescriptors[ETableType.EditionTable].Table = new Table() { TableName = RefRomName.IsNullOrEmpty() ? "Edition Table" : $"Table copied from {RefRomName}", RomName = RefRomName.IsNullOrEmpty() ? "romname" : RefRomName };
             if (Pinball != null) {
                 Pinball.Init();
@@ -191,7 +216,7 @@ namespace DirectOutputToolkit
 
         internal void SetupTable(ETableType TableType, string RomName)
         {
-            ResetPinball(true);
+            ResetPinball(false);
             TableDescriptors[TableType].Table = null;
             TableDescriptors[TableType].Table = new Table();
             var table = TableDescriptors[TableType].Table;

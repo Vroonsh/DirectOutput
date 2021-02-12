@@ -36,6 +36,12 @@ namespace DirectOutputControls
             }
         }
 
+        public CustomFieldPropertyDescriptor<TComponent, TField> GetCustomField<TComponent, TField>(string fieldName)
+        {
+            var customField = CustomFields.FirstOrDefault(CF => CF.Name.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase));
+            return (CustomFieldPropertyDescriptor<TComponent, TField>)customField;
+        }
+
         public BaseTypeDescriptor(object wrappedObj, bool editable, bool generateCustomFields = false)
             : base(TypeDescriptor.GetProvider(wrappedObj).GetTypeDescriptor(wrappedObj))
         {
@@ -86,7 +92,7 @@ namespace DirectOutputControls
         public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
             var properties = base.GetProperties(attributes).Cast<PropertyDescriptor>()
-                                 .Select(p => ToCustomProperty(p)).Union(CustomFields);
+                                 .Select(p => ToCustomProperty(p)).Union(CustomFields.Where(CF=>(CF as ICustomFieldOverridable).IsEnabled()));
 
             return new PropertyDescriptorCollection(properties.ToArray());
         }

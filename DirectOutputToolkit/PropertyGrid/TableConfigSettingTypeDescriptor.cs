@@ -8,6 +8,7 @@ using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Design;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace DirectOutputToolkit
 {
-    class TableConfigSettingTypeDescriptor : BaseTypeDescriptor, IColorListProvider, IShapeListProvider, IToyListProvider
+    class TableConfigSettingTypeDescriptor : BaseTypeDescriptor, IColorListProvider, IShapeListProvider, IToyListProvider, IBitmapListProvider
     {
         public EffectTreeNode EffectNode { get; private set; }
         public TableConfigSetting WrappedTCS { get; private set; }
@@ -43,6 +44,13 @@ namespace DirectOutputToolkit
         public IEnumerable<IToy> GetToyList()
         {
             return Handler.GetCompatibleToys(WrappedTCS);
+        }
+        #endregion
+
+        #region IBitmapListProvider
+        public IEnumerable<Image> GetBitmapList()
+        {
+            return Handler.GetBitmapList(WrappedTCS);
         }
         #endregion
 
@@ -84,16 +92,16 @@ namespace DirectOutputToolkit
             PropertyDescriptors["AreaFlickerMaxDurationMs"] = new PropertyDescriptorHandler();
             PropertyDescriptors["AreaFlickerFadeDurationMs"] = new PropertyDescriptorHandler();
 
-            PropertyDescriptors["AreaBitmapTop"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapLeft"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapWidth"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapHeight"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapFrame"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapAnimationStepSize"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapAnimationStepCount"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapAnimationFrameDuration"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapAnimationDirection"] = new PropertyDescriptorHandler();
-            PropertyDescriptors["AreaBitmapAnimationBehaviour"] = new PropertyDescriptorHandler();
+            PropertyDescriptors["AreaBitmapTop"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapLeft"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapWidth"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapHeight"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapFrame"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapAnimationStepSize"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapAnimationStepCount"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapAnimationFrameDuration"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapAnimationDirection"] = new PropertyDescriptorHandler() { Browsable = false };
+            PropertyDescriptors["AreaBitmapAnimationBehaviour"] = new PropertyDescriptorHandler() { Browsable = false };
 
             GenerateCustomFields();
             Refresh();
@@ -108,6 +116,19 @@ namespace DirectOutputToolkit
                 new DisplayNameAttribute("Toy Name"),
                 new ReadOnlyAttribute(!Editable),
                 new EditorAttribute(typeof(ToyNameEditor), typeof(UITypeEditor))
+                }));
+
+            var bitMapSetting = new AreaBitmapSetting();
+            bitMapSetting.FromTableConfigSetting(WrappedTCS);
+
+            CustomFields.Add(new CustomFieldPropertyDescriptor<TableConfigSetting, AreaBitmapSetting>(this,
+                new CustomField<AreaBitmapSetting>("BitmapSettings", bitMapSetting),
+                new Attribute[]
+                {
+                new CategoryAttribute("Bitmap"),
+                new DisplayNameAttribute("Bitmap settings"),
+                new ReadOnlyAttribute(!Editable),
+                new EditorAttribute(typeof(AreaBitmapSettingEditor), typeof(UITypeEditor))
                 }));
         }
 
@@ -154,16 +175,12 @@ namespace DirectOutputToolkit
             PropertyDescriptors["AreaFlickerMaxDurationMs"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Flicker);
             PropertyDescriptors["AreaFlickerFadeDurationMs"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Flicker);
 
-            PropertyDescriptors["AreaBitmapTop"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapLeft"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapWidth"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapHeight"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapFrame"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapAnimationStepSize"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapAnimationStepCount"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapAnimationFrameDuration"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapAnimationDirection"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
-            PropertyDescriptors["AreaBitmapAnimationBehaviour"].Browsable = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
+            GetCustomField<TableConfigSetting, AreaBitmapSetting>("BitmapSettings").Enabled = (effectType == TableConfigSetting.EffectTypeMX.Bitmap);
+            if (effectType == TableConfigSetting.EffectTypeMX.Bitmap) {
+                var bitmapSetting = CustomFieldValues["BitmapSettings"] as AreaBitmapSetting;
+                bitmapSetting.ToTableConfigSetting(WrappedTCS);
+            }
         }
+
     }
 }
