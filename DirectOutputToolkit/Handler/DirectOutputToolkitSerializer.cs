@@ -6,6 +6,7 @@ using DirectOutput.Table;
 using DofConfigToolWrapper;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,7 @@ namespace DirectOutputToolkit
 
         public string TableName { get; set; } = string.Empty;
         public string RomName { get; set; } = string.Empty;
+        public string ImageName { get; set; } = string.Empty;
         public List<TableElementDescriptor> TableElements = new List<TableElementDescriptor>();
         public List<EffectDescriptor> StaticEffects = new List<EffectDescriptor>();
 
@@ -40,6 +42,7 @@ namespace DirectOutputToolkit
         {
             TableName = node.EditionTable.TableName;
             RomName = node.EditionTable.RomName;
+            ImageName = node.Image.Tag as string;
             foreach (var se in node.EditionTable.AssignedStaticEffects) {
                 if (se.Effect != null) {
                     var neweffDesc = new EffectDescriptor();
@@ -59,6 +62,10 @@ namespace DirectOutputToolkit
             }
 
             foreach(var TE in node.EditionTable.TableElements) {
+                if (TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
+                    continue;
+                }
+
                 var newTE = new TableElementDescriptor() { Type = TE.TableElementType, Name = TE.Name, Number = TE.Number };
 
                 foreach(var se in TE.AssignedEffects) {
@@ -131,6 +138,9 @@ namespace DirectOutputToolkit
             if (tableDescriptor != null) {
                 TableNode.EditionTable.TableName = tableDescriptor.TableName;
                 TableNode.EditionTable.RomName = tableDescriptor.RomName;
+                TableNode.Image = Image.FromFile(tableDescriptor.ImageName);
+                TableNode.Image.Tag = tableDescriptor.ImageName;
+                TableNode.OnImageChanged(TableNode.Image);
                 TableNode.Refresh();
 
                 var TCCNumber = 0;
