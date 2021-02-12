@@ -23,11 +23,19 @@ namespace DirectOutputControls
         public TField DefaultValue { get; private set; }
     }
 
-    public class CustomFieldPropertyDescriptor<TComponent, TField> : PropertyDescriptor
+    public interface ICustomFieldOverridable
+    {
+        bool IsEnabled();
+    }
+
+    public class CustomFieldPropertyDescriptor<TComponent, TField> : PropertyDescriptor, ICustomFieldOverridable
     {
         public CustomField<TField> CustomField { get; private set; }
 
         private BaseTypeDescriptor Container;
+
+        public bool Enabled { get; set; } = true;
+        public bool IsEnabled() => Enabled;
 
         public CustomFieldPropertyDescriptor(BaseTypeDescriptor container, CustomField<TField> customField, Attribute[] attrs)
             : base(customField.Name, attrs)
@@ -84,5 +92,6 @@ namespace DirectOutputControls
         {
             return false;
         }
+
     }
 }
