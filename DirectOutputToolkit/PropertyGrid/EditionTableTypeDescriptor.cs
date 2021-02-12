@@ -3,6 +3,8 @@ using DirectOutputControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +13,12 @@ namespace DirectOutputToolkit
 {
     class EditionTableTypeDescriptor : BaseTypeDescriptor
     {
-        public Table EditionTable {get; private set;}
+        public EditionTableTreeNode TableNode { get; private set; }
 
-        public EditionTableTypeDescriptor(Table Table, bool editable = true)
-            : base(Table, editable)
+        public EditionTableTypeDescriptor(EditionTableTreeNode tableNode, bool editable = true)
+            : base(tableNode.EditionTable, editable)
         {
-            EditionTable = Table;
+            TableNode = tableNode;
 
             PropertyDescriptors["TableElements"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["Pinball"] = new PropertyDescriptorHandler() { Browsable = false };
@@ -29,9 +31,26 @@ namespace DirectOutputToolkit
             PropertyDescriptors["Effects"] = new PropertyDescriptorHandler() { Browsable = false };
             PropertyDescriptors["AssignedStaticEffects"] = new PropertyDescriptorHandler() { Browsable = false };
 
+            GenerateCustomFields();
             Refresh();
         }
 
-        public override void Refresh() {}
+        protected override void GenerateCustomFields()
+        {
+            CustomFields.Add(new CustomFieldPropertyDescriptor<EditionTableTypeDescriptor, Image>(this,
+                new CustomField<Image>("Image", TableNode.Image),
+                new Attribute[]
+                {
+                new BrowsableAttribute(true),
+                new DisplayNameAttribute("Image"),
+                new ReadOnlyAttribute(!Editable),
+                new EditorAttribute(typeof(ImageSelectorEditor), typeof(UITypeEditor))
+                }));
+        }
+
+        public override void Refresh()
+        {
+            TableNode.OnImageChanged(CustomFieldValues["Image"] as Image);
+        }
     }
 }
