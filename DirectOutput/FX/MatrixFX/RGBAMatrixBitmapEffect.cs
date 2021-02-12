@@ -13,8 +13,23 @@ namespace DirectOutput.FX.MatrixFX
     /// 
     /// The image extraction takes place upon initalization of the framework. While the framework is active, it only outputs the previously extracted and scaled data to allow for better performance. 
     /// </summary>
-    public class RGBAMatrixBitmapEffect : MatrixBitmapEffectBase<RGBAColor>
+    public class RGBAMatrixBitmapEffect : MatrixBitmapEffectBase<RGBAColor>, IMatrixRGBAColor
     {
+        /// <summary>
+        /// Gets or sets the first active color.
+        /// </summary>
+        /// <value>
+        /// The active color.
+        /// </value>
+        public RGBAColor ActiveColor { get; set; } = new RGBAColor(0x00, 0x00, 0xff, 0xff);
+
+        /// <summary>
+        /// Gets or sets the first active color.
+        /// </summary>
+        /// <value>
+        /// The active color.
+        /// </value>
+        public RGBAColor InactiveColor { get; set; } = new RGBAColor(0x00, 0x00, 0xff, 0x00);
 
         /// <summary>
         /// Gets the value for a single element in the matrix.
@@ -28,6 +43,9 @@ namespace DirectOutput.FX.MatrixFX
 
             RGBAColor D = Pixel.GetRGBAColor();
 
+            D.Red = (int)((float)D.Red * ActiveColor.Red / 255);
+            D.Green = (int)((float)D.Green * ActiveColor.Green / 255);
+            D.Blue = (int)((float)D.Blue * ActiveColor.Blue / 255);
             D.Alpha = (int)((float)Pixel.Alpha * TriggerValue / 255);
 
             return D;
