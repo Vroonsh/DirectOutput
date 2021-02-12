@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +64,16 @@
     <Compile Include="..\AssemblyInfo\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Editors\Providers\IBitmapListProvider.cs" />
+    <Compile Include="Editors\UITypeEditors\AreaBitmap\AreaBitmapSetting.cs" />
+    <Compile Include="Editors\UITypeEditors\AreaBitmap\AreaBitmapSettingEditor.cs" />
+    <Compile Include="Editors\UITypeEditors\AreaBitmap\AreaBitmapSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\UITypeEditors\AreaBitmap\AreaBitmapSettingForm.Designer.cs">
+      <DependentUpon>AreaBitmapSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\UITypeEditors\ImageSelectorEditor.cs" />
     <Compile Include="Preview\DirectOutputToolkitDummyToy.cs" />
     <Compile Include="Preview\ViewAreas\DirectOutputViewAreaUpdatable.cs" />
     <Compile Include="Preview\ViewAreas\DirectOutputViewAreaVirtual.cs" />
@@ -122,6 +133,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\UITypeEditors\AreaBitmap\AreaBitmapSettingForm.resx">
+      <DependentUpon>AreaBitmapSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Preview\DirectOutputPreviewControl.resx">
       <DependentUpon>DirectOutputPreviewControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -136,5 +150,6 @@
   <ItemGroup>
     <None Include="Resources\StartButton.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
