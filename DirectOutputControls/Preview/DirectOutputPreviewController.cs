@@ -241,9 +241,7 @@ namespace DirectOutputControls
                 if (needRefresh && Refresh != null) {
                     Refresh.Invoke();
                 }
-            } catch (Exception E) {
-            } finally { }
-
+            } catch  {} 
         }
 
         protected override bool VerifySettings()

@@ -55,7 +55,7 @@ namespace DirectOutputToolkit
             if (OCD.ShowDialog() == DialogResult.OK) {
 
                 Handler = new DirectOutputToolkitHandler(Settings);
-
+                Handler.ForceDofConfigToolUpdate = OCD.ForceDofConfigToolUpdate;
                 DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Settings.LastDofConfigSetup);
                 DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDirectOutputViewSetup);
 
@@ -77,7 +77,7 @@ namespace DirectOutputToolkit
                 comboBoxRefTableOutputFilter.DataSource = DofConfigToolOutputs.GetPublicDofOutput(true);
                 comboBoxRefTableOutputFilter.Text = DofConfigToolOutputEnum.Invalid.ToString();
 
-                EditionTableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
+                EditionTableNode = new EditionTableTreeNode(Handler, Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable));
                 EditionTableNode.Rebuild(Handler);
                 treeViewEditionTable.Nodes.Add(EditionTableNode);
                 treeViewEditionTable.Refresh();
@@ -508,7 +508,7 @@ namespace DirectOutputToolkit
             if (!fd.FileName.IsNullOrEmpty()) {
                 PopulateReferenceTable(string.Empty);
                 var serializer = new DirectOutputToolkitSerializer();
-                EditionTableTreeNode tableNode = new EditionTableTreeNode(Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable));
+                EditionTableTreeNode tableNode = new EditionTableTreeNode(Handler, Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable));
                 tableNode.Rebuild(Handler);
                 if (serializer.Deserialize(tableNode, fd.FileName, Handler)) {
                     PopulateTableElements(DirectOutputToolkitHandler.ETableType.ReferenceTable);
@@ -535,7 +535,7 @@ namespace DirectOutputToolkit
             TD.Refresh();
             propertyGridMain.Refresh();
             if (treeViewEditionTable.SelectedNode is EditionTableTreeNode editionTableNode) {
-                if (editionTableNode.EditionTable == TD.EditionTable) {
+                if (editionTableNode.EditionTable == TD.TableNode.EditionTable) {
                     editionTableNode.Rebuild(Handler);
                     treeViewEditionTable.Refresh();
                 }
@@ -576,11 +576,8 @@ namespace DirectOutputToolkit
             propertyGridMain.Refresh();
             if (treeViewEditionTable.SelectedNode is EffectTreeNode editionEffectTreeNode) {
                 if (editionEffectTreeNode.TCS == TCS) {
-                    if (e.ChangedItem.Value == TCS.ColorConfig) {
-                        TCS.ColorName = TCS.ColorConfig.Name;
-                    } else if (e.ChangedItem.Value == TCS.ColorConfig2) {
-                        TCS.ColorName2 = TCS.ColorConfig2.Name;
-                    }
+                    TCS.ColorName = TCS.ColorConfig?.Name ?? string.Empty;
+                    TCS.ColorName2 = TCS.ColorConfig2?.Name ?? string.Empty;
                     editionEffectTreeNode.Rebuild(Handler, null);
                     treeViewEditionTable.Refresh();
                 }
@@ -617,7 +614,7 @@ namespace DirectOutputToolkit
             } else if (node is TableElementTreeNode TENode) {
                 propertyGridMain.SelectedObject = new TableElementTypeDescriptor(TENode.TE, node.TreeView == treeViewEditionTable);
             } else if (node is EditionTableTreeNode editionTableNode) {
-                propertyGridMain.SelectedObject = new EditionTableTypeDescriptor(editionTableNode.EditionTable, node.TreeView == treeViewEditionTable);
+                propertyGridMain.SelectedObject = new EditionTableTypeDescriptor(editionTableNode, node.TreeView == treeViewEditionTable);
             } else {
                 propertyGridMain.SelectedObject = null;
             }

@@ -41,16 +41,16 @@ namespace DirectOutputToolkit
             this.OpenDofViewSetupFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.DofConfigSetupFilenameComboBox = new System.Windows.Forms.ComboBox();
             this.DofViewSetupFilenameComboBox = new System.Windows.Forms.ComboBox();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.buttonDofConfigSetupEdit = new System.Windows.Forms.Button();
             this.buttonDofViewSetupEdit = new System.Windows.Forms.Button();
+            this.checkBoxForceDownload = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // OKButton
             // 
-            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(600, 64);
+            this.OKButton.Location = new System.Drawing.Point(580, 99);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(159, 23);
             this.OKButton.TabIndex = 0;
@@ -60,9 +60,9 @@ namespace DirectOutputToolkit
             // 
             // CancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(764, 64);
+            this.CancelButton.Location = new System.Drawing.Point(744, 99);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(150, 23);
             this.CancelButton.TabIndex = 1;
@@ -85,7 +85,7 @@ namespace DirectOutputToolkit
             // DofConfigSetupFileSelectButton
             // 
             this.DofConfigSetupFileSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DofConfigSetupFileSelectButton.Location = new System.Drawing.Point(818, 7);
+            this.DofConfigSetupFileSelectButton.Location = new System.Drawing.Point(798, 7);
             this.DofConfigSetupFileSelectButton.Name = "DofConfigSetupFileSelectButton";
             this.DofConfigSetupFileSelectButton.Size = new System.Drawing.Size(45, 23);
             this.DofConfigSetupFileSelectButton.TabIndex = 4;
@@ -96,7 +96,7 @@ namespace DirectOutputToolkit
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 40);
+            this.label3.Location = new System.Drawing.Point(12, 69);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(175, 13);
             this.label3.TabIndex = 6;
@@ -105,7 +105,7 @@ namespace DirectOutputToolkit
             // DofViewSetupSelectButton
             // 
             this.DofViewSetupSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DofViewSetupSelectButton.Location = new System.Drawing.Point(818, 35);
+            this.DofViewSetupSelectButton.Location = new System.Drawing.Point(798, 64);
             this.DofViewSetupSelectButton.Name = "DofViewSetupSelectButton";
             this.DofViewSetupSelectButton.Size = new System.Drawing.Size(45, 23);
             this.DofViewSetupSelectButton.TabIndex = 8;
@@ -127,7 +127,7 @@ namespace DirectOutputToolkit
             this.DofConfigSetupFilenameComboBox.Location = new System.Drawing.Point(120, 9);
             this.DofConfigSetupFilenameComboBox.MaxDropDownItems = 16;
             this.DofConfigSetupFilenameComboBox.Name = "DofConfigSetupFilenameComboBox";
-            this.DofConfigSetupFilenameComboBox.Size = new System.Drawing.Size(692, 21);
+            this.DofConfigSetupFilenameComboBox.Size = new System.Drawing.Size(672, 21);
             this.DofConfigSetupFilenameComboBox.TabIndex = 12;
             // 
             // DofViewSetupFilenameComboBox
@@ -137,15 +137,15 @@ namespace DirectOutputToolkit
             this.DofViewSetupFilenameComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.DofViewSetupFilenameComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.DofViewSetupFilenameComboBox.FormattingEnabled = true;
-            this.DofViewSetupFilenameComboBox.Location = new System.Drawing.Point(193, 37);
+            this.DofViewSetupFilenameComboBox.Location = new System.Drawing.Point(193, 66);
             this.DofViewSetupFilenameComboBox.Name = "DofViewSetupFilenameComboBox";
-            this.DofViewSetupFilenameComboBox.Size = new System.Drawing.Size(619, 21);
+            this.DofViewSetupFilenameComboBox.Size = new System.Drawing.Size(599, 21);
             this.DofViewSetupFilenameComboBox.TabIndex = 13;
             // 
             // buttonDofConfigSetupEdit
             // 
             this.buttonDofConfigSetupEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDofConfigSetupEdit.Location = new System.Drawing.Point(869, 7);
+            this.buttonDofConfigSetupEdit.Location = new System.Drawing.Point(849, 7);
             this.buttonDofConfigSetupEdit.Name = "buttonDofConfigSetupEdit";
             this.buttonDofConfigSetupEdit.Size = new System.Drawing.Size(45, 23);
             this.buttonDofConfigSetupEdit.TabIndex = 14;
@@ -156,7 +156,7 @@ namespace DirectOutputToolkit
             // buttonDofViewSetupEdit
             // 
             this.buttonDofViewSetupEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDofViewSetupEdit.Location = new System.Drawing.Point(869, 35);
+            this.buttonDofViewSetupEdit.Location = new System.Drawing.Point(849, 64);
             this.buttonDofViewSetupEdit.Name = "buttonDofViewSetupEdit";
             this.buttonDofViewSetupEdit.Size = new System.Drawing.Size(45, 23);
             this.buttonDofViewSetupEdit.TabIndex = 15;
@@ -164,12 +164,25 @@ namespace DirectOutputToolkit
             this.buttonDofViewSetupEdit.UseVisualStyleBackColor = true;
             this.buttonDofViewSetupEdit.Click += new System.EventHandler(this.buttonDofViewSetupEdit_Click);
             // 
+            // checkBoxForceDownload
+            // 
+            this.checkBoxForceDownload.AutoSize = true;
+            this.checkBoxForceDownload.Location = new System.Drawing.Point(15, 39);
+            this.checkBoxForceDownload.Name = "checkBoxForceDownload";
+            this.checkBoxForceDownload.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxForceDownload.TabIndex = 16;
+            this.checkBoxForceDownload.Text = "Force Dofconfigtool download";
+            this.checkBoxForceDownload.UseVisualStyleBackColor = true;
+            this.checkBoxForceDownload.CheckedChanged += new System.EventHandler(this.checkBoxForceDownload_CheckedChanged);
+            // 
             // OpenConfigDialog
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(926, 101);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(906, 136);
+            this.Controls.Add(this.checkBoxForceDownload);
             this.Controls.Add(this.buttonDofViewSetupEdit);
             this.Controls.Add(this.buttonDofConfigSetupEdit);
             this.Controls.Add(this.DofViewSetupFilenameComboBox);
@@ -181,8 +194,7 @@ namespace DirectOutputToolkit
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(1200, 140);
-            this.MinimumSize = new System.Drawing.Size(700, 140);
+            this.MinimumSize = new System.Drawing.Size(0, 140);
             this.Name = "OpenConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -204,8 +216,8 @@ namespace DirectOutputToolkit
         private System.Windows.Forms.OpenFileDialog OpenDofViewSetupFileDialog;
         private System.Windows.Forms.ComboBox DofConfigSetupFilenameComboBox;
         private System.Windows.Forms.ComboBox DofViewSetupFilenameComboBox;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button buttonDofConfigSetupEdit;
         private System.Windows.Forms.Button buttonDofViewSetupEdit;
+        private System.Windows.Forms.CheckBox checkBoxForceDownload;
     }
 }
