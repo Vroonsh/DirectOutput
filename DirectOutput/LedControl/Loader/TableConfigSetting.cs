@@ -1245,7 +1245,7 @@ namespace DirectOutput.LedControl.Loader
                     //BitmapAnimation
                     configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepSize, 1, "AAS");
                     configToolStr += GetConfigToolCommand(AreaBitmapAnimationStepCount, 0, "AAC");
-                    configToolStr += GetConfigToolCommand((int)((1000.0f / AreaBitmapAnimationFrameDuration) + 0.5f), 30, "AAF");
+                    configToolStr += GetConfigToolCommand((int)((1000.0f / AreaBitmapAnimationFrameDuration) + 0.5f), 1000 / 30, "AAF");
                     configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationDirection, (char)MatrixAnimationStepDirectionEnum.Frame, "AAD");
                     configToolStr += GetConfigToolCommand((char)AreaBitmapAnimationBehaviour, (char)AnimationBehaviourEnum.Loop, "AAB");
                 } else if ((AreaFlickerDensity != 0) || (AreaFlickerMinDurationMs != 0) || (AreaFlickerMaxDurationMs != 0) || (AreaFlickerFadeDurationMs != 0)) {
