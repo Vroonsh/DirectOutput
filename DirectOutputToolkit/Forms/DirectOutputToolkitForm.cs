@@ -82,9 +82,17 @@ namespace DirectOutputToolkit
                 treeViewEditionTable.Nodes.Add(EditionTableNode);
                 treeViewEditionTable.Refresh();
 
+                if (Settings.LastMainWindowRect != Rectangle.Empty) {
+                    this.Bounds = Settings.LastMainWindowRect;
+                }
+
                 PreviewForm.Show(this);
                 Screen current = Screen.FromControl(this);
-                PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
+                if (Settings.LastPreviewWindowRect != Rectangle.Empty) {
+                    PreviewForm.Bounds = Settings.LastPreviewWindowRect;
+                } else {
+                    PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
+                }
                 PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
                 return true;
@@ -95,6 +103,8 @@ namespace DirectOutputToolkit
 
         private void SaveSettings()
         {
+            Settings.LastMainWindowRect = this.Bounds;
+            Settings.LastPreviewWindowRect = PreviewForm.Bounds;
             Settings.SaveSettings();
         }
 
