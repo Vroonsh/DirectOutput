@@ -35,8 +35,24 @@ namespace DirectOutput.FX.MatrixFX
     /// In this example DOF extracts a area of 20x100pixels for every frame of the animation. For every frame of the animation it steps 5 pixels down, so we slowly progress through the whole image.
     ///  
     /// </summary>
-    public class RGBAMatrixBitmapAnimationEffect : MatrixBitmapAnimationEffectBase<RGBAColor>
+    public class RGBAMatrixBitmapAnimationEffect : MatrixBitmapAnimationEffectBase<RGBAColor>, IMatrixRGBAColor
     {
+        /// <summary>
+        /// Gets or sets the first active color.
+        /// </summary>
+        /// <value>
+        /// The active color.
+        /// </value>
+        public RGBAColor ActiveColor { get; set; } = new RGBAColor(0x00, 0x00, 0xff, 0xff);
+
+        /// <summary>
+        /// Gets or sets the first active color.
+        /// </summary>
+        /// <value>
+        /// The active color.
+        /// </value>
+        public RGBAColor InactiveColor { get; set; } = new RGBAColor(0x00, 0x00, 0xff, 0x00);
+
         /// <summary>
         /// Gets the value for a single element in the matrix.
         /// </summary>
@@ -47,6 +63,9 @@ namespace DirectOutput.FX.MatrixFX
         {
             RGBAColor D = Pixel.GetRGBAColor();
 
+            D.Red = (int)((float)D.Red * ActiveColor.Red / 255);
+            D.Green = (int)((float)D.Green * ActiveColor.Green / 255);
+            D.Blue = (int)((float)D.Blue * ActiveColor.Blue / 255);
             D.Alpha = (int)((float)Pixel.Alpha * TriggerValue / 255);
 
             return D;
