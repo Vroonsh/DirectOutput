@@ -129,19 +129,36 @@ namespace DirectOutput.LedControl.Setup
 
                 } else if (TCS.IsBitmap) {
                     FilePattern P = new FilePattern("{0}\\{1}.*".Build(IniFilePath, ShortRomName));
+                    RGBAColor ActiveColor = null;
+                    if (TCS.ColorConfig != null) {
+                        ActiveColor = TCS.ColorConfig.GetCabinetColor().GetRGBAColor();
+                    } else {
+                        if (!TCS.ColorName.IsNullOrWhiteSpace()) {
+                            if (TCS.ColorName.StartsWith("#")) {
+                                ActiveColor = new RGBAColor();
+                                if (!ActiveColor.SetColor(TCS.ColorName)) {
+                                    ActiveColor = null;
+                                }
+                            }
+                        }
+                    }
+
+                    if (ActiveColor == null) {
+                        ActiveColor = new RGBAColor(0xff, 0, 0, 0xff);
+                    }
 
                     if (TCS.AreaBitmapAnimationStepCount > 1) {
                         //it is a animation
                         if (Toy is IMatrixToy<RGBAColor>) {
 
-                            Effect = new RGBAMatrixBitmapAnimationEffect() { BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, AnimationStepDirection = TCS.AreaBitmapAnimationDirection, AnimationFrameDurationMs = TCS.AreaBitmapAnimationFrameDuration, AnimationFrameCount = TCS.AreaBitmapAnimationStepCount, AnimationStepSize = TCS.AreaBitmapAnimationStepSize, AnimationBehaviour = TCS.AreaBitmapAnimationBehaviour, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
+                            Effect = new RGBAMatrixBitmapAnimationEffect() { ActiveColor = ActiveColor, BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, AnimationStepDirection = TCS.AreaBitmapAnimationDirection, AnimationFrameDurationMs = TCS.AreaBitmapAnimationFrameDuration, AnimationFrameCount = TCS.AreaBitmapAnimationStepCount, AnimationStepSize = TCS.AreaBitmapAnimationStepSize, AnimationBehaviour = TCS.AreaBitmapAnimationBehaviour, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                         } else {
                             Effect = new AnalogAlphaMatrixBitmapAnimationEffect() { BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, AnimationStepDirection = TCS.AreaBitmapAnimationDirection, AnimationFrameDurationMs = TCS.AreaBitmapAnimationFrameDuration, AnimationFrameCount = TCS.AreaBitmapAnimationStepCount, AnimationStepSize = TCS.AreaBitmapAnimationStepSize, AnimationBehaviour = TCS.AreaBitmapAnimationBehaviour, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                         }
                     } else {
                         //its a static bitmap
                         if (Toy is IMatrixToy<RGBAColor>) {
-                            Effect = new RGBAMatrixBitmapEffect() { BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
+                            Effect = new RGBAMatrixBitmapEffect() { ActiveColor = ActiveColor, BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                         } else {
                             Effect = new AnalogAlphaMatrixBitmapEffect() { BitmapFilePattern = P, BitmapLeft = TCS.AreaBitmapLeft, BitmapTop = TCS.AreaBitmapTop, BitmapHeight = TCS.AreaBitmapHeight, BitmapWidth = TCS.AreaBitmapWidth, BitmapFrameNumber = TCS.AreaBitmapFrame, Height = TCS.AreaHeight, Width = TCS.AreaWidth, Top = TCS.AreaTop, Left = TCS.AreaLeft, LayerNr = Layer, FixedLayerNr = TCS.Layer.HasValue,  ToyName = Toy.Name };
                         }
