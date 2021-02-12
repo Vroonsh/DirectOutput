@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using DofConfigToolWrapper;
@@ -18,6 +19,9 @@ namespace DirectOutputToolkit
 
         public bool DofFilesAutoUpdate { get; set; } = true;
         public bool AutoSaveOnQuit { get; set; } = true;
+
+        public Rectangle LastMainWindowRect = new Rectangle();
+        public Rectangle LastPreviewWindowRect = new Rectangle();
 
         public void SaveSettings()
         {
