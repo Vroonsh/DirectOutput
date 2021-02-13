@@ -86,12 +86,11 @@ namespace DirectOutputToolkit
                     this.Bounds = Settings.LastMainWindowRect;
                 }
 
-                PreviewForm.Show(this);
-                Screen current = Screen.FromControl(this);
+                PreviewForm.Show();
                 if (Settings.LastPreviewWindowRect != Rectangle.Empty) {
                     PreviewForm.Bounds = Settings.LastPreviewWindowRect;
                 } else {
-                    PreviewForm.Location = new Point(Math.Min(Bounds.Right, current.WorkingArea.Right), Bounds.Y);
+                    PreviewForm.Location = new Point(Math.Min(Bounds.Right, Screen.FromControl(this).WorkingArea.Right), Bounds.Y);
                 }
                 PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
@@ -516,6 +515,7 @@ namespace DirectOutputToolkit
 
             fd.ShowDialog();
             if (!fd.FileName.IsNullOrEmpty()) {
+                RomNameComboBox.Text = string.Empty;
                 PopulateReferenceTable(string.Empty);
                 var serializer = new DirectOutputToolkitSerializer();
                 EditionTableTreeNode tableNode = new EditionTableTreeNode(Handler, Handler.GetTable(DirectOutputToolkitHandler.ETableType.ReferenceTable));
@@ -711,6 +711,7 @@ namespace DirectOutputToolkit
                     parentTE.AssignedEffects = new AssignedEffectList();
                     EditionTable.TableElements.Add(parentTE);
                     TENode = new TableElementTreeNode(parentTE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    targetTENodes.Add(TENode);
                     EditionTableNode.Nodes.Add(TENode);
                     EditionTableNode.Refresh();
                 }
@@ -729,7 +730,6 @@ namespace DirectOutputToolkit
                 var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
                 newEffectNode.Rebuild(Handler, null);
                 EditionTable.AssignedStaticEffects.Init(EditionTable);
-                EditionTableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
                 EditionTableNode.StaticEffectsNode.Rebuild(Handler);
                 SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
             }
