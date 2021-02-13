@@ -42,7 +42,9 @@ namespace DirectOutputToolkit
         {
             TableName = node.EditionTable.TableName;
             RomName = node.EditionTable.RomName;
-            ImageName = node.Image.Tag as string;
+            if (node.Image != null) {
+                ImageName = node.Image.Tag as string;
+            }
             foreach (var se in node.EditionTable.AssignedStaticEffects) {
                 if (se.Effect != null) {
                     var neweffDesc = new EffectDescriptor();
@@ -138,9 +140,11 @@ namespace DirectOutputToolkit
             if (tableDescriptor != null) {
                 TableNode.EditionTable.TableName = tableDescriptor.TableName;
                 TableNode.EditionTable.RomName = tableDescriptor.RomName;
-                TableNode.Image = Image.FromFile(tableDescriptor.ImageName);
-                TableNode.Image.Tag = tableDescriptor.ImageName;
-                TableNode.OnImageChanged(TableNode.Image);
+                if (tableDescriptor.ImageName != string.Empty) {
+                    TableNode.Image = Image.FromFile(tableDescriptor.ImageName);
+                    TableNode.Image.Tag = tableDescriptor.ImageName;
+                    TableNode.OnImageChanged(TableNode.Image);
+                }
                 TableNode.Refresh();
 
                 var TCCNumber = 0;
