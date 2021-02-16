@@ -99,8 +99,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOFSetupPBXFixup", "DOFSetu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyInfo", "AssemblyInfo\AssemblyInfo.csproj", "{B153E2F0-22E6-445D-9B54-540C6AB85AF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedControlToolkit", "LedControlToolkit\LedControlToolkit.csproj", "{EF22DD92-10D2-4FB5-990D-A36E534C7044}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectOutputControls", "DirectOutputControls\DirectOutputControls.csproj", "{4A068F60-EC8F-41A1-951A-2AFD448E4BA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DofConfigToolWrapper", "DofConfigToolWrapper\DofConfigToolWrapper.csproj", "{108D1A08-4828-455C-BBF0-3C4BC2F79FEC}"
@@ -303,18 +301,6 @@ Global
 		{B153E2F0-22E6-445D-9B54-540C6AB85AF9}.Release|x64.Build.0 = Release|Any CPU
 		{B153E2F0-22E6-445D-9B54-540C6AB85AF9}.Release|x86.ActiveCfg = Release|Any CPU
 		{B153E2F0-22E6-445D-9B54-540C6AB85AF9}.Release|x86.Build.0 = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|x64.Build.0 = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Debug|x86.Build.0 = Debug|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|x64.ActiveCfg = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|x64.Build.0 = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|x86.ActiveCfg = Release|Any CPU
-		{EF22DD92-10D2-4FB5-990D-A36E534C7044}.Release|x86.Build.0 = Release|Any CPU
 		{4A068F60-EC8F-41A1-951A-2AFD448E4BA6}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4A068F60-EC8F-41A1-951A-2AFD448E4BA6}.Debug|x64.ActiveCfg = Debug|x64
 		{4A068F60-EC8F-41A1-951A-2AFD448E4BA6}.Debug|x64.Build.0 = Debug|x64
