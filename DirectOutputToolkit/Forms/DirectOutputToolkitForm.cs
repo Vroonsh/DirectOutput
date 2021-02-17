@@ -395,19 +395,20 @@ namespace DirectOutputToolkit
                 if (outputFilter == DofConfigToolOutputEnum.Invalid ||
                     tableElement.AssignedEffects.Any(AE=>ToysFromOutputFilter.Contains(AE.Effect.GetAssignedToy()))) {
 
-                    var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
-                    var listNode = new TableElementTreeNode(tableElement, TableType);
+                    if (!tableElement.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
+                        var elementName = tableElement.Name.IsNullOrEmpty() ? $"{tableElement.TableElementType}[{tableElement.Number}]" : tableElement.Name;
+                        var listNode = new TableElementTreeNode(tableElement, TableType);
 
-                    foreach (var effect in tableElement.AssignedEffects) {
-                        if (outputFilter == DofConfigToolOutputEnum.Invalid ||
-                            ToysFromOutputFilter.Contains(effect.Effect.GetAssignedToy())) {
-                            var effectNode = new EffectTreeNode(tableElement, TableType, effect.Effect, Handler);
-                            listNode.Nodes.Add(effectNode);
+                        foreach (var effect in tableElement.AssignedEffects) {
+                            if (outputFilter == DofConfigToolOutputEnum.Invalid ||
+                                ToysFromOutputFilter.Contains(effect.Effect.GetAssignedToy())) {
+                                var effectNode = new EffectTreeNode(tableElement, TableType, effect.Effect, Handler);
+                                listNode.Nodes.Add(effectNode);
+                            }
                         }
+                        listNode.Refresh();
+                        rootNodes.Add(listNode);
                     }
-
-                    listNode.Refresh();
-                    rootNodes.Add(listNode);
                 }
 
             }
