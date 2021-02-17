@@ -113,6 +113,7 @@ namespace DirectOutputToolkit
         public virtual TableElement GetTableElement() => TestTE;
         private DirectOutputToolkitHandler.ETableType _TableType = DirectOutputToolkitHandler.ETableType.EditionTable;
         public DirectOutputToolkitHandler.ETableType GetTableType() => _TableType;
+        public bool HasNoBoolEffects() => TCS.NoBool;
 
         public override string ToString() => DofConfigCommand;
 
