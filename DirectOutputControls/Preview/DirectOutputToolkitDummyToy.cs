@@ -21,13 +21,18 @@ namespace DirectOutputControls
                 return "DirectOutputToolkitDummyMatrixToy";
             }
             set {
-
+                if (BeforeNameChanged != null) {
+                    BeforeNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
+                if (AfterNameChanged != null) {
+                    AfterNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
             }
         }
 
         public void Init(Cabinet Cabinet) { }
-        public void Reset() { }
         public void Finish() { }
+        public void Reset() { }
 
         //IMatrixToy
         public RGBAColor[,] GetLayer(int LayerNr) => new RGBAColor[0, 0];
@@ -48,7 +53,12 @@ namespace DirectOutputControls
                 return "DirectOutputToolkitDummyAnalogToy";
             }
             set {
-
+                if (BeforeNameChanged != null) {
+                    BeforeNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
+                if (AfterNameChanged != null) {
+                    AfterNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
             }
         }
 
@@ -73,7 +83,12 @@ namespace DirectOutputControls
                 return "DirectOutputToolkitDummyRGBAToy";
             }
             set {
-
+                if (BeforeNameChanged != null) {
+                    BeforeNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
+                if (AfterNameChanged != null) {
+                    AfterNameChanged.Invoke(this, new NameChangeEventArgs());
+                }
             }
         }
 
