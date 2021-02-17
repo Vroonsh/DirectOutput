@@ -98,28 +98,28 @@
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // loadTableToolStripMenuItem
             // 
             this.loadTableToolStripMenuItem.Name = "loadTableToolStripMenuItem";
-            this.loadTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.loadTableToolStripMenuItem.Text = "Load Table";
             this.loadTableToolStripMenuItem.Click += new System.EventHandler(this.loadTableToolStripMenuItem_Click);
             // 
             // saveTableToolStripMenuItem
             // 
             this.saveTableToolStripMenuItem.Name = "saveTableToolStripMenuItem";
-            this.saveTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveTableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.saveTableToolStripMenuItem.Text = "Save Table";
             this.saveTableToolStripMenuItem.Click += new System.EventHandler(this.saveTableToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -282,6 +282,7 @@
             this.treeViewEditionTable.TabIndex = 23;
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             this.treeViewEditionTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseDown);
+            this.treeViewEditionTable.MouseMove += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseMove);
             // 
             // buttonLoadRefTable
             // 
