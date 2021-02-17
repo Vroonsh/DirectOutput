@@ -77,7 +77,7 @@ namespace DirectOutputToolkit
             } else {
                 var forceWrite = (Image == null || !(Image.Tag as string).Equals(image.Tag as string, StringComparison.InvariantCultureIgnoreCase));
                 if (Image != image) {
-                    Image.Dispose();
+                    Image?.Dispose();
                     Image = image;
                 }
                 var srcFile = Image.Tag as string;
