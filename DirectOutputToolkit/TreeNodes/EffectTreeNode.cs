@@ -75,8 +75,7 @@ namespace DirectOutputToolkit
             var RefEffect = SrcEffect != null ? SrcEffect : Effect;
 
             //rebuild Effect
-            List<IEffect> allEffects = new List<IEffect>();
-            RefEffect.GetAllEffects(allEffects);
+            var allEffects = RefEffect.GetAllEffects();
 
             //Retrieve necessary data for the Configurator directly from the effect name
             int LedWizNumber, TCCNumber, SettingNumber;
@@ -86,8 +85,10 @@ namespace DirectOutputToolkit
             //Retrieve Toy & TCCNumber from Chosen Output
             var Toy = RefEffect.GetAssignedToy();
 
-            //Remove all effects from Table & AssignedEffects before rebuilding
-            Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
+            //Remove all effects from Table & AssignedEffects before rebuilding if we're using our own effect as reference
+            if (SrcEffect == null) {
+                Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
+            }
 
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
             var newEffect = Handler.CreateEffect(TCS, TCCNumber, SettingNumber, _TableType, Toy, LedWizNumber);
