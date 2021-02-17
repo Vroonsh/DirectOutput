@@ -29,8 +29,6 @@ namespace DirectOutputToolkit
             return false;
         }
 
-        private bool _HasNoBoolEffects = false;
-
         public TableElement TE { get; private set; } = null;
 
         public TableElementTreeNode(TableElement tableElement, DirectOutputToolkitHandler.ETableType TableType) : base()
