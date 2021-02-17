@@ -41,6 +41,8 @@ namespace DirectOutputToolkit
             privateDoubleBuffered.SetValue(treeViewEditionTable, true);
             privateDoubleBuffered.SetValue(treeViewReferenceTable, true);
 
+            treeViewEditionTable.ShowNodeToolTips = true;
+
             treeViewReferenceTable.ImageList = imageListIcons;
             treeViewReferenceTable.FullRowSelect = true;
             treeViewReferenceTable.HideSelection = false;
@@ -290,14 +292,14 @@ namespace DirectOutputToolkit
             if (silent || MessageBox.Show($"Do you want to delete effect {node.Text} from {(node.Parent as TableElementTreeNode)?.TE.Name} ?", "Delete Effect", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                 if (node.Parent is TableElementTreeNode TENode) {
                     TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
-                    Handler.RemoveEffects(new List<IEffect> { node.Effect }, (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
+                    Handler.RemoveEffects(node.Effect.GetAllEffects(), (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
                     if (!silent) {
                         TENode.Rebuild(Handler);
                         SetCurrentSelectedNode(TENode);
                     }
                 } else if (node.Parent is StaticEffectsTreeNode staticEffectsNode) {
                     EditionTableNode.EditionTable.AssignedStaticEffects.RemoveAll(AE => AE.Effect == node.Effect);
-                    Handler.RemoveEffects(new List<IEffect> { node.Effect }, null, node.GetTableType());
+                    Handler.RemoveEffects(node.Effect.GetAllEffects(), null, node.GetTableType());
                     if (!silent) {
                         staticEffectsNode.Rebuild(Handler);
                         SetCurrentSelectedNode(staticEffectsNode);
@@ -721,7 +723,7 @@ namespace DirectOutputToolkit
             if (targetTENodes.Count > 0) {
                 foreach(var node in targetTENodes) {
                     var newEffectNode = new EffectTreeNode(node.TE, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
-                    newEffectNode.Rebuild(Handler, null);
+                    newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
                     parentTE.AssignedEffects.Init(EditionTable);
                     TENode.Nodes.Add(newEffectNode);
                     TENode.Rebuild(Handler);
@@ -729,7 +731,7 @@ namespace DirectOutputToolkit
                 }
             } else {
                 var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, SrcEffectNode.Effect, Handler);
-                newEffectNode.Rebuild(Handler, null);
+                newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
                 EditionTable.AssignedStaticEffects.Init(EditionTable);
                 EditionTableNode.StaticEffectsNode.Rebuild(Handler);
                 SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
@@ -890,6 +892,37 @@ namespace DirectOutputToolkit
                     effMenu.Show(treeViewEditionTable, location);
                 }
             }
+        }
+
+        bool ShowDebugNodes = false;
+        ToolTip DebugNodeTooltip = new ToolTip() { InitialDelay = 500 };
+
+        private void treeViewEditionTable_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!ShowDebugNodes) return;
+
+            var hit = treeViewEditionTable.HitTest(e.X, e.Y);
+            if (hit.Node == null) {
+                DebugNodeTooltip.Hide(this);
+            } else {
+                var message = string.Empty;
+
+                if (hit.Node is EditionTableTreeNode tableNode) {
+                    message = $"{tableNode.EditionTable.AssignedStaticEffects.Count} static effects\n" +
+                              $"{tableNode.EditionTable.Effects.Count} effects\n" +
+                              $"{string.Join("\n", tableNode.EditionTable.Effects.Select(E => E.Name))}" +
+                              $"{tableNode.EditionTable.TableElements.Count} tableElements\n" +
+                              $"{tableNode.EditionTable.Bitmaps.Count} bitmaps";
+                }
+
+                if (message != string.Empty) {
+                    DebugNodeTooltip.Show(message, this, e.Location.X + 10, e.Location.Y);
+                } else {
+                    DebugNodeTooltip.Hide(this);
+                }
+            }
+
+
         }
         #endregion
 

@@ -77,7 +77,7 @@ namespace DirectOutput.FX
         /// <summary>
         /// Will populate a List with all effects from an effect hierarchy
         /// </summary>
-        /// <param name="Effects">a List of effets to fill</param>
-        void GetAllEffects(List<IEffect> Effects);
+        /// <returns>an array containing all effects</returns>
+        IEffect[] GetAllEffects();
     }
 }
