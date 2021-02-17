@@ -302,6 +302,7 @@ namespace DirectOutputToolkit
                     Handler.RemoveEffects(node.Effect.GetAllEffects(), null, node.GetTableType());
                     if (!silent) {
                         staticEffectsNode.Rebuild(Handler);
+                        EditionTableNode.Refresh();
                         SetCurrentSelectedNode(staticEffectsNode);
                     }
                 }
@@ -734,6 +735,7 @@ namespace DirectOutputToolkit
                 newEffectNode.Rebuild(Handler, SrcEffectNode.Effect);
                 EditionTable.AssignedStaticEffects.Init(EditionTable);
                 EditionTableNode.StaticEffectsNode.Rebuild(Handler);
+                EditionTableNode.Refresh();
                 SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
             }
         }
@@ -775,6 +777,7 @@ namespace DirectOutputToolkit
                 }
                 EditionTable.AssignedStaticEffects.Init(EditionTable);
                 EditionTableNode.StaticEffectsNode.Rebuild(Handler);
+                EditionTableNode.Refresh();
                 SetCurrentSelectedNode(EditionTableNode.StaticEffectsNode);
             }
         }
