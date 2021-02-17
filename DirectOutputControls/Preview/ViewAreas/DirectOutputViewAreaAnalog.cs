@@ -46,6 +46,8 @@ namespace DirectOutputControls
 
         public override void Display(Graphics gr, Font f, SolidBrush br)
         {
+            if (!Visible || !Enabled) return;
+
             if (DofOutputs.Count == 0) return;
 
             var rect = ComputeDisplayRect();
