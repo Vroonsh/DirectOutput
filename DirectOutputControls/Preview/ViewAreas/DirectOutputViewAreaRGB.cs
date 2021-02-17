@@ -163,7 +163,7 @@ namespace DirectOutputControls
             var maxDim = Math.Max(MxWidth, MxHeight);
             var center = new Point(DisplayRect.X + DisplayRect.Width / 2, DisplayRect.Y + DisplayRect.Height / 2);
             var radius = (int)(Math.Min(DisplayRect.Width, DisplayRect.Height) / 2 * 0.9f);
-            LedRectangle.Width = LedRectangle.Height = radius / (maxDim / 4);
+            LedRectangle.Width = (maxDim / 4) > 0 ? LedRectangle.Height = radius / (maxDim / 4) : 0;
             var startAngleRad = StartAngle * Math.PI / 180.0f;
             for (int i = 0; i < maxDim; ++i) {
                 br.Color = Values != null ? Color.FromArgb(Values[i * 3], Values[(i * 3) + 1], Values[(i * 3) + 2]) : Color.Black;
@@ -171,8 +171,13 @@ namespace DirectOutputControls
                     var angle = (float)i * (2 * Math.PI) / maxDim;
                     angle = (angle + startAngleRad) % (Math.PI * 2.0f);
                     LedRectangle.X = center.X + (int)((Math.Cos(angle) * radius) + 0.5f);
-                    LedRectangle.Y = center.Y + (int)((Math.Sin(angle) * radius) + 0.5f);
+                    LedRectangle.Y = center.Y - (int)((Math.Sin(angle) * radius) + 0.5f);
                     gr.FillRectangle(br, LedRectangle);
+                    if (i == 0) {
+                        LedRectangle.X = center.X + (int)((Math.Cos(angle) * (radius + LedRectangle.Width)) + 0.5f);
+                        LedRectangle.Y = center.Y - (int)((Math.Sin(angle) * (radius + LedRectangle.Height)) + 0.5f);
+                        gr.FillRectangle(new SolidBrush(Color.White), LedRectangle);
+                    }
                 }
             }
         }
