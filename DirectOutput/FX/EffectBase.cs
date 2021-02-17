@@ -49,10 +49,10 @@ namespace DirectOutput.FX
         /// <summary>
         /// Will populate a List with all effects from an effect hierarchy
         /// </summary>
-        /// <param name="Effects">a List of effets to fill</param>
-        public virtual void GetAllEffects(List<IEffect> Effects)
+        /// <returns>an array containing all effects</returns>
+        public virtual IEffect[] GetAllEffects()
         {
-            Effects.Add(this);
+            return new IEffect[] { this };
         }
     }
 }

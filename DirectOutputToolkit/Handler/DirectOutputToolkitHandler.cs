@@ -385,11 +385,11 @@ namespace DirectOutputToolkit
             eff.Init(TableDescriptors[tableType].Table);
         }
 
-        internal void RemoveEffects(List<IEffect> allEffects, TableElement parentTE, ETableType tableType)
+        internal void RemoveEffects(IEffect[] effects, TableElement parentTE, ETableType tableType)
         {
             ResetRunnigTableElement(parentTE);
             var Table = TableDescriptors[tableType].Table;
-            foreach (var eff in allEffects) {
+            foreach (var eff in effects) {
                 Table.Effects.RemoveAll(E=> E == eff);
                 Table.AssignedStaticEffects.RemoveAll(AE => AE.Effect == eff);
                 foreach (var TE in Table.TableElements) {

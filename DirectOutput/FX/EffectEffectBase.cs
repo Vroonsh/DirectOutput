@@ -148,12 +148,17 @@ namespace DirectOutput.FX
         /// <summary>
         /// Will populate a List with all effects from an effect hierarchy
         /// </summary>
-        /// <param name="Effects">a List of effets to fill</param>
-        public override void GetAllEffects(List<IEffect> Effects)
+        /// <returns>an array containing all effects</returns>
+        public override IEffect[] GetAllEffects()
         {
-            Effects.Add(this);
             if (TargetEffect != null) {
-                TargetEffect.GetAllEffects(Effects);
+                var targeteffects = TargetEffect.GetAllEffects();
+                var effects = new IEffect[targeteffects.Length + 1];
+                effects[0] = this;
+                targeteffects.CopyTo(effects, 1);
+                return effects;
+            } else {
+                return new IEffect[] { this };
             }
         }
     }
