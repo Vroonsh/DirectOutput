@@ -17,6 +17,19 @@ namespace DirectOutputToolkit
         public virtual TableElement GetTableElement() => TE;
         private DirectOutputToolkitHandler.ETableType _TableType = DirectOutputToolkitHandler.ETableType.EditionTable;
         public DirectOutputToolkitHandler.ETableType GetTableType() => _TableType;
+        public bool HasNoBoolEffects()
+        {
+            foreach (var node in Nodes) {
+                if (node is EffectTreeNode effectNode) {
+                    if (effectNode.TCS.NoBool) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool _HasNoBoolEffects = false;
 
         public TableElement TE { get; private set; } = null;
 
@@ -57,7 +70,7 @@ namespace DirectOutputToolkit
         internal void Rebuild(DirectOutputToolkitHandler handler)
         {
             Nodes.Clear();
-            foreach(var eff in TE.AssignedEffects) {
+            foreach (var eff in TE.AssignedEffects) {
                 handler.InitEffect(eff, _TableType);
                 var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler);
                 effNode.UpdateFromTableElement(TE);

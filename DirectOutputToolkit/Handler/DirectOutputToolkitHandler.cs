@@ -275,7 +275,7 @@ namespace DirectOutputToolkit
             }
 
             TableElementData D = tableElement.GetTableElementData();
-            D.Value = TEData.Value > 0 ? 0 : 1;
+            D.Value = TEData.Value > 0 ? 0 : tableElementTreeNode.HasNoBoolEffects() ? 255 : 1;
             if (D.Value == 0) {
                 TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
             } else {
@@ -306,7 +306,7 @@ namespace DirectOutputToolkit
             }
 
             TableElementData D = tableElement.GetTableElementData();
-            D.Value = value;
+            D.Value = value == 1 ? (tableElementTreeNode.HasNoBoolEffects() ? 255 : 1) : value;
             if (D.Value == 0) {
                 TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
             } else {
