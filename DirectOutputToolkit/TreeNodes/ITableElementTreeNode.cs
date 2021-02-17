@@ -6,5 +6,6 @@ namespace DirectOutputToolkit
     {
         TableElement GetTableElement();
         DirectOutputToolkitHandler.ETableType GetTableType();
+        bool HasNoBoolEffects();
     }
 }
