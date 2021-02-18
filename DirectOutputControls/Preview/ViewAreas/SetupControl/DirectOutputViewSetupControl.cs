@@ -107,7 +107,7 @@ namespace DirectOutputControls
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
 
-            if (command.Sender is TreeNodeArea nodeArea) {
+            if (command.Source is TreeNodeArea nodeArea) {
                 if (_DirectOutputViewSetup.HasArea(nodeArea.Area)) {
                     var newArea = new T();
                     newArea.Name = _DirectOutputViewSetup.FindUniqueAreaName(newArea is DirectOutputViewAreaVirtual ? "Virtual Area" : "New Area");
@@ -149,7 +149,7 @@ namespace DirectOutputControls
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
 
-            if (command.Sender is TreeNodeArea nodeArea) {
+            if (command.Source is TreeNodeArea nodeArea) {
                 if (_DirectOutputViewSetup.RemoveArea(nodeArea.Area)) {
                     if (nodeArea.Parent != null) {
                         nodeArea.Parent.Nodes.Remove(nodeArea);
@@ -168,7 +168,7 @@ namespace DirectOutputControls
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
 
-            if (command.Sender is TreeNodeArea sourceNode) {
+            if (command.Source is TreeNodeArea sourceNode) {
                 if (command.Target is TreeNodeArea targetNode) {
                     if (targetNode.Area is DirectOutputViewAreaVirtual) {
                         var destArea = sourceNode.Area.Clone();
@@ -196,9 +196,9 @@ namespace DirectOutputControls
 
                     var addMenu = new MenuItem("Add area at root");
                     areaMenu.MenuItems.Add(addMenu);
-                    addMenu.MenuItems.Add(new MenuItem("Virtual area", new EventHandler(this.OnAddVirtualArea)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    addMenu.MenuItems.Add(new MenuItem("Analog area", new EventHandler(this.OnAddAnalogArea)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    addMenu.MenuItems.Add(new MenuItem("RGB area", new EventHandler(this.OnAddRGBArea)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
+                    addMenu.MenuItems.Add(new MenuItem("Virtual area", new EventHandler(this.OnAddVirtualArea)) { Tag = new TreeNodeCommand() { Source = null, Target = null } });
+                    addMenu.MenuItems.Add(new MenuItem("Analog area", new EventHandler(this.OnAddAnalogArea)) { Tag = new TreeNodeCommand() { Source = null, Target = null } });
+                    addMenu.MenuItems.Add(new MenuItem("RGB area", new EventHandler(this.OnAddRGBArea)) { Tag = new TreeNodeCommand() { Source = null, Target = null } });
 
                     areaMenu.Show(treeViewAreas, e.Location);
                 } else if (hit.Node is TreeNodeArea nodeArea) {
@@ -207,18 +207,18 @@ namespace DirectOutputControls
                     if (nodeArea.Area is DirectOutputViewAreaVirtual) {
                         var addMenu = new MenuItem($"[{nodeArea.Text}] Add area");
                         areaMenu.MenuItems.Add(addMenu);
-                        addMenu.MenuItems.Add(new MenuItem("Virtual area", new EventHandler(this.OnAddVirtualArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });
-                        addMenu.MenuItems.Add(new MenuItem("Analog area", new EventHandler(this.OnAddAnalogArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });
-                        addMenu.MenuItems.Add(new MenuItem("RGB area", new EventHandler(this.OnAddRGBArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });
+                        addMenu.MenuItems.Add(new MenuItem("Virtual area", new EventHandler(this.OnAddVirtualArea)) { Tag = new TreeNodeCommand() { Source = hit.Node, Target = null } });
+                        addMenu.MenuItems.Add(new MenuItem("Analog area", new EventHandler(this.OnAddAnalogArea)) { Tag = new TreeNodeCommand() { Source = hit.Node, Target = null } });
+                        addMenu.MenuItems.Add(new MenuItem("RGB area", new EventHandler(this.OnAddRGBArea)) { Tag = new TreeNodeCommand() { Source = hit.Node, Target = null } });
                     }
 
-                    areaMenu.MenuItems.Add(new MenuItem($"Delete [{nodeArea.Text}]", new EventHandler(this.OnDeleteArea)) { Tag = new TreeNodeCommand() { Sender = hit.Node, Target = null } });
+                    areaMenu.MenuItems.Add(new MenuItem($"Delete [{nodeArea.Text}]", new EventHandler(this.OnDeleteArea)) { Tag = new TreeNodeCommand() { Source = hit.Node, Target = null } });
 
                     var copyMenu = new MenuItem($"Copy [{nodeArea.Text}] into");
                     areaMenu.MenuItems.Add(copyMenu);
                     var destinations = treeViewAreas.GetNodes<TreeNodeArea>().Where(N => N.Area is DirectOutputViewAreaVirtual);
                     foreach (var node in destinations) {
-                        copyMenu.MenuItems.Add(new MenuItem($"{node.Text}", new EventHandler(this.OnCopyViewArea)) { Tag = new TreeNodeCommand() { Sender = nodeArea, Target = (node as TreeNode) } });
+                        copyMenu.MenuItems.Add(new MenuItem($"{node.Text}", new EventHandler(this.OnCopyViewArea)) { Tag = new TreeNodeCommand() { Source = nodeArea, Target = (node as TreeNode) } });
                     }
 
                     areaMenu.Show(treeViewAreas, e.Location);
