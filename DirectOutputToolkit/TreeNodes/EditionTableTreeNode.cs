@@ -70,12 +70,12 @@ namespace DirectOutputToolkit
             return true;
         }
 
-        internal void OnImageChanged(Image image)
+        internal void OnImageChanged(Image image, string OldRomname = "")
         {
             if (image == null) {
                 Image = image;
             } else {
-                var forceWrite = (Image == null || !(Image.Tag as string).Equals(image.Tag as string, StringComparison.InvariantCultureIgnoreCase));
+                var forceWrite = (Image == null || !(Image.Tag as string).Equals(image.Tag as string, StringComparison.InvariantCultureIgnoreCase) || OldRomname != string.Empty);
                 if (Image != image) {
                     Image?.Dispose();
                     Image = image;
@@ -85,7 +85,7 @@ namespace DirectOutputToolkit
                 var destFile = Path.Combine(Handler.DofFilesHandler.UserLocalPath, $"{EditionTable.RomName}{ext}");
                 if (forceWrite || !FilesAreEquals(srcFile, destFile)) { 
                     var dir = new DirectoryInfo(Handler.DofFilesHandler.UserLocalPath);
-                    foreach (var file in dir.EnumerateFiles($"{EditionTable.RomName}.*")) {
+                    foreach (var file in dir.EnumerateFiles($"{(OldRomname != string.Empty ? OldRomname : EditionTable.RomName)}.*")) {
                         file.Delete();
                     }
                     Image.Save(destFile);
