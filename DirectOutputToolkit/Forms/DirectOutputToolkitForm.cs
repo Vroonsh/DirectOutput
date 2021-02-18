@@ -1,5 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.FX;
+using DirectOutput.FX.MatrixFX;
+using DirectOutput.General;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.LedControl.Setup;
 using DirectOutput.Table;
@@ -547,6 +549,13 @@ namespace DirectOutputToolkit
         private void OnEditionTableChanged(EditionTableTypeDescriptor TD, PropertyValueChangedEventArgs e)
         {
             TD.Refresh();
+            if (e.ChangedItem.PropertyDescriptor.Name == "RomName") {
+                TD.TableNode.OnImageChanged(TD.TableNode.Image, e.OldValue as string);
+                var bitmapEffects = TD.TableNode.EditionTable.Effects.Where(E => E is IMatrixBitmapEffect).Cast<IMatrixBitmapEffect>();
+                foreach(var eff in bitmapEffects) {
+                    eff.BitmapFilePattern = new FilePattern("{0}\\{1}.*".Build(Handler.DofFilesHandler.UserLocalPath, TD.TableNode.EditionTable.RomName));
+                }
+            }
             propertyGridMain.Refresh();
             if (treeViewEditionTable.SelectedNode is EditionTableTreeNode editionTableNode) {
                 if (editionTableNode.EditionTable == TD.TableNode.EditionTable) {
