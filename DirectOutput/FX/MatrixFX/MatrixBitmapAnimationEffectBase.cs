@@ -320,7 +320,7 @@ namespace DirectOutput.FX.MatrixFX
             if (BitmapFilePattern.IsValid)
             {
 
-                string Filename = BitmapFilePattern.GetFirstMatchingFile(Table.Pinball.GlobalConfig.GetReplaceValuesDictionary()).FullName;
+                string Filename = BitmapFilePattern.GetFirstMatchingFile(Table.Pinball.GlobalConfig.GetReplaceValuesDictionary())?.FullName ?? string.Empty;
                 if (!Filename.IsNullOrWhiteSpace())
                 {
                     FastImage BM;
