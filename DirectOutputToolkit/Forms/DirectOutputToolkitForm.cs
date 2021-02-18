@@ -807,6 +807,17 @@ namespace DirectOutputToolkit
             SetCurrentSelectedNode(newTENode);
         }
 
+        private void OnCopyDofCommandToClipboard(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var SrcEffNode = (command.Sender as EffectTreeNode);
+
+            if (SrcEffNode != null) {
+                Clipboard.SetText(SrcEffNode.DofConfigCommand);
+            }
+        }
+
         public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, int TCCNumber, string DofCommand, string ToyName, DirectOutputToolkitHandler Handler)
         {
             TableConfigSetting TCS = new TableConfigSetting();
@@ -845,6 +856,8 @@ namespace DirectOutputToolkit
         {
             if (treeNode is EffectTreeNode effectNode) {
                 ContextMenu effectMenu = new ContextMenu();
+
+                effectMenu.MenuItems.Add(new MenuItem("Copy Dof command to clipboard", new EventHandler(this.OnCopyDofCommandToClipboard)) { Tag = new TreeNodeCommand() { Sender = treeNode } });
 
                 var addMenu = new MenuItem("Add effect to");
                 effectMenu.MenuItems.Add(addMenu);
