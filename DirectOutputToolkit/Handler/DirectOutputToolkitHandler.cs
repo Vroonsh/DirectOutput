@@ -38,7 +38,7 @@ namespace DirectOutputToolkit
         public class TableDescriptor
         {
             public Table Table;
-            public List<TableElement> RunnigTableElements = new List<TableElement>();
+            public List<TableElement> RunningTableElements = new List<TableElement>();
         }
 
         public enum ETableType
@@ -186,7 +186,7 @@ namespace DirectOutputToolkit
                         tdesc.Value.Table.Finish();
                         tdesc.Value.Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
                     }
-                    tdesc.Value.RunnigTableElements.Clear();
+                    tdesc.Value.RunningTableElements.Clear();
                 }
                 if (ReInit) {
                     Pinball.Finish();
@@ -250,7 +250,7 @@ namespace DirectOutputToolkit
             if (TE == null) return;
             var effects = TE.AssignedEffects.Select(AE => AE.Effect).ToArray();
             foreach (var tdesc in TableDescriptors) {
-                if (tdesc.Value.RunnigTableElements.Contains(TE) || tdesc.Value.RunnigTableElements.Any(E => E.AssignedEffects.Any(AE => effects.Contains(AE.Effect)))) {
+                if (tdesc.Value.RunningTableElements.Contains(TE) || tdesc.Value.RunningTableElements.Any(E => E.AssignedEffects.Any(AE => effects.Contains(AE.Effect)))) {
                     ResetPinball(false);
                     break;
                 }
@@ -277,10 +277,10 @@ namespace DirectOutputToolkit
             TableElementData D = tableElement.GetTableElementData();
             D.Value = TEData.Value > 0 ? 0 : tableElementTreeNode.HasNoBoolEffects() ? 255 : 1;
             if (D.Value == 0) {
-                TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
+                TableDesc.RunningTableElements.RemoveAll(TE => TE == tableElement);
             } else {
-                if (!TableDesc.RunnigTableElements.Contains(tableElement)) {
-                    TableDesc.RunnigTableElements.Add(tableElement);
+                if (!TableDesc.RunningTableElements.Contains(tableElement)) {
+                    TableDesc.RunningTableElements.Add(tableElement);
                 }
             }
             Pinball.Table = Table;
@@ -308,10 +308,10 @@ namespace DirectOutputToolkit
             TableElementData D = tableElement.GetTableElementData();
             D.Value = value == 1 ? (tableElementTreeNode.HasNoBoolEffects() ? 255 : 1) : value;
             if (D.Value == 0) {
-                TableDesc.RunnigTableElements.RemoveAll(TE => TE == tableElement);
+                TableDesc.RunningTableElements.RemoveAll(TE => TE == tableElement);
             } else {
-                if (!TableDesc.RunnigTableElements.Contains(tableElement)) {
-                    TableDesc.RunnigTableElements.Add(tableElement);
+                if (!TableDesc.RunningTableElements.Contains(tableElement)) {
+                    TableDesc.RunningTableElements.Add(tableElement);
                 }
             }
             Pinball.Table = Table;

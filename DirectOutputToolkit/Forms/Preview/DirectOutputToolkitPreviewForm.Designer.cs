@@ -145,6 +145,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DirectOutputToolkitPreviewForm";
             this.ShowInTaskbar = false;
             this.Text = "DirectOutput Toolkit Preview";
