@@ -88,7 +88,7 @@ namespace DirectOutputToolkit
                     this.Bounds = Settings.LastMainWindowRect;
                 }
 
-                PreviewForm.Show();
+                PreviewForm.Show(this);
                 if (Settings.LastPreviewWindowRect != Rectangle.Empty) {
                     PreviewForm.Bounds = Settings.LastPreviewWindowRect;
                 } else {
@@ -675,26 +675,57 @@ namespace DirectOutputToolkit
 
         private static string NewTableElementName = "Table_Element_";
 
+        private void OnCreateTableElement(object sender, EventArgs e)
+        {
+            var EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
+
+            var newTE = new TableElement() { TableElementType = TableElementTypeEnum.NamedElement, Name = $"{NewTableElementName}{EditionTable.TableElements.Count}" };
+            newTE.AssignedEffects = new AssignedEffectList();
+            EditionTable.TableElements.Add(newTE);
+            var TENode = new TableElementTreeNode(newTE, DirectOutputToolkitHandler.ETableType.EditionTable);
+            EditionTableNode.Nodes.Add(TENode);
+            EditionTableNode.Refresh();
+            SetCurrentSelectedNode(TENode);
+        }
+
+        private void OnCreateEffect(object sender, EventArgs e, string dofCommand, DofConfigToolOutputEnum output)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var TENode = (command.Source as TableElementTreeNode);
+            var StaticNode = (command.Source as StaticEffectsTreeNode);
+
+            int TCCNumber = EditionTableNode.EditionTable.TableElements.Count;
+
+            var Toy = Handler.GetToysFromOutput(output).FirstOrDefault();
+
+            var fullCommand = StaticNode != null ? $"ON {dofCommand}" : $"{TENode.TE} {dofCommand}";
+            var effectNode = CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, fullCommand, Toy?.Name, Handler);
+            EditionTableNode.Refresh();
+            treeViewEditionTable.SelectedNode = effectNode;
+            SetCurrentSelectedNode(effectNode);
+        }
+
         private void OnCreateAnalogAlphaEffect(object sender, EventArgs e)
         {
-            MessageBox.Show("Not Yet ;)");
+            OnCreateEffect(sender, e, "I48", DofConfigToolOutputEnum.StartButton);
         }
 
         private void OnCreateRGBColorEffect(object sender, EventArgs e)
         {
-            MessageBox.Show("Not Yet ;)");
+            OnCreateEffect(sender, e, "Magenta", DofConfigToolOutputEnum.Flasher5_Center);
         }
 
         private void OnCreateMxAreaEffect(object sender, EventArgs e)
         {
-            MessageBox.Show("Not Yet ;)");
+            OnCreateEffect(sender, e, "Magenta AL0 AT0 AW100 AH100", DofConfigToolOutputEnum.PFBackEffectsMX);
         }
 
         private void OnCopyEffectToEditor(object sender, EventArgs e)
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var SrcEffectNode = (command.Sender as EffectTreeNode);
+            var SrcEffectNode = (command.Source as EffectTreeNode);
             var TENode = (command.Target as TableElementTreeNode);
             var StaticNode = (command.Target as StaticEffectsTreeNode);
             var parentTE = TENode?.TE ?? null;
@@ -744,7 +775,7 @@ namespace DirectOutputToolkit
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var SrcTENode = (command.Sender as TableElementTreeNode);
+            var SrcTENode = (command.Source as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
             var StaticNode = (command.Target as StaticEffectsTreeNode);
             var parentTE = TargetTENode?.TE ?? null;
@@ -786,7 +817,7 @@ namespace DirectOutputToolkit
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var SrcTENode = (command.Sender as TableElementTreeNode);
+            var SrcTENode = (command.Source as TableElementTreeNode);
             var TargetTENode = (command.Target as TableElementTreeNode);
             var EditionTable = Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable);
 
@@ -811,14 +842,14 @@ namespace DirectOutputToolkit
         {
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
-            var SrcEffNode = (command.Sender as EffectTreeNode);
+            var SrcEffNode = (command.Source as EffectTreeNode);
 
             if (SrcEffNode != null) {
                 Clipboard.SetText(SrcEffNode.DofConfigCommand);
             }
         }
 
-        public void CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, int TCCNumber, string DofCommand, string ToyName, DirectOutputToolkitHandler Handler)
+        public EffectTreeNode CreateEffectsFromDofCommand(EditionTableTreeNode TableNode, int TCCNumber, string DofCommand, string ToyName, DirectOutputToolkitHandler Handler)
         {
             TableConfigSetting TCS = new TableConfigSetting();
             TCS.ParseSettingData(DofCommand);
@@ -838,17 +869,32 @@ namespace DirectOutputToolkit
                 EditionTableNode.EditionTable.Effects[num].Init(EditionTableNode.EditionTable);
             }
 
-            foreach (var te in TableNode.EditionTable.TableElements) {
-                te.AssignedEffects.Init(TableNode.EditionTable);
-                var teNode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
-                if (teNode == null) {
-                    teNode = new TableElementTreeNode(te, DirectOutputToolkitHandler.ETableType.EditionTable);
-                    TableNode.Nodes.Add(teNode);
-                }
-                if (teNode.TE.AssignedEffects.Any(AE => AE.Effect == newEffect)) {
-                    teNode.Rebuild(Handler);
+            EffectTreeNode returnNode = null;
+
+            TableNode.EditionTable.AssignedStaticEffects.Init(TableNode.EditionTable);
+            if (TableNode.EditionTable.AssignedStaticEffects.FirstOrDefault(AE=>AE.Effect == newEffect) != null) {
+                TableNode.StaticEffectsNode.Rebuild(Handler);
+                returnNode = TableNode.StaticEffectsNode.Nodes.Cast<EffectTreeNode>().FirstOrDefault(EN => EN.Effect == newEffect);
+            }
+
+            if (returnNode == null) {
+                foreach (var te in TableNode.EditionTable.TableElements) {
+                    te.AssignedEffects.Init(TableNode.EditionTable);
+                    if (!te.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
+                        var teNode = TableNode.Nodes.OfType<TableElementTreeNode>().Cast<TableElementTreeNode>().FirstOrDefault(N => N.TE == te);
+                        if (teNode == null) {
+                            teNode = new TableElementTreeNode(te, DirectOutputToolkitHandler.ETableType.EditionTable);
+                            TableNode.Nodes.Add(teNode);
+                        }
+                        if (teNode.TE.AssignedEffects.Any(AE => AE.Effect == newEffect)) {
+                            teNode.Rebuild(Handler);
+                            returnNode = teNode.Nodes.Cast<EffectTreeNode>().FirstOrDefault(EN => EN.Effect == newEffect);
+                        }
+                    }
                 }
             }
+
+            return returnNode;
         }
 
 
@@ -857,58 +903,69 @@ namespace DirectOutputToolkit
             if (treeNode is EffectTreeNode effectNode) {
                 ContextMenu effectMenu = new ContextMenu();
 
-                effectMenu.MenuItems.Add(new MenuItem("Copy Dof command to clipboard", new EventHandler(this.OnCopyDofCommandToClipboard)) { Tag = new TreeNodeCommand() { Sender = treeNode } });
+                effectMenu.MenuItems.Add(new MenuItem("Copy Dof command to clipboard", new EventHandler(this.OnCopyDofCommandToClipboard)) { Tag = new TreeNodeCommand() { Source = treeNode } });
 
                 var addMenu = new MenuItem("Add effect to");
                 effectMenu.MenuItems.Add(addMenu);
 
                 if (effectNode.TCS.OutputControl != OutputControlEnum.Condition) {
-                    addMenu.MenuItems.Add(new MenuItem("New Table Element", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = null } });
+                    addMenu.MenuItems.Add(new MenuItem("New Table Element", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
                     foreach (var node in EditionTableNode.Nodes) {
-                        addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
+                        addMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = (node as TreeNode) } });
                     }
                 } else {
-                    addMenu.MenuItems.Add(new MenuItem("Edition table", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = null } });
+                    addMenu.MenuItems.Add(new MenuItem("Edition table", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
                 }
 
                 effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
             } else if (treeNode is TableElementTreeNode tableElementNode) {
                 ContextMenu teMenu = new ContextMenu();
 
-                teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = null } });
+                if (treeview == treeViewEditionTable) {
+                    var createMenu = new MenuItem("Create new effect");
+                    teMenu.MenuItems.Add(createMenu);
+                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                }
+
+                teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
 
                 if (EditionTableNode.Nodes.Count > 0) {
                     var insertMenu = new MenuItem($"Copy [{tableElementNode.ToString()}] into");
                     teMenu.MenuItems.Add(insertMenu);
                     foreach (var node in EditionTableNode.Nodes) {
-                        insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
+                        insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = (node as TreeNode) } });
                     }
 
                     insertMenu = new MenuItem($"Insert [{tableElementNode.ToString()}] before");
                     teMenu.MenuItems.Add(insertMenu);
                     foreach (var node in EditionTableNode.Nodes) {
                         if (node is TableElementTreeNode) {
-                            insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Sender = treeNode, Target = (node as TreeNode) } });
+                            insertMenu.MenuItems.Add(new MenuItem($"{(node as TreeNode).Text}", new EventHandler(this.OnInsertTableElementToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = (node as TreeNode) } });
                         }
                     }
                 }
                 teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
             } else if (treeNode is StaticEffectsTreeNode staticNode) {
+                ContextMenu staticMenu = new ContextMenu();
 
-            } else if (treeNode == null) {
                 if (treeview == treeViewEditionTable) {
-                    ContextMenu effMenu = new ContextMenu();
-
-                    var createMenu = new MenuItem("Create new effect");
-                    effMenu.MenuItems.Add(createMenu);
-                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Sender = null, Target = null } });
-
-                    effMenu.Show(treeViewEditionTable, location);
+                    var createMenu = new MenuItem("Create new static effect");
+                    staticMenu.MenuItems.Add(createMenu);
+                    createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                    createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
                 }
+
+                staticMenu.Show(treeview, location);
+            } else if (treeNode is EditionTableTreeNode editionTableNode) {
+                ContextMenu effMenu = new ContextMenu();
+                effMenu.MenuItems.Add(new MenuItem("Create new table element", new EventHandler(this.OnCreateTableElement)) { Tag = new TreeNodeCommand() { Source = null, Target = null } });
+                effMenu.Show(treeview, location);
             }
         }
+
 
         bool ShowDebugNodes = false;
         ToolTip DebugNodeTooltip = new ToolTip() { InitialDelay = 500 };
