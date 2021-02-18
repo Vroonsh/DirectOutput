@@ -9,7 +9,7 @@ namespace DirectOutputControls
 {
     public class TreeNodeCommand
     {
-        public TreeNode Sender;
+        public TreeNode Source;
         public TreeNode Target;
     }
 }
