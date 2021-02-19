@@ -31,8 +31,10 @@ namespace DirectOutputToolkit
 
             this.OpenDofConfigSetupFileDialog.Filter = DofConfigToolSetupControl.FileFilter;
             this.OpenDofConfigSetupFileDialog.DefaultExt = DofConfigToolSetupControl.FileDefaultExt;
+            this.OpenDofConfigSetupFileDialog.InitialDirectory = Application.StartupPath;
             this.OpenDofViewSetupFileDialog.Filter = DirectOutputViewSetupControl.FileFilter;
             this.OpenDofViewSetupFileDialog.DefaultExt = DirectOutputViewSetupControl.FileDefaultExt;
+            this.OpenDofViewSetupFileDialog.InitialDirectory = Application.StartupPath;
 
             LoadData();
         }
