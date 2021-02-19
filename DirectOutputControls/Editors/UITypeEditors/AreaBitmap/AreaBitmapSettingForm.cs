@@ -49,6 +49,7 @@ namespace DirectOutputControls
             comboBoxImageSelect.SelectedIndex = 0;
             ComputeImageMetrics();
             EditionSetting = Setting.Clone() as AreaBitmapSetting;
+            comboBoxFrameSelect.SelectedIndex = EditionSetting.Frame;
             propertyGridSettings.SelectedObject = EditionSetting;
             SelectionRect = EditionSetting.Rect;
             AnimationTimer.Tick += AnimationTimer_Tick;
@@ -65,13 +66,18 @@ namespace DirectOutputControls
             for(var num = 0; num < FrameCount; num++) {
                 comboBoxFrameSelect.Items.Add($"Frame {num}");
             }
-            comboBoxFrameSelect.SelectedIndex = 0;
+            comboBoxFrameSelect.SelectedIndex = EditionSetting.Frame;
         }
 
         private void comboBoxFrameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrentImage.SelectActiveFrame(CurrentDimension, comboBoxFrameSelect.SelectedIndex);
             EditionSetting.Frame = comboBoxFrameSelect.SelectedIndex;
+            if (EditionSetting.AreaBitmapAnimationDirection == MatrixAnimationStepDirectionEnum.Frame) {
+                EditionSetting.AreaBitmapAnimationStepCount = Math.Min(EditionSetting.AreaBitmapAnimationStepCount, FrameCount - EditionSetting.Frame);
+                propertyGridSettings.Refresh();
+                CurrentAnimationFrame = 0;
+            }
         }
 
         private void ComputeImageMetrics()
@@ -129,8 +135,8 @@ namespace DirectOutputControls
                 }
             }
 
-            e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(64, Color.DarkBlue)), new Rectangle(0, 0, pictureBoxImage.Width, Math.Min(30, pictureBoxImage.Height)));
-            e.Graphics.DrawString($"Zoom : {ZoomFactor}, Offset {Offset}, Rect {ImageRect}, LastLoc {LastLocation}, PixelSize {PixelSize}, Pos {posX},{posY}", Font, GridPen.Brush, new Point(10, 10));
+            e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.DarkBlue)), new Rectangle(0, 0, pictureBoxImage.Width, Math.Min(30, pictureBoxImage.Height)));
+            e.Graphics.DrawString($"Selection rect {SelectionRect}, Animation duration {(float)EditionSetting.AreaBitmapAnimationStepCount*1000/EditionSetting.AreaBitmapAnimationFrameRate} ms", Font, GridPen.Brush, new Point(10, 10));
         }
 
         private void pictureBoxPreview_Paint(object sender, PaintEventArgs e)
@@ -209,7 +215,7 @@ namespace DirectOutputControls
             LastLocation = e.Location;
             if (e.Button == MouseButtons.Left) {
                 StartDragLocation = e.Location;
-            }
+            } 
         }
 
         private void pictureBoxImage_MouseUp(object sender, MouseEventArgs e)
@@ -218,7 +224,7 @@ namespace DirectOutputControls
                 EditionSetting.Rect = SelectionRect;
                 propertyGridSettings.Refresh();
                 StartDragLocation = new Point(-1, -1);
-            }
+            } 
         }
 
         private void AeraBitmapSettingForm_Resize(object sender, EventArgs e)
@@ -263,20 +269,37 @@ namespace DirectOutputControls
             if (e.ChangedItem.PropertyDescriptor.Name == "AreaBitmapAnimationFrameRate") {
                 UpdateTimer();
             }
+            if (e.ChangedItem.PropertyDescriptor.Name == "AreaBitmapAnimationStepCount") {
+                if (EditionSetting.AreaBitmapAnimationDirection == MatrixAnimationStepDirectionEnum.Frame) {
+                    EditionSetting.AreaBitmapAnimationStepCount = EditionSetting.AreaBitmapAnimationStepCount.Limit(0, FrameCount - EditionSetting.Frame);
+                    propertyGridSettings.Refresh();
+                }
+            }
         }
 
         private void AnimationTimer_Tick(object sender, EventArgs e)
         {
-            var maxFrame = EditionSetting.AreaBitmapAnimationDirection == MatrixAnimationStepDirectionEnum.Frame ? Math.Min(EditionSetting.AreaBitmapAnimationStepCount, FrameCount) : EditionSetting.AreaBitmapAnimationStepCount;
-            if (maxFrame > 0) {
+            if (FrameCount > 0) {
                 CurrentAnimationFrame++;
-                CurrentAnimationFrame = CurrentAnimationFrame % maxFrame;
                 if (EditionSetting.AreaBitmapAnimationDirection == MatrixAnimationStepDirectionEnum.Frame) {
-                    CurrentImage?.SelectActiveFrame(CurrentDimension, CurrentAnimationFrame);
+                    if (CurrentAnimationFrame >= Math.Min(EditionSetting.AreaBitmapAnimationStepCount, FrameCount - EditionSetting.Frame)) {
+                        CurrentAnimationFrame = 0;
+                    }
+                } else {
+                    if (CurrentAnimationFrame >= EditionSetting.AreaBitmapAnimationStepCount) {
+                        CurrentAnimationFrame = 0;
+                    }
+                }
+                if (EditionSetting.AreaBitmapAnimationDirection == MatrixAnimationStepDirectionEnum.Frame) {
+                    CurrentImage?.SelectActiveFrame(CurrentDimension, CurrentAnimationFrame + EditionSetting.Frame);
                 }
                 Refresh();
             }
         }
 
+        private void buttonCenterImage_Click(object sender, EventArgs e)
+        {
+            Offset.X = Offset.Y = 0;
+        }
     }
 }
