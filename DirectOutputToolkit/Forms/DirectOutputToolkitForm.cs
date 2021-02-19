@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static DirectOutputToolkit.DirectOutputToolkitHandler;
 
 namespace DirectOutputToolkit
 {
@@ -578,15 +579,28 @@ namespace DirectOutputToolkit
                                     $"Will set name to [{newName}]", "Wrong Table Element Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     TE.Name = newName;
                 }
-            }
+            } 
+
             TE.Name = TE.Name.Replace(" ", "_");
+
+            var sameTETypes = Handler.GetTable(ETableType.EditionTable).TableElements.Where(E => E != TE && E.TableElementType == TE.TableElementType);
+            if( TE.TableElementType == TableElementTypeEnum.NamedElement) {
+                while (sameTETypes.Any(E => E.Name.Equals(TE.Name, StringComparison.InvariantCultureIgnoreCase))) {
+                    TE.Name += "0";
+                }
+            } else {
+                while (sameTETypes.Any(E => E.Number == TE.Number)) {
+                    TE.Number++;
+                }
+            }
+
             TD.Refresh();
             propertyGridMain.Refresh();
             if (treeViewEditionTable.SelectedNode is TableElementTreeNode editionTETreeNode) {
                 if (editionTETreeNode.TE == TE) {
-                    Handler.RemoveTableElement(TE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    Handler.RemoveTableElement(TE, ETableType.EditionTable);
                     editionTETreeNode.Rebuild(Handler);
-                    Handler.AddTableElement(TE, DirectOutputToolkitHandler.ETableType.EditionTable);
+                    Handler.AddTableElement(TE, ETableType.EditionTable);
                     treeViewEditionTable.Refresh();
                 }
             }
