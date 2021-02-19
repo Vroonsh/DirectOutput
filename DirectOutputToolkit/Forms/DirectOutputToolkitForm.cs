@@ -87,11 +87,12 @@ namespace DirectOutputToolkit
                 treeViewEditionTable.Nodes.Add(EditionTableNode);
                 treeViewEditionTable.Refresh();
 
+                PreviewForm.Show(this);
+
                 if (Settings.LastMainWindowRect != Rectangle.Empty) {
                     this.Bounds = Settings.LastMainWindowRect;
                 }
 
-                PreviewForm.Show(this);
                 if (Settings.LastPreviewWindowRect != Rectangle.Empty) {
                     PreviewForm.Bounds = Settings.LastPreviewWindowRect;
                 } else {
