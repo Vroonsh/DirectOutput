@@ -39,6 +39,7 @@
             this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.comboBoxFrameSelect = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.buttonCenterImage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -94,6 +95,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonCenterImage);
             this.groupBox3.Controls.Add(this.trackBarZoomFactor);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.comboBoxImageSelect);
@@ -189,6 +191,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Frame selector";
             // 
+            // buttonCenterImage
+            // 
+            this.buttonCenterImage.Location = new System.Drawing.Point(292, 609);
+            this.buttonCenterImage.Name = "buttonCenterImage";
+            this.buttonCenterImage.Size = new System.Drawing.Size(101, 23);
+            this.buttonCenterImage.TabIndex = 7;
+            this.buttonCenterImage.Text = "Center image";
+            this.buttonCenterImage.UseVisualStyleBackColor = true;
+            this.buttonCenterImage.Click += new System.EventHandler(this.buttonCenterImage_Click);
+            // 
             // AreaBitmapSettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,5 +239,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PropertyGrid propertyGridSettings;
         private System.Windows.Forms.Button buttonValidate;
+        private System.Windows.Forms.Button buttonCenterImage;
     }
 }
