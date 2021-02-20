@@ -46,14 +46,16 @@ namespace DirectOutputToolkit
             }
 
             foreach (var TE in TableNode.EditionTable.TableElements) {
-                foreach (var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
-                    if (Toys.Contains(eff.GetAssignedToy())) {
-                        TableConfigSetting TCS = new TableConfigSetting();
-                        TCS.FromEffect(eff);
-                        if (!TCSDict.Keys.Any(T => T == TCS)) {
-                            TCSDict[TCS] = new List<TableElement>();
+                if (!TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
+                    foreach (var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
+                        if (Toys.Contains(eff.GetAssignedToy())) {
+                            TableConfigSetting TCS = new TableConfigSetting();
+                            TCS.FromEffect(eff);
+                            if (!TCSDict.Keys.Any(T => T == TCS)) {
+                                TCSDict[TCS] = new List<TableElement>();
+                            }
+                            TCSDict[TCS].Add(TE);
                         }
-                        TCSDict[TCS].Add(TE);
                     }
                 }
             }
