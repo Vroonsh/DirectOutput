@@ -135,11 +135,11 @@
             // buttonSaveSettings
             // 
             this.buttonSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveSettings.Location = new System.Drawing.Point(368, 215);
+            this.buttonSaveSettings.Location = new System.Drawing.Point(317, 215);
             this.buttonSaveSettings.Name = "buttonSaveSettings";
-            this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveSettings.Size = new System.Drawing.Size(126, 23);
             this.buttonSaveSettings.TabIndex = 24;
-            this.buttonSaveSettings.Text = "Save";
+            this.buttonSaveSettings.Text = "Save && Close";
             this.buttonSaveSettings.UseVisualStyleBackColor = true;
             this.buttonSaveSettings.Click += new System.EventHandler(this.buttonSaveSettings_Click);
             // 
