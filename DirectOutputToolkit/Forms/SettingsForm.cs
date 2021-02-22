@@ -14,6 +14,8 @@ namespace DirectOutputToolkit
     {
         public Settings Settings { get; set; } = null;
 
+        public Action PreviewBackColorChanged = null;
+
         public SettingsForm()
         {
             InitializeComponent();
@@ -27,6 +29,8 @@ namespace DirectOutputToolkit
             checkBoxDofAutoUpdate.Checked = Settings.DofFilesAutoUpdate;
 
             checkBoxAutoSave.Checked = Settings.AutoSaveOnQuit;
+
+            labelBckColor.BackColor = Settings.PreviewBackgroundColor;
         }
 
         private void checkBoxDofAutoUpdate_CheckedChanged(object sender, EventArgs e)
@@ -54,5 +58,16 @@ namespace DirectOutputToolkit
             Settings.SaveSettings();
         }
 
+        private void buttonBckColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            if (dlg.ShowDialog() == DialogResult.OK) {
+                Settings.PreviewBackgroundColor = dlg.Color;
+                labelBckColor.BackColor = dlg.Color;
+                if (PreviewBackColorChanged != null) {
+                    PreviewBackColorChanged.Invoke();
+                }
+            }
+        }
     }
 }

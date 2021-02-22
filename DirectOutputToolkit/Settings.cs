@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
 using DofConfigToolWrapper;
 
 namespace DirectOutputToolkit
@@ -20,8 +21,19 @@ namespace DirectOutputToolkit
         public bool DofFilesAutoUpdate { get; set; } = true;
         public bool AutoSaveOnQuit { get; set; } = true;
 
-        public Rectangle LastMainWindowRect = new Rectangle();
-        public Rectangle LastPreviewWindowRect = new Rectangle();
+        [XmlIgnore]
+        public Color PreviewBackgroundColor { get; set; }  = Color.MidnightBlue;
+        public int PreviewBackgroundColorARGB
+        {   get {
+                return PreviewBackgroundColor.ToArgb();
+            }
+            set {
+                PreviewBackgroundColor = Color.FromArgb(value);
+            }
+        }
+
+        public Rectangle LastMainWindowRect { get; set; } = new Rectangle();
+        public Rectangle LastPreviewWindowRect { get; set; } = new Rectangle();
 
         public void SaveSettings()
         {

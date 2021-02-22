@@ -98,6 +98,8 @@ namespace DirectOutputToolkit
                 } else {
                     PreviewForm.Location = new Point(Math.Min(Bounds.Right, Screen.FromControl(this).WorkingArea.Right), Bounds.Y);
                 }
+
+                PreviewForm.PreviewControl.BackgroundColor = Settings.PreviewBackgroundColor;
                 PreviewForm.PreviewControl.OnSetupChanged(DofViewSetup);
 
                 return true;
@@ -221,17 +223,19 @@ namespace DirectOutputToolkit
             dlg.ShowDialog(this);
         }
 
+        private void OnSettingsPreviewBckColor()
+        {
+            PreviewForm.PreviewControl.BackgroundColor = Settings.PreviewBackgroundColor;
+            PreviewForm.Refresh();
+        }
+
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SettingsForm frm = new SettingsForm() { Settings = Settings };
+            frm.PreviewBackColorChanged += OnSettingsPreviewBckColor;
             frm.ShowDialog(this);
+            frm.PreviewBackColorChanged -= OnSettingsPreviewBckColor;
         }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         #endregion
 
         #region Effect Editor
