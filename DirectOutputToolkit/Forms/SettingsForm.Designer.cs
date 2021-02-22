@@ -37,10 +37,15 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.buttonBckColor = new System.Windows.Forms.Button();
+            this.labelBckColor = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatrixMinDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinDuration)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label3
@@ -130,7 +135,7 @@
             // buttonSaveSettings
             // 
             this.buttonSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveSettings.Location = new System.Drawing.Point(368, 184);
+            this.buttonSaveSettings.Location = new System.Drawing.Point(368, 215);
             this.buttonSaveSettings.Name = "buttonSaveSettings";
             this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveSettings.TabIndex = 24;
@@ -142,7 +147,7 @@
             // 
             this.checkBoxAutoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(15, 188);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(15, 219);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(171, 17);
             this.checkBoxAutoSave.TabIndex = 25;
@@ -150,11 +155,51 @@
             this.checkBoxAutoSave.UseVisualStyleBackColor = true;
             this.checkBoxAutoSave.CheckedChanged += new System.EventHandler(this.checkBoxAutoSave_CheckedChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.labelBckColor);
+            this.groupBox1.Controls.Add(this.buttonBckColor);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Location = new System.Drawing.Point(15, 151);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(428, 51);
+            this.groupBox1.TabIndex = 26;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Preview";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Background Color";
+            // 
+            // buttonBckColor
+            // 
+            this.buttonBckColor.Location = new System.Drawing.Point(199, 15);
+            this.buttonBckColor.Name = "buttonBckColor";
+            this.buttonBckColor.Size = new System.Drawing.Size(41, 23);
+            this.buttonBckColor.TabIndex = 1;
+            this.buttonBckColor.Text = "Set";
+            this.buttonBckColor.UseVisualStyleBackColor = true;
+            this.buttonBckColor.Click += new System.EventHandler(this.buttonBckColor_Click);
+            // 
+            // labelBckColor
+            // 
+            this.labelBckColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelBckColor.Location = new System.Drawing.Point(119, 15);
+            this.labelBckColor.Name = "labelBckColor";
+            this.labelBckColor.Size = new System.Drawing.Size(74, 23);
+            this.labelBckColor.TabIndex = 2;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(455, 219);
+            this.ClientSize = new System.Drawing.Size(455, 250);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.checkBoxAutoSave);
             this.Controls.Add(this.buttonSaveSettings);
             this.Controls.Add(this.groupBox3);
@@ -170,6 +215,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,5 +233,9 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonSaveSettings;
         private System.Windows.Forms.CheckBox checkBoxAutoSave;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label labelBckColor;
+        private System.Windows.Forms.Button buttonBckColor;
+        private System.Windows.Forms.Label label1;
     }
 }
