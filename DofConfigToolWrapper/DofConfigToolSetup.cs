@@ -117,7 +117,7 @@ namespace DofConfigToolWrapper
                     if (mapping.Output == DofConfigToolOutputEnum.Invalid) {
                         Errors += $"controller [{controller}] mapping {num} is Invalid type.\n";
                     }else if (controller.OutputMappings.Any(M=>M != mapping && M.Output == mapping.Output)) {
-                        Warnings += $"controller [{controller}] mapping {num} has duplicated Output {mapping.Output}.\n";
+                        Warnings += $"controller [{controller}] mapping {num} has duplicated Output {mapping.Output}, it's supported but could be a setup error.\n";
                     }
 
                     if (mapping.PortNumber <= 0) {
