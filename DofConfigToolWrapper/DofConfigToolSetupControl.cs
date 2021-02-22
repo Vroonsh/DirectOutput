@@ -490,14 +490,16 @@ namespace DofConfigToolWrapper
 
         private void DataGridViewControllers_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.RowIndex >= 0) {
-                SelectedController = DofConfigToolSetup.ControllerSetups[e.RowIndex];
-                dataGridViewOutputMappings.DataSource = SelectedController.OutputMappings.ToArray();
-            } else {
-                dataGridViewOutputMappings.DataSource = null;
+            if (e.Button == MouseButtons.Left) {
+                if (e.RowIndex >= 0) {
+                    SelectedController = DofConfigToolSetup.ControllerSetups[e.RowIndex];
+                    dataGridViewOutputMappings.DataSource = SelectedController.OutputMappings.ToArray();
+                } else {
+                    dataGridViewOutputMappings.DataSource = null;
+                }
+                SelectedMapping = null;
+                dataGridViewOutputMappings.Refresh();
             }
-            SelectedMapping = null;
-            dataGridViewOutputMappings.Refresh();
         }
 
         private void SelectLastMapping()
@@ -534,8 +536,10 @@ namespace DofConfigToolWrapper
 
         private void DataGridViewOutputMappings_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (SelectedController != null && e.RowIndex >= 0) {
-                SelectedMapping = SelectedController.OutputMappings[e.RowIndex];
+            if (e.Button == MouseButtons.Left) {
+                if (SelectedController != null && e.RowIndex >= 0) {
+                    SelectedMapping = SelectedController.OutputMappings[e.RowIndex];
+                }
             }
         }
 
