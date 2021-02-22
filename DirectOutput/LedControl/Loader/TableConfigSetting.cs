@@ -990,7 +990,7 @@ namespace DirectOutput.LedControl.Loader
                 } else if (currentFX is ExtendDurationEffect extDurationFX) {
                     ExtDurationMs = extDurationFX.DurationMs;
                 } else if (currentFX is MinDurationEffect minDurationFX) {
-                    if (minDurationFX.Name.Split(' ').Last() != "DefaultMinDurationEffect") {
+                    if (!(minDurationFX is DefaultMinDurationEffect)) {
                         MinDurationMs = minDurationFX.MinDurationMs;
                     }
                 } else if (currentFX is MaxDurationEffect maxDurationFX) {

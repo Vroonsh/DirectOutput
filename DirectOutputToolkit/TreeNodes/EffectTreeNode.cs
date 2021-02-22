@@ -30,12 +30,7 @@ namespace DirectOutputToolkit
             ImageIndex = TestTE.Value > 0 ? 1 : 0;
             SelectedImageIndex = ImageIndex;
             Handler = handler;
-            TCS.FromEffect(Effect);
-            if (TCS.OutputType == OutputTypeEnum.AnalogOutput && TCS.MinDurationMs == Handler.Settings.EffectMinDurationMs) {
-                TCS.MinDurationMs = 0;
-            } else if (TCS.OutputType == OutputTypeEnum.RGBOutput && TCS.MinDurationMs == Handler.Settings.EffectRGBMinDurationMs) {
-                TCS.MinDurationMs = 0;
-            }
+            TCS = Handler.TCSFromEffect(Effect);
             TCS.ResolveColorConfigs(Handler.ColorConfigurations);
             UpdateFromTableElement(TableTE);
         }
@@ -66,8 +61,9 @@ namespace DirectOutputToolkit
                 TCS.TableElement = (TE != null) ? $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}" : string.Empty;
             }
 
-            DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
-            Text = $"[{Effect?.GetAssignedToy()?.Name}] {DofConfigCommand}";
+            var ToyName = Effect?.GetAssignedToy()?.Name ?? string.Empty;
+            DofConfigCommand = Handler.ToConfigToolCommand(TCS, Effect?.GetAssignedToy(), exportTE: true, fullRangeIntensity: true);
+            Text = $"[{ToyName}] {DofConfigCommand}";
         }
 
         public void Rebuild(DirectOutputToolkitHandler Handler, IEffect SrcEffect)

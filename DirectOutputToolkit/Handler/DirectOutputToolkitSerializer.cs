@@ -50,13 +50,7 @@ namespace DirectOutputToolkit
                     var neweffDesc = new EffectDescriptor();
                     var ToyName = se.Effect.GetAssignedToy()?.Name;
                     neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
-                    var TCS = new TableConfigSetting();
-                    TCS.FromEffect(se.Effect);
-                    if (TCS.OutputType == OutputTypeEnum.AnalogOutput && TCS.MinDurationMs == Handler.Settings.EffectMinDurationMs) {
-                        TCS.MinDurationMs = 0;
-                    } else if (TCS.OutputType == OutputTypeEnum.RGBOutput && TCS.MinDurationMs == Handler.Settings.EffectRGBMinDurationMs) {
-                        TCS.MinDurationMs = 0;
-                    }
+                    var TCS = Handler.TCSFromEffect(se.Effect);
                     TCS.OutputControl = TCS.Invert ? OutputControlEnum.FixedOff : OutputControlEnum.FixedOn;
                     neweffDesc.TCS = TCS.ToConfigToolCommand();
                     StaticEffects.Add(neweffDesc);
@@ -75,13 +69,7 @@ namespace DirectOutputToolkit
                         var neweffDesc = new EffectDescriptor();
                         var ToyName = se.Effect.GetAssignedToy()?.Name;
                         neweffDesc.ToyOutput = Handler.GetToyOutput(ToyName);
-                        var TCS = new TableConfigSetting();
-                        TCS.FromEffect(se.Effect);
-                        if (TCS.OutputType == OutputTypeEnum.AnalogOutput && TCS.MinDurationMs == Handler.Settings.EffectMinDurationMs) {
-                            TCS.MinDurationMs = 0;
-                        } else if (TCS.OutputType == OutputTypeEnum.RGBOutput && TCS.MinDurationMs == Handler.Settings.EffectRGBMinDurationMs) {
-                            TCS.MinDurationMs = 0;
-                        }
+                        var TCS = Handler.TCSFromEffect(se.Effect);
                         TCS.OutputControl = OutputControlEnum.Controlled;
                         TCS.TableElement = $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}";
                         neweffDesc.TCS = TCS.ToConfigToolCommand();
