@@ -23,12 +23,12 @@ namespace DirectOutputToolkit
 
         [XmlIgnore]
         public Color PreviewBackgroundColor { get; set; }  = Color.MidnightBlue;
-        public int PreviewBackgroundColorARGB
+        public uint PreviewBackgroundColorARGB
         {   get {
-                return PreviewBackgroundColor.ToArgb();
+                return (uint)PreviewBackgroundColor.ToArgb();
             }
             set {
-                PreviewBackgroundColor = Color.FromArgb(value);
+                PreviewBackgroundColor = Color.FromArgb((int)value);
             }
         }
 
