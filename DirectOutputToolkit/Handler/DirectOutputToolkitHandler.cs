@@ -430,10 +430,11 @@ namespace DirectOutputToolkit
             List<IToy> compatibleToys = new List<IToy>();
 
             compatibleToys.AddRange(Toys.Where(T=>
-                    (TCS.IsArea && (T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>)) ||
+                    !PreviewController.IsDummyToy(T) &&
+                    ((TCS.IsArea && (T is IMatrixToy<RGBAColor> || T is IMatrixToy<AnalogAlpha>)) ||
                     (!TCS.IsArea &&
                         ((TCS.OutputType == OutputTypeEnum.AnalogOutput && T is IAnalogAlphaToy) ||
-                        (TCS.OutputType == OutputTypeEnum.RGBOutput && T is IRGBAToy)))
+                        (TCS.OutputType == OutputTypeEnum.RGBOutput && T is IRGBAToy))))
                 ));
 
             return compatibleToys.ToArray();
