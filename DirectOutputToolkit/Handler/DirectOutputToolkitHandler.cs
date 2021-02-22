@@ -60,6 +60,7 @@ namespace DirectOutputToolkit
                 }
             };
 
+
         internal IEnumerable<Image> GetBitmapList(TableConfigSetting wrappedTCS)
         {
             FilePattern BitmapFilePattern = new FilePattern($"{DofFilesHandler.UserLocalPath}\\{TableDescriptors[ETableType.EditionTable].Table.RomName}.*");
@@ -71,6 +72,29 @@ namespace DirectOutputToolkit
                 images.Add(image);
             }
             return images;
+        }
+
+        internal TableConfigSetting TCSFromEffect(IEffect eff)
+        {
+            var TCS = new TableConfigSetting();
+            TCS.FromEffect(eff);
+            var toy = eff.GetAssignedToy();
+            if (toy is IAnalogAlphaToy && TCS.MinDurationMs == Settings.EffectMinDurationMs) { 
+                TCS.MinDurationMs = 0;
+            } else if (toy is IRGBAToy && TCS.MinDurationMs == Settings.EffectRGBMinDurationMs) {
+                TCS.MinDurationMs = 0;
+            }
+            return TCS;
+        }
+
+        internal string ToConfigToolCommand(TableConfigSetting TCS, IToy toy, bool exportTE, bool fullRangeIntensity)
+        {
+            var dofCommand = TCS.ToConfigToolCommand(ColorConfigurations.GetCabinetColorList(), exportTE, fullRangeIntensity);
+            dofCommand = dofCommand.Replace(toy is IAnalogAlphaToy ?
+                                                    $"M{Settings.EffectMinDurationMs}" :
+                                                    $"M{Settings.EffectRGBMinDurationMs}"
+                                                    , "").TrimEnd(' ');
+            return dofCommand;
         }
 
         internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
@@ -331,8 +355,7 @@ namespace DirectOutputToolkit
         #region Effects 
         internal IEffect CreateEffect(IEffect refEffect, TableElement TE, ETableType tableType)
         {
-            TableConfigSetting TCS = new TableConfigSetting();
-            TCS.FromEffect(refEffect);
+            var TCS = TCSFromEffect(refEffect);
 
             if (TE != null) {
                 TCS.OutputControl = OutputControlEnum.Controlled;

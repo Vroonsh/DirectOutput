@@ -391,9 +391,12 @@ namespace DirectOutput.LedControl.Setup
 
 
                 if (TCS.MinDurationMs > 0 || (Toy is IRGBAToy && EffectRGBMinDurationMs > 0) || (!(Toy is IRGBAToy) && EffectMinDurationMs > 0)) {
-                    string N = (TCS.MinDurationMs > 0 ? "MinDuratonEffect" : "DefaultMinDurationEffect");
                     int Min = (TCS.MinDurationMs > 0 ? TCS.MinDurationMs : (Toy is IRGBAToy ? EffectRGBMinDurationMs : EffectMinDurationMs));
-                    Effect = new MinDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, N), TargetEffectName = Effect.Name, MinDurationMs = Min };
+                    if (TCS.MinDurationMs > 0) {
+                        Effect = new MinDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "MinDurationEffect"), TargetEffectName = Effect.Name, MinDurationMs = Min };
+                    } else {
+                        Effect = new DefaultMinDurationEffect() { Name = GetFormatedEffectName(LedWizNr, TCCNumber, SettingNumber, "DefaultMinDurationEffect"), TargetEffectName = Effect.Name, MinDurationMs = Min };
+                    }
                     MakeEffectNameUnique(Effect, Table);
                     Table.Effects.Add(Effect);
                 }

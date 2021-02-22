@@ -128,4 +128,6 @@ namespace DirectOutput.FX.TimmedFX
 
 
     }
+
+    public class DefaultMinDurationEffect : MinDurationEffect { }
 }
