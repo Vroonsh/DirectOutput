@@ -56,6 +56,7 @@ namespace DirectOutputToolkit
         private void buttonSaveSettings_Click(object sender, EventArgs e)
         {
             Settings.SaveSettings();
+            this.Close();
         }
 
         private void buttonBckColor_Click(object sender, EventArgs e)
