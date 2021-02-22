@@ -50,7 +50,7 @@
             this.comboBoxOutput.FormattingEnabled = true;
             this.comboBoxOutput.Location = new System.Drawing.Point(129, 4);
             this.comboBoxOutput.Name = "comboBoxOutput";
-            this.comboBoxOutput.Size = new System.Drawing.Size(350, 21);
+            this.comboBoxOutput.Size = new System.Drawing.Size(517, 21);
             this.comboBoxOutput.TabIndex = 2;
             this.comboBoxOutput.SelectedIndexChanged += new System.EventHandler(this.comboBoxOutput_SelectedIndexChanged);
             // 
@@ -61,15 +61,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxDOFCommand.Location = new System.Drawing.Point(4, 63);
             this.richTextBoxDOFCommand.Name = "richTextBoxDOFCommand";
-            this.richTextBoxDOFCommand.Size = new System.Drawing.Size(475, 384);
+            this.richTextBoxDOFCommand.Size = new System.Drawing.Size(642, 455);
             this.richTextBoxDOFCommand.TabIndex = 3;
             this.richTextBoxDOFCommand.Text = "";
             // 
             // checkBoxFullRangeIntensity
             // 
             this.checkBoxFullRangeIntensity.AutoSize = true;
-            this.checkBoxFullRangeIntensity.Checked = true;
-            this.checkBoxFullRangeIntensity.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxFullRangeIntensity.Location = new System.Drawing.Point(4, 40);
             this.checkBoxFullRangeIntensity.Name = "checkBoxFullRangeIntensity";
             this.checkBoxFullRangeIntensity.Size = new System.Drawing.Size(140, 17);
@@ -82,7 +80,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(485, 448);
+            this.ClientSize = new System.Drawing.Size(652, 519);
             this.Controls.Add(this.checkBoxFullRangeIntensity);
             this.Controls.Add(this.richTextBoxDOFCommand);
             this.Controls.Add(this.comboBoxOutput);

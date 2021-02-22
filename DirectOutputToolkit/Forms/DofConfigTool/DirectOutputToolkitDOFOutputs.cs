@@ -1,4 +1,5 @@
-﻿using DirectOutput.LedControl.Loader;
+﻿using DirectOutput.FX;
+using DirectOutput.LedControl.Loader;
 using DirectOutput.Table;
 using DofConfigToolWrapper;
 using System;
@@ -28,19 +29,30 @@ namespace DirectOutputToolkit
             comboBoxOutput.DataSource = DofConfigToolOutputs.GetPublicDofOutputNames(false);
         }
 
+        private class ExportTCS
+        {
+            public IEffect Effect;
+            public TableConfigSetting TCS;
+            public string DofCommand;
+        }
+
         private void UpdateOutputCommands()
         {
-            var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(comboBoxOutput.Text));
+            var output = DofConfigToolOutputs.GetOutput(comboBoxOutput.Text);
+            var Toys = Handler.GetToysFromOutput(output);
             var ColorList = Handler.ColorConfigurations.GetCabinetColorList();
 
-            Dictionary<TableConfigSetting, List<TableElement>> TCSDict = new Dictionary<TableConfigSetting, List<TableElement>>();
+            Dictionary<ExportTCS, List<TableElement>> TCSDict = new Dictionary<ExportTCS, List<TableElement>>();
 
             foreach (var eff in TableNode.EditionTable.AssignedStaticEffects.Select(AE => AE.Effect).ToArray()) {
-                if (Toys.Contains(eff.GetAssignedToy())) {
-                    TableConfigSetting TCS = new TableConfigSetting();
-                    TCS.FromEffect(eff);
-                    if (!TCSDict.Keys.Any(T => T == TCS)) {
-                        TCSDict[TCS] = new List<TableElement>();
+                var effToy = eff.GetAssignedToy();
+                if (Toys.Contains(effToy)) {
+                    var TCS = Handler.TCSFromEffect(eff);
+                    var dofCommand = Handler.ToConfigToolCommand(TCS, effToy, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
+                    var matchingExport = TCSDict.Keys.FirstOrDefault(T => T.DofCommand.Equals(dofCommand, StringComparison.InvariantCultureIgnoreCase));
+                    if (matchingExport == null) {
+                        matchingExport = new ExportTCS() { Effect = eff, TCS = TCS, DofCommand = dofCommand };
+                        TCSDict[matchingExport] = new List<TableElement>();
                     }
                 }
             }
@@ -48,13 +60,16 @@ namespace DirectOutputToolkit
             foreach (var TE in TableNode.EditionTable.TableElements) {
                 if (!TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)) {
                     foreach (var eff in TE.AssignedEffects.Select(AE => AE.Effect).ToArray()) {
-                        if (Toys.Contains(eff.GetAssignedToy())) {
-                            TableConfigSetting TCS = new TableConfigSetting();
-                            TCS.FromEffect(eff);
-                            if (!TCSDict.Keys.Any(T => T == TCS)) {
-                                TCSDict[TCS] = new List<TableElement>();
+                        var effToy = eff.GetAssignedToy();
+                        if (Toys.Contains(effToy)) {
+                            var TCS = Handler.TCSFromEffect(eff);
+                            var dofCommand = Handler.ToConfigToolCommand(TCS, effToy, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
+                            var matchingExport = TCSDict.Keys.FirstOrDefault(T => T.DofCommand.Equals(dofCommand, StringComparison.InvariantCultureIgnoreCase));
+                            if (matchingExport == null) {
+                                matchingExport = new ExportTCS() { Effect = eff, TCS = TCS, DofCommand = dofCommand };
+                                TCSDict[matchingExport] = new List<TableElement>();
                             }
-                            TCSDict[TCS].Add(TE);
+                            TCSDict[matchingExport].Add(TE);
                         }
                     }
                 }
@@ -69,9 +84,9 @@ namespace DirectOutputToolkit
                 if (pair.Value.Count > 0) {
                     richTextBoxDOFCommand.Text += string.Join("|", pair.Value.Where(TE => !TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase)).Select(TE => TE.ToString()).ToArray());
                 } else {
-                    richTextBoxDOFCommand.Text += pair.Key.OutputControl == OutputControlEnum.FixedOn ? "ON" : "OFF";
+                    richTextBoxDOFCommand.Text += pair.Key.TCS.OutputControl == OutputControlEnum.FixedOn ? "ON" : "OFF";
                 }
-                richTextBoxDOFCommand.Text += $" {pair.Key.ToConfigToolCommand(ColorList, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked)}";
+                richTextBoxDOFCommand.Text += $" {pair.Key.DofCommand}";
             }
 
             richTextBoxDOFCommand.Refresh();
