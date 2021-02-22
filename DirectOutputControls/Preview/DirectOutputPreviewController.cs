@@ -95,7 +95,7 @@ namespace DirectOutputControls
                                 var ledstrip = new LedStrip() {
                                     ColorOrder = DirectOutput.Cab.Toys.Layer.RGBOrderEnum.RGB,
                                     FadingCurveName = "SwissLizardsLedCurve",
-                                    Name = $"{o.Output} (Mx)",
+                                    Name = $"{o.PortNumber}-{o.Output} (Mx)",
                                     OutputControllerName = this.Name,
                                     LedStripArrangement = DirectOutput.Cab.Toys.Layer.LedStripArrangementEnum.LeftRightTopDown,
                                     Width = biggestArea.MxWidth,
@@ -127,7 +127,7 @@ namespace DirectOutputControls
                         switch (o.PortRange) {
                             case 1: {
                                 toy = new AnalogAlphaToy() {
-                                    Name = $"{o.Output} (Analog)",
+                                    Name = $"{o.PortNumber}-{o.Output} (Analog)",
                                     OutputName = $"{LWE.Name}.{o.PortNumber:00}"
                                 };
                                 p.Cabinet.Toys.Add(toy);
@@ -136,7 +136,7 @@ namespace DirectOutputControls
 
                             case 3: {
                                 toy = new RGBAToy() {
-                                    Name = $"{o.Output} (RGB)",
+                                    Name = $"{o.PortNumber}-{o.Output} (RGB)",
                                     OutputNameRed = $"{LWE.Name}.{o.PortNumber:00}",
                                     OutputNameGreen = $"{LWE.Name}.{o.PortNumber+1:00}",
                                     OutputNameBlue = $"{LWE.Name}.{o.PortNumber+2:00}"
@@ -144,9 +144,9 @@ namespace DirectOutputControls
                                 p.Cabinet.Toys.Add(toy);
 
                                 //Create 3 analog Toys for rgbsplit
-                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
-                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 1:00}" });
-                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 2:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.PortNumber}-{o.Output} rgbsplit Red (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.PortNumber+1}-{o.Output} rgbsplit Green (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 1:00}" });
+                                splitToys.Add(new RGBSplitAnalogAlphaToy() { Name = $"{o.PortNumber+2}-{o.Output} rgbsplit Blue (Analog)", OutputName = $"{LWE.Name}.{o.PortNumber + 2:00}" });
                                 p.Cabinet.Toys.AddRange(splitToys);
                                 break;
                             }
@@ -252,6 +252,8 @@ namespace DirectOutputControls
         private DirectOutputToolkitDummyAnalogToy DummyAnalogToy = new DirectOutputToolkitDummyAnalogToy();
         private DirectOutputToolkitDummyRGBAToy DummyRGBAToy = new DirectOutputToolkitDummyRGBAToy();
         private DirectOutputToolkitDummyMatrixToy DummyMatrixToy = new DirectOutputToolkitDummyMatrixToy();
+
+        public bool IsDummyToy(IToy toy) => toy == DummyAnalogToy || toy == DummyMatrixToy || toy == DummyRGBAToy;
 
         internal IToy GetCompatibleDummyToy(TableConfigSetting TCS)
         {
