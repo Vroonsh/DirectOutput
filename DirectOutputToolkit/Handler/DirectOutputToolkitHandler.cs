@@ -383,7 +383,6 @@ namespace DirectOutputToolkit
 
             //Reorder Assigned effects as they should be from the ini file & resolve effect from effectname
             foreach (var TE in Table.TableElements) {
-                TE.AssignedEffects.Sort((E1, E2) => E1.EffectName.CompareTo(E2.EffectName));
                 foreach (var assignEff in TE.AssignedEffects) {
                     assignEff.Init(Table);
                 }
