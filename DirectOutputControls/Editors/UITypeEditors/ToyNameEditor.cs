@@ -28,7 +28,7 @@ namespace DirectOutputControls
                 IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
                 string shapeName = value as string;
                 if (edSvc != null) {
-                    ListBoxEditor dropdown = new ListBoxEditor(value, edSvc) { HorizontalScrollbar = true };
+                    ListBoxEditor dropdown = new ListBoxEditor(value, edSvc) { HorizontalScrollbar = true, Width = 300 };
                     dropdown.Items.AddRange(toyListProvider.GetToyList().Select(T => T.Name).ToArray());
                     edSvc.DropDownControl(dropdown);
                     return dropdown.Selection;
