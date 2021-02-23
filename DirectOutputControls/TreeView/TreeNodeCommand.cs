@@ -11,5 +11,6 @@ namespace DirectOutputControls
     {
         public TreeNode Source;
         public TreeNode Target;
+        public object Params;
     }
 }

@@ -30,6 +30,7 @@ namespace DirectOutputControls
         public ColorConfigListBoxEditor(object selection, ColorList cabColorList, IWindowsFormsEditorService edsvc)
             : base(selection, edsvc)
         {
+            Width = 200;
             CabinetColorList = cabColorList;
             DrawMode = DrawMode.OwnerDrawFixed;
         }
