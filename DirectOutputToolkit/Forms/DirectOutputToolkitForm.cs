@@ -1,6 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.FX;
 using DirectOutput.FX.MatrixFX;
+using DirectOutput.FX.TimmedFX;
 using DirectOutput.General;
 using DirectOutput.LedControl.Loader;
 using DirectOutput.LedControl.Setup;
@@ -8,6 +9,7 @@ using DirectOutput.Table;
 using DirectOutputControls;
 using DofConfigToolWrapper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -177,6 +179,11 @@ namespace DirectOutputToolkit
             fd.ShowDialog();
 
             if (!fd.FileName.IsNullOrEmpty()) {
+                //Sort all tableelementsnodes effects in their original creation ordering
+                var TEnodes = EditionTableNode.Nodes.OfType<TableElementTreeNode>();
+                foreach (var TENode in TEnodes) {
+                    SortTableElementNode(TENode, SortEffectsEnum.Original);
+                }
                 var serializer = new DirectOutputToolkitSerializer();
                 if (serializer.Serialize(EditionTableNode, fd.FileName, Handler)) {
                     SetCurrentSelectedNode(EditionTableNode);
@@ -749,6 +756,87 @@ namespace DirectOutputToolkit
             OnCreateEffect(sender, e, "Magenta AL0 AT0 AW100 AH100", DofConfigToolOutputEnum.PFBackEffectsMX);
         }
 
+        private enum SortEffectsEnum
+        {
+            Original,
+            NameAscending,
+            NameDescending,
+            StartTimeAscending,
+            StartTimeDescending,
+        }
+
+        private class NodeTextSorter : IComparer
+        {
+            public TreeNode Parent = null;
+            public bool Ascending = true;
+
+            public NodeTextSorter() { }
+
+            public int Compare(object o1, object o2)
+            {
+                TreeNode node1 = o1 as TreeNode;
+                TreeNode node2 = o2 as TreeNode;
+
+                if (Parent == null || node1.Parent != Parent || node2.Parent != Parent) {
+                    return 0;
+                }
+
+                if (Ascending) {
+                    return node1.Text.CompareTo(node2.Text);
+                } else {
+                    return node2.Text.CompareTo(node1.Text);
+                }
+            }
+        }
+
+        private void SortTableElementNode(TableElementTreeNode TENode, SortEffectsEnum SortType)
+        {
+            int StartTimeComparison(AssignedEffect E1, AssignedEffect E2)
+            {
+                var startTime1 = (E1.Effect.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
+                var startTime2 = (E2.Effect.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
+                return startTime1.CompareTo(startTime2);
+            }
+
+            switch (SortType) {
+                case SortEffectsEnum.NameAscending:
+                    TENode.TreeView.TreeViewNodeSorter = new NodeTextSorter() { Parent = TENode, Ascending = true };
+                    TENode.TreeView.Sort();
+                    break;
+                case SortEffectsEnum.NameDescending:
+                    TENode.TreeView.TreeViewNodeSorter = new NodeTextSorter() { Parent = TENode, Ascending = false };
+                    TENode.TreeView.Sort();
+                    break;
+                case SortEffectsEnum.StartTimeAscending:
+                    TENode.TE.AssignedEffects.Sort((E1, E2) => StartTimeComparison(E1, E2));
+                    TENode.Rebuild(Handler);
+                    break;
+                case SortEffectsEnum.StartTimeDescending:
+                    TENode.TE.AssignedEffects.Sort((E1, E2) => StartTimeComparison(E2, E1));
+                    TENode.Rebuild(Handler);
+                    break;
+                case SortEffectsEnum.Original:
+                    var EditionTable = Handler.GetTable(ETableType.EditionTable);
+                    TENode.TE.AssignedEffects.Sort((E1, E2) => EditionTable.Effects.IndexOf(E1.Effect).CompareTo(EditionTable.Effects.IndexOf(E2.Effect)));
+                    TENode.Rebuild(Handler);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnSortTableElementEffects(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var TENode = (command.Source as TableElementTreeNode);
+            var SortType = (SortEffectsEnum)(command.Params);
+
+            SortTableElementNode(TENode, SortType);
+
+            SetCurrentSelectedNode(TENode);
+        }
+
         private void OnCopyEffectToEditor(object sender, EventArgs e)
         {
             var item = (sender as MenuItem);
@@ -955,6 +1043,7 @@ namespace DirectOutputToolkit
                     createMenu.MenuItems.Add(new MenuItem("AnalogAlpha Effect", new EventHandler(this.OnCreateAnalogAlphaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
                     createMenu.MenuItems.Add(new MenuItem("RGB Color Effect", new EventHandler(this.OnCreateRGBColorEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
                     createMenu.MenuItems.Add(new MenuItem("Mx Area Effect", new EventHandler(this.OnCreateMxAreaEffect)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                    teMenu.MenuItems.Add(new MenuItem("-"));
                 }
 
                 teMenu.MenuItems.Add(new MenuItem($"Add [{tableElementNode.ToString()}] to {Handler.GetTable(DirectOutputToolkitHandler.ETableType.EditionTable).TableName}", new EventHandler(this.OnCopyTableElementToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
@@ -974,6 +1063,18 @@ namespace DirectOutputToolkit
                         }
                     }
                 }
+
+                if (treeview == treeViewEditionTable) {
+                    teMenu.MenuItems.Add(new MenuItem("-"));
+                    var sortMenu = new MenuItem("Sort effects");
+                    teMenu.MenuItems.Add(sortMenu);
+                    sortMenu.MenuItems.Add(new MenuItem("Original ordering", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.Original } });
+                    sortMenu.MenuItems.Add(new MenuItem("By name (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.NameAscending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By name (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.NameDescending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By start time (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.StartTimeAscending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By start time (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.StartTimeDescending } });
+                }
+
                 teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
             } else if (treeNode is StaticEffectsTreeNode staticNode) {
                 ContextMenu staticMenu = new ContextMenu();
@@ -993,7 +1094,6 @@ namespace DirectOutputToolkit
                 effMenu.Show(treeview, location);
             }
         }
-
 
         bool ShowDebugNodes = false;
         ToolTip DebugNodeTooltip = new ToolTip() { InitialDelay = 500 };
