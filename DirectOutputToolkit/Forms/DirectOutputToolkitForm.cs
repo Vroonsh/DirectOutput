@@ -181,9 +181,6 @@ namespace DirectOutputToolkit
             if (!fd.FileName.IsNullOrEmpty()) {
                 //Sort all tableelementsnodes effects in their original creation ordering
                 var TEnodes = EditionTableNode.Nodes.OfType<TableElementTreeNode>();
-                foreach (var TENode in TEnodes) {
-                    SortTableElementNode(TENode, SortEffectsEnum.Original);
-                }
                 var serializer = new DirectOutputToolkitSerializer();
                 if (serializer.Serialize(EditionTableNode, fd.FileName, Handler)) {
                     SetCurrentSelectedNode(EditionTableNode);
@@ -756,73 +753,65 @@ namespace DirectOutputToolkit
             OnCreateEffect(sender, e, "Magenta AL0 AT0 AW100 AH100", DofConfigToolOutputEnum.PFBackEffectsMX);
         }
 
-        private enum SortEffectsEnum
-        {
-            Original,
-            NameAscending,
-            NameDescending,
-            StartTimeAscending,
-            StartTimeDescending,
-        }
 
-        private class NodeTextSorter : IComparer
+        private class NodeSorter : IComparer
         {
-            public TreeNode Parent = null;
-            public bool Ascending = true;
+            public enum SortEffectsEnum
+            {
+                Original,
+                NameAscending,
+                NameDescending,
+                StartTimeAscending,
+                StartTimeDescending,
+            }
 
-            public NodeTextSorter() { }
+            public TableElementTreeNode TENode = null;
+            public SortEffectsEnum SortType = SortEffectsEnum.Original;
+            public Table EditionTable = null;
+
+            public NodeSorter() { }
 
             public int Compare(object o1, object o2)
             {
-                TreeNode node1 = o1 as TreeNode;
-                TreeNode node2 = o2 as TreeNode;
+                var node1 = o1 as EffectTreeNode;
+                var node2 = o2 as EffectTreeNode;
 
-                if (Parent == null || node1.Parent != Parent || node2.Parent != Parent) {
+                if (TENode == null || node1 == null || node2 == null ||
+                    node1.Parent != TENode || node2.Parent != TENode) {
                     return 0;
                 }
 
-                if (Ascending) {
-                    return node1.Text.CompareTo(node2.Text);
-                } else {
-                    return node2.Text.CompareTo(node1.Text);
+                int StartTimeComparison(IEffect E1, IEffect E2)
+                {
+                    var startTime1 = (E1.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
+                    var startTime2 = (E2.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
+                    return startTime1.CompareTo(startTime2);
                 }
+
+                switch (SortType) {
+                    case SortEffectsEnum.NameAscending:
+                        return node1.Text.CompareTo(node2.Text);
+                    case SortEffectsEnum.NameDescending:
+                        return node2.Text.CompareTo(node1.Text);
+                    case SortEffectsEnum.StartTimeAscending:
+                        return StartTimeComparison(node1.Effect, node2.Effect);
+                    case SortEffectsEnum.StartTimeDescending:
+                        return StartTimeComparison(node2.Effect, node1.Effect);
+                    case SortEffectsEnum.Original:
+                        if (EditionTable == null) return 0;
+                        return EditionTable.Effects.IndexOf(node1.Effect).CompareTo(EditionTable.Effects.IndexOf(node2.Effect));
+                    default:
+                        break;
+                }
+
+                return 0;
             }
         }
 
-        private void SortTableElementNode(TableElementTreeNode TENode, SortEffectsEnum SortType)
+        private void SortTableElementNode(TableElementTreeNode TENode, NodeSorter.SortEffectsEnum SortType)
         {
-            int StartTimeComparison(AssignedEffect E1, AssignedEffect E2)
-            {
-                var startTime1 = (E1.Effect.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
-                var startTime2 = (E2.Effect.GetAllEffects().FirstOrDefault(E => E is DelayEffect) as DelayEffect)?.DelayMs ?? 0;
-                return startTime1.CompareTo(startTime2);
-            }
-
-            switch (SortType) {
-                case SortEffectsEnum.NameAscending:
-                    TENode.TreeView.TreeViewNodeSorter = new NodeTextSorter() { Parent = TENode, Ascending = true };
-                    TENode.TreeView.Sort();
-                    break;
-                case SortEffectsEnum.NameDescending:
-                    TENode.TreeView.TreeViewNodeSorter = new NodeTextSorter() { Parent = TENode, Ascending = false };
-                    TENode.TreeView.Sort();
-                    break;
-                case SortEffectsEnum.StartTimeAscending:
-                    TENode.TE.AssignedEffects.Sort((E1, E2) => StartTimeComparison(E1, E2));
-                    TENode.Rebuild(Handler);
-                    break;
-                case SortEffectsEnum.StartTimeDescending:
-                    TENode.TE.AssignedEffects.Sort((E1, E2) => StartTimeComparison(E2, E1));
-                    TENode.Rebuild(Handler);
-                    break;
-                case SortEffectsEnum.Original:
-                    var EditionTable = Handler.GetTable(ETableType.EditionTable);
-                    TENode.TE.AssignedEffects.Sort((E1, E2) => EditionTable.Effects.IndexOf(E1.Effect).CompareTo(EditionTable.Effects.IndexOf(E2.Effect)));
-                    TENode.Rebuild(Handler);
-                    break;
-                default:
-                    break;
-            }
+            TENode.TreeView.TreeViewNodeSorter = new NodeSorter() { TENode = TENode, SortType = SortType, EditionTable = Handler.GetTable(ETableType.EditionTable) };
+            TENode.TreeView.Sort();
         }
 
         private void OnSortTableElementEffects(object sender, EventArgs e)
@@ -830,7 +819,7 @@ namespace DirectOutputToolkit
             var item = (sender as MenuItem);
             var command = (item.Tag as TreeNodeCommand);
             var TENode = (command.Source as TableElementTreeNode);
-            var SortType = (SortEffectsEnum)(command.Params);
+            var SortType = (NodeSorter.SortEffectsEnum)(command.Params);
 
             SortTableElementNode(TENode, SortType);
 
@@ -1068,11 +1057,11 @@ namespace DirectOutputToolkit
                     teMenu.MenuItems.Add(new MenuItem("-"));
                     var sortMenu = new MenuItem("Sort effects");
                     teMenu.MenuItems.Add(sortMenu);
-                    sortMenu.MenuItems.Add(new MenuItem("Original ordering", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.Original } });
-                    sortMenu.MenuItems.Add(new MenuItem("By name (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.NameAscending } });
-                    sortMenu.MenuItems.Add(new MenuItem("By name (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.NameDescending } });
-                    sortMenu.MenuItems.Add(new MenuItem("By start time (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.StartTimeAscending } });
-                    sortMenu.MenuItems.Add(new MenuItem("By start time (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = SortEffectsEnum.StartTimeDescending } });
+                    sortMenu.MenuItems.Add(new MenuItem("Original ordering", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = NodeSorter.SortEffectsEnum.Original } });
+                    sortMenu.MenuItems.Add(new MenuItem("By name (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = NodeSorter.SortEffectsEnum.NameAscending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By name (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = NodeSorter.SortEffectsEnum.NameDescending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By start time (ascending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = NodeSorter.SortEffectsEnum.StartTimeAscending } });
+                    sortMenu.MenuItems.Add(new MenuItem("By start time (descending)", new EventHandler(this.OnSortTableElementEffects)) { Tag = new TreeNodeCommand() { Source = treeNode, Params = NodeSorter.SortEffectsEnum.StartTimeDescending } });
                 }
 
                 teMenu.Show(tableElementNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
