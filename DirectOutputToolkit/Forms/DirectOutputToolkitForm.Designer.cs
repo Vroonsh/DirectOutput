@@ -273,6 +273,7 @@
             // 
             // treeViewEditionTable
             // 
+            this.treeViewEditionTable.AllowDrop = true;
             this.treeViewEditionTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -280,6 +281,8 @@
             this.treeViewEditionTable.Name = "treeViewEditionTable";
             this.treeViewEditionTable.Size = new System.Drawing.Size(870, 540);
             this.treeViewEditionTable.TabIndex = 23;
+            this.treeViewEditionTable.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeViewEditionTable_DragDrop);
+            this.treeViewEditionTable.DragOver += new System.Windows.Forms.DragEventHandler(this.treeViewEditionTable_DragOver);
             this.treeViewEditionTable.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewEditionTable_KeyDown);
             this.treeViewEditionTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseDown);
             this.treeViewEditionTable.MouseMove += new System.Windows.Forms.MouseEventHandler(this.treeViewEditionTable_MouseMove);
