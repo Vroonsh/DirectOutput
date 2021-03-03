@@ -266,7 +266,7 @@ namespace DirectOutputToolkit
                     ShowContextMenu(treeViewEditionTable, hit.Node, e.Location);
                 } else if (e.Button == MouseButtons.Left) {
                     if (hit.Node is EffectTreeNode || hit.Node is TableElementTreeNode) {
-                        DoDragDrop(hit.Node, DragDropEffects.Copy | DragDropEffects.None);
+                        DoDragDrop(hit.Node, DragDropEffects.All);
                     }
                 }
             }
@@ -303,33 +303,37 @@ namespace DirectOutputToolkit
         }
 
 
-        private void DeleteEffectNode(EffectTreeNode node, bool silent = false)
+        private void DeleteEffectNode(EffectTreeNode node, bool silent = false, bool rebuild = true)
         {
             if (silent || MessageBox.Show($"Do you want to delete effect {node.Text} from {(node.Parent as TableElementTreeNode)?.TE.Name} ?", "Delete Effect", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                 if (node.Parent is TableElementTreeNode TENode) {
                     TENode.TE.AssignedEffects.RemoveAll(AE => AE.Effect == node.Effect);
                     Handler.RemoveEffects(node.Effect.GetAllEffects(), (node.Parent as TableElementTreeNode)?.TE, node.GetTableType());
-                    if (!silent) {
+                    if (rebuild) {
                         TENode.Rebuild(Handler);
+                    }
+                    if (!silent) {
                         SetCurrentSelectedNode(TENode);
                     }
                 } else if (node.Parent is StaticEffectsTreeNode staticEffectsNode) {
                     EditionTableNode.EditionTable.AssignedStaticEffects.RemoveAll(AE => AE.Effect == node.Effect);
                     Handler.RemoveEffects(node.Effect.GetAllEffects(), null, node.GetTableType());
-                    if (!silent) {
+                    if (rebuild) {
                         staticEffectsNode.Rebuild(Handler);
                         EditionTableNode.Refresh();
+                    }
+                    if (!silent) {
                         SetCurrentSelectedNode(staticEffectsNode);
                     }
                 }
             }
         }
 
-        private void DeleteTableElementNode(TableElementTreeNode node)
+        private void DeleteTableElementNode(TableElementTreeNode node, bool silent = false)
         {
-            if (MessageBox.Show($"Do you want to delete {node.TE.Name} and all its effects ?", "Delete Table Element", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+            if (silent || MessageBox.Show($"Do you want to delete {node.TE.Name} and all its effects ?", "Delete Table Element", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                 foreach (var effNode in node.Nodes) {
-                    DeleteEffectNode(effNode as EffectTreeNode, true);
+                    DeleteEffectNode(effNode as EffectTreeNode, silent: true, rebuild: false);
                 }
                 Handler.RemoveTableElement(node.GetTableElement(), node.GetTableType());
                 EditionTableNode.Rebuild(Handler);
@@ -366,28 +370,47 @@ namespace DirectOutputToolkit
             }
         }
 
+        private ToolTip DragToolTip = new ToolTip();
+        private TreeNode DragOverNode = null;
+        private DateTime DragOverStartTime = DateTime.MinValue;
+
         private void treeViewEditionTable_DragOver(object sender, DragEventArgs e)
         {
-            var srcNode = e.Data.GetData(typeof(EffectTreeNode).ToString(), true);
+            var srcNode = e.Data.GetData(typeof(EffectTreeNode).ToString(), true) as TreeNode;
             if (srcNode == null) {
-                srcNode = e.Data.GetData(typeof(TableElementTreeNode).ToString(), true);
+                srcNode = e.Data.GetData(typeof(TableElementTreeNode).ToString(), true) as TreeNode;
             }
             if (srcNode != null) {
                 Point dscreen = new Point(e.X, e.Y);
                 Point dclient = treeViewEditionTable.PointToClient(dscreen);
                 var hit = treeViewEditionTable.HitTest(dclient);
+                if (DragOverNode != hit.Node) {
+                    DragOverNode = hit.Node;
+                    DragOverStartTime = DateTime.Now;
+                } else if (DragOverNode != null && DragOverNode.Nodes.Count > 0 && !DragOverNode.IsExpanded && (DateTime.Now - DragOverStartTime).Seconds >= 1.0f){
+                    DragOverNode.Expand();
+                }
                 if (hit.Node != null && hit.Node != srcNode && !(hit.Node is EffectTreeNode)) {
-                    e.Effect = DragDropEffects.Copy;
+                    if (hit.Node.TreeView == srcNode.TreeView && (e.KeyState & 4) != 0) {
+                        e.Effect = DragDropEffects.Move;
+                        DragToolTip.Show($"Move {srcNode.Text} to {hit.Node.Text}", this, PointToClient(dscreen));
+                    } else {
+                        e.Effect = DragDropEffects.Copy;
+                        DragToolTip.Show($"Copy {srcNode.Text} to {hit.Node.Text}", this, PointToClient(dscreen));
+                    }
                 } else {
                     e.Effect = DragDropEffects.None;
+                    DragToolTip.Hide(this);
                 }
             } else {
                 e.Effect = DragDropEffects.None;
+                DragToolTip.Hide(this);
             }
         }
 
         private void treeViewEditionTable_DragDrop(object sender, DragEventArgs e)
         {
+            DragToolTip.Hide(this);
             Point dscreen = new Point(e.X, e.Y);
             Point dclient = treeViewEditionTable.PointToClient(dscreen);
             var hit = treeViewEditionTable.HitTest(dclient);
@@ -396,10 +419,15 @@ namespace DirectOutputToolkit
                 if (e.Data.GetDataPresent(typeof(EffectTreeNode).ToString())) {
                     Source = e.Data.GetData(typeof(EffectTreeNode).ToString(), true) as TreeNode;
                     CopyEffectToEditor(Source, hit.Node);
-
+                    if ((e.KeyState & 4) != 0) {
+                        DeleteEffectNode(Source as EffectTreeNode, silent: true, rebuild: true);
+                    }
                 } else if (e.Data.GetDataPresent(typeof(TableElementTreeNode).ToString())) {
                     Source = e.Data.GetData(typeof(TableElementTreeNode).ToString(), true) as TreeNode;
                     CopyTableElementToEditor(Source, hit.Node);
+                    if ((e.KeyState & 4) != 0) {
+                        DeleteTableElementNode(Source as TableElementTreeNode, true);
+                    }
                 }
 
             }
@@ -517,7 +545,7 @@ namespace DirectOutputToolkit
                     ShowContextMenu(treeViewReferenceTable, hit.Node, e.Location);
                 } else if (e.Button == MouseButtons.Left) {
                     if (hit.Node is EffectTreeNode || hit.Node is TableElementTreeNode) {
-                        DoDragDrop(hit.Node, DragDropEffects.Copy | DragDropEffects.None);
+                        DoDragDrop(hit.Node, DragDropEffects.All);
                     }
                 }
             }
