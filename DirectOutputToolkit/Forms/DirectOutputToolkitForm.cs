@@ -267,6 +267,8 @@ namespace DirectOutputToolkit
                 } else if (e.Button == MouseButtons.Left) {
                     if (hit.Node is EffectTreeNode || hit.Node is TableElementTreeNode) {
                         DoDragDrop(hit.Node, DragDropEffects.All);
+                        DragOverStartTime = DateTime.MaxValue;
+                        DragOverNode = null;
                     }
                 }
             }
@@ -372,7 +374,7 @@ namespace DirectOutputToolkit
 
         private ToolTip DragToolTip = new ToolTip();
         private TreeNode DragOverNode = null;
-        private DateTime DragOverStartTime = DateTime.MinValue;
+        private DateTime DragOverStartTime = DateTime.MaxValue;
 
         private void treeViewEditionTable_DragOver(object sender, DragEventArgs e)
         {
@@ -389,6 +391,7 @@ namespace DirectOutputToolkit
                     DragOverStartTime = DateTime.Now;
                 } else if (DragOverNode != null && DragOverNode.Nodes.Count > 0 && !DragOverNode.IsExpanded && (DateTime.Now - DragOverStartTime).Seconds >= 1.0f){
                     DragOverNode.Expand();
+                    DragOverStartTime = DateTime.MaxValue;
                 }
                 if (hit.Node != null && hit.Node != srcNode && !(hit.Node is EffectTreeNode)) {
                     if (hit.Node.TreeView == srcNode.TreeView && (e.KeyState & 4) != 0) {
@@ -410,26 +413,28 @@ namespace DirectOutputToolkit
 
         private void treeViewEditionTable_DragDrop(object sender, DragEventArgs e)
         {
+            var srcNode = e.Data.GetData(typeof(EffectTreeNode).ToString(), true) as TreeNode;
+            if (srcNode == null) {
+                srcNode = e.Data.GetData(typeof(TableElementTreeNode).ToString(), true) as TreeNode;
+            }
             DragToolTip.Hide(this);
-            Point dscreen = new Point(e.X, e.Y);
-            Point dclient = treeViewEditionTable.PointToClient(dscreen);
-            var hit = treeViewEditionTable.HitTest(dclient);
-            if (hit.Node != null && !(hit.Node is EffectTreeNode)) {
-                TreeNode Source = null;
-                if (e.Data.GetDataPresent(typeof(EffectTreeNode).ToString())) {
-                    Source = e.Data.GetData(typeof(EffectTreeNode).ToString(), true) as TreeNode;
-                    CopyEffectToEditor(Source, hit.Node);
-                    if ((e.KeyState & 4) != 0) {
-                        DeleteEffectNode(Source as EffectTreeNode, silent: true, rebuild: true);
-                    }
-                } else if (e.Data.GetDataPresent(typeof(TableElementTreeNode).ToString())) {
-                    Source = e.Data.GetData(typeof(TableElementTreeNode).ToString(), true) as TreeNode;
-                    CopyTableElementToEditor(Source, hit.Node);
-                    if ((e.KeyState & 4) != 0) {
-                        DeleteTableElementNode(Source as TableElementTreeNode, true);
+            if (srcNode != null) {
+                Point dscreen = new Point(e.X, e.Y);
+                Point dclient = treeViewEditionTable.PointToClient(dscreen);
+                var hit = treeViewEditionTable.HitTest(dclient);
+                if (hit.Node != null && hit.Node != srcNode && !(hit.Node is EffectTreeNode)) {
+                    if (srcNode is EffectTreeNode) {
+                        CopyEffectToEditor(srcNode, hit.Node);
+                        if ((e.KeyState & 4) != 0) {
+                            DeleteEffectNode(srcNode as EffectTreeNode, silent: true, rebuild: true);
+                        }
+                    } else if (srcNode is TableElementTreeNode) {
+                        CopyTableElementToEditor(srcNode, hit.Node);
+                        if ((e.KeyState & 4) != 0) {
+                            DeleteTableElementNode(srcNode as TableElementTreeNode, true);
+                        }
                     }
                 }
-
             }
         }
         #endregion
@@ -546,6 +551,8 @@ namespace DirectOutputToolkit
                 } else if (e.Button == MouseButtons.Left) {
                     if (hit.Node is EffectTreeNode || hit.Node is TableElementTreeNode) {
                         DoDragDrop(hit.Node, DragDropEffects.All);
+                        DragOverStartTime = DateTime.MaxValue;
+                        DragOverNode = null;
                     }
                 }
             }
