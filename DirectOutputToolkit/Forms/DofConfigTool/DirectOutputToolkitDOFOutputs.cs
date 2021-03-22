@@ -69,13 +69,20 @@ namespace DirectOutputToolkit
                                 matchingExport = new ExportTCS() { Effect = eff, TCS = TCS, DofCommand = dofCommand };
                                 TCSDict[matchingExport] = new List<TableElement>();
                             }
-                            TCSDict[matchingExport].Add(TE);
+                            if (!TCSDict[matchingExport].Contains(TE)) {
+                                TCSDict[matchingExport].Add(TE);
+                            }
                         }
                     }
                 }
             }
 
             richTextBoxDOFCommand.Text = string.Empty;
+
+            if (checkBoxSortEffects.Checked) {
+                var sortedTCSDict = TCSDict.OrderBy(x => x.Key.TCS.WaitDurationMs);
+                TCSDict = sortedTCSDict.ToDictionary(x => x.Key, x => x.Value);
+            }
 
             foreach (var pair in TCSDict) {
                 if (!richTextBoxDOFCommand.Text.IsNullOrEmpty()) {
@@ -98,6 +105,11 @@ namespace DirectOutputToolkit
         }
 
         private void checkBoxFullRangeIntensity_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateOutputCommands();
+        }
+
+        private void checkBoxSortEffects_CheckedChanged(object sender, EventArgs e)
         {
             UpdateOutputCommands();
         }
