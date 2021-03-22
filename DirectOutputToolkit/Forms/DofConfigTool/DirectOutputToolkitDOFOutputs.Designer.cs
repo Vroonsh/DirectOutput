@@ -32,6 +32,7 @@
             this.comboBoxOutput = new System.Windows.Forms.ComboBox();
             this.richTextBoxDOFCommand = new System.Windows.Forms.RichTextBox();
             this.checkBoxFullRangeIntensity = new System.Windows.Forms.CheckBox();
+            this.checkBoxSortEffects = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -76,11 +77,25 @@
             this.checkBoxFullRangeIntensity.UseVisualStyleBackColor = true;
             this.checkBoxFullRangeIntensity.CheckedChanged += new System.EventHandler(this.checkBoxFullRangeIntensity_CheckedChanged);
             // 
+            // checkBoxSortEffects
+            // 
+            this.checkBoxSortEffects.AutoSize = true;
+            this.checkBoxSortEffects.Checked = true;
+            this.checkBoxSortEffects.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSortEffects.Location = new System.Drawing.Point(150, 40);
+            this.checkBoxSortEffects.Name = "checkBoxSortEffects";
+            this.checkBoxSortEffects.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxSortEffects.TabIndex = 5;
+            this.checkBoxSortEffects.Text = "Sort effects by start time";
+            this.checkBoxSortEffects.UseVisualStyleBackColor = true;
+            this.checkBoxSortEffects.CheckedChanged += new System.EventHandler(this.checkBoxSortEffects_CheckedChanged);
+            // 
             // DirectOutputToolkitDOFOutputs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(652, 519);
+            this.Controls.Add(this.checkBoxSortEffects);
             this.Controls.Add(this.checkBoxFullRangeIntensity);
             this.Controls.Add(this.richTextBoxDOFCommand);
             this.Controls.Add(this.comboBoxOutput);
@@ -101,5 +116,6 @@
         private System.Windows.Forms.ComboBox comboBoxOutput;
         private System.Windows.Forms.RichTextBox richTextBoxDOFCommand;
         private System.Windows.Forms.CheckBox checkBoxFullRangeIntensity;
+        private System.Windows.Forms.CheckBox checkBoxSortEffects;
     }
 }
