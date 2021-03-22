@@ -80,9 +80,10 @@ namespace DirectOutputControls
                     edSvc.DropDownControl(dropdown);
                     if (dropdown.SelectedIndex == 0) {
                         ColorDialog dlg = new ColorDialog();
-                        dlg.ShowDialog();
-                        RGBAColor customColor = new RGBAColor(dlg.Color.R, dlg.Color.G, dlg.Color.B) ;
-                        return new ColorConfig() { Name = $"{customColor.ToString()}", Red = customColor.Red, Green = customColor.Green, Blue = customColor.Blue, Alpha = 255 };
+                        if (dlg.ShowDialog() == DialogResult.OK) {
+                            RGBAColor customColor = new RGBAColor(dlg.Color.R, dlg.Color.G, dlg.Color.B);
+                            return colorListProvider.ResolveColorConfig(customColor);
+                        }
                     } else {
                         return colorListProvider.GetColorConfig(dropdown.Selection as string);
                     }
