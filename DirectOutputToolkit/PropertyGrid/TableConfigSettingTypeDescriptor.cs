@@ -32,6 +32,15 @@ namespace DirectOutputToolkit
             return Handler?.ColorConfigurations.FirstOrDefault(CC => CC.Name.Equals(colorName, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        public ColorConfig ResolveColorConfig(RGBAColor color)
+        {
+            var colorConf = Handler?.ColorConfigurations.FirstOrDefault(CC => CC.Red == color.Red && CC.Green == color.Green && CC.Blue == color.Blue && CC.Alpha == color.Alpha);
+            if (colorConf == null) {
+                return new ColorConfig() { Name = $"{color.ToString()}", Red = color.Red, Green = color.Green, Blue = color.Blue, Alpha = 255 };
+            }
+            return colorConf;
+        }
+
         public ColorList GetColorList() => Handler?.ColorConfigurations.GetCabinetColorList();
 
         #endregion
