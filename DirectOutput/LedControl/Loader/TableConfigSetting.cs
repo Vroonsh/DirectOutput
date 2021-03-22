@@ -1121,9 +1121,17 @@ namespace DirectOutput.LedControl.Loader
 
         public void ResolveColorConfigs(ColorConfigList CCL)
         {
-            ColorConfig = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName, StringComparison.InvariantCultureIgnoreCase));
-            if (IsPlasma) {
+            if (ColorName != null) {
+                ColorConfig = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName, StringComparison.InvariantCultureIgnoreCase));
+                if (ColorConfig == null) {
+                    ColorConfig = new ColorConfig($"{ColorName}={ColorName}");
+                }
+            }
+            if (IsPlasma && ColorName2 != null) {
                 ColorConfig2 = CCL.FirstOrDefault(CC => CC.Name.Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase) || CC.GetCabinetColor().ToString().Equals(ColorName2, StringComparison.InvariantCultureIgnoreCase));
+                if (ColorConfig2 == null) {
+                    ColorConfig2 = new ColorConfig($"{ColorName2}={ColorName2}");
+                }
             }
         }
 
