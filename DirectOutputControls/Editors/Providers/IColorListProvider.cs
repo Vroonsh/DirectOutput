@@ -6,6 +6,7 @@ namespace DirectOutputControls
     public interface IColorListProvider
     {
         ColorConfig GetColorConfig(string colorName);
+        ColorConfig ResolveColorConfig(RGBAColor color);
         ColorList GetColorList();
     }
 }
