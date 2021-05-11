@@ -756,7 +756,7 @@ namespace DirectOutputToolkit
 
         private void UpdateActivationButton(Button but, int value)
         {
-            but.Text = value > 0 ? "Dectivate" : "Activate";
+            but.Text = value > 0 ? "Deactivate" : "Activate";
             but.Refresh();
         }
 
