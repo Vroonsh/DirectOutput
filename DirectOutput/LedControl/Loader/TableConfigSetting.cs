@@ -1132,6 +1132,18 @@ namespace DirectOutput.LedControl.Loader
             return $"{command}{value.ToString()} ";
         }
 
+        private string GetConfigToolIntensity(int value, int defaultValue, string command, bool fullRangeIntensity)
+        {
+            if (value.Equals(defaultValue)) {
+                return string.Empty;
+            }
+            if (fullRangeIntensity) {
+                return $"{command}#{value.ToString("X")} ";
+            } else {
+                return $"{command}{(int)((((float)value / 255.0f) * 48.0f) + 0.5f)} ";
+            }
+        }
+
         private string GetConfigToolCommand(string value, string command)
         {
             if (value.IsNullOrEmpty()) {
@@ -1192,7 +1204,7 @@ namespace DirectOutput.LedControl.Loader
             }
 
             //Blink & nested blink
-            configToolStr += GetConfigToolCommand(BlinkLow, 0, "BL#");
+            configToolStr += GetConfigToolIntensity(BlinkLow, 0, "BL", fullRangeIntensity);
             configToolStr += GetConfigToolCommand(BlinkPulseWidth, 50, "BPW");
             configToolStr += GetConfigToolCommand(BlinkIntervalMsNested, 0, "BNP");
             configToolStr += GetConfigToolCommand(BlinkPulseWidthNested, 50, "BNPW");
@@ -1210,11 +1222,7 @@ namespace DirectOutput.LedControl.Loader
 
             //Intensity
             if (Intensity < 255) {
-                if (fullRangeIntensity) {
-                    configToolStr += GetConfigToolCommand(Intensity, -1, "I#");
-                } else if (Intensity != -1) {
-                    configToolStr += $"I{(int)((((float)Intensity / 255.0f) * 48.0f) + 0.5f)}";
-                }
+                configToolStr += GetConfigToolIntensity(Intensity, -1, "I", fullRangeIntensity);
             }
 
             //Layer
