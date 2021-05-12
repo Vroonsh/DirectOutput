@@ -84,7 +84,9 @@ namespace DirectOutputToolkit
             PropertyDescriptors["ColorName2"] = new PropertyDescriptorHandler() { Browsable = false };
 
             PropertyDescriptors["ColorConfig"] = new PropertyDescriptorHandler() { DisplayName = "Color", TypeConverter = typeof(ColorConfigTypeConverter), TypeEditor = typeof(ColorConfigEditor) };
-            PropertyDescriptors["Intensity"] = new PropertyDescriptorHandler() {};
+            PropertyDescriptors["Intensity"] = new PropertyDescriptorHandler() { DisplayName = "Intensity (0->255)" };
+
+            PropertyDescriptors["BlinkLow"] = new PropertyDescriptorHandler() { DisplayName = "BlinkLow (0->255)" };
 
             PropertyDescriptors["PlasmaSpeed"] = new PropertyDescriptorHandler();
             PropertyDescriptors["PlasmaDensity"] = new PropertyDescriptorHandler();
