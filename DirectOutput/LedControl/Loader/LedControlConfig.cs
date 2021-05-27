@@ -73,8 +73,8 @@ namespace DirectOutput.LedControl.Loader
         }
 
     
-        private VariablesDictionary GlobalVariables = null;
-        private TableVariablesDictionary TableVariables = null;
+        public VariablesDictionary GlobalVariables { get; private set; } = null;
+        public TableVariablesDictionary TableVariables { get; private set; } = null;
 
 
         /// <summary>
