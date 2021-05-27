@@ -67,13 +67,16 @@ namespace DirectOutputToolkit
 
         internal void Rebuild(DirectOutputToolkitHandler handler)
         {
-            Nodes.Clear();
+            List<TreeNode> newNodes = new List<TreeNode>();
             foreach (var eff in TE.AssignedEffects) {
                 handler.InitEffect(eff, _TableType);
                 var effNode = new EffectTreeNode(TE, _TableType, eff.Effect, handler);
                 effNode.UpdateFromTableElement(TE);
-                Nodes.Add(effNode);
+                newNodes.Add(effNode);
             }
+
+            Nodes.Clear();
+            Nodes.AddRange(newNodes.ToArray());
             Refresh();
         }
     }

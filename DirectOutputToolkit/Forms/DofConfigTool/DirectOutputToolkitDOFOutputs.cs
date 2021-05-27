@@ -48,7 +48,7 @@ namespace DirectOutputToolkit
                 var effToy = eff.GetAssignedToy();
                 if (Toys.Contains(effToy)) {
                     var TCS = Handler.TCSFromEffect(eff);
-                    var dofCommand = Handler.ToConfigToolCommand(TCS, effToy, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
+                    var dofCommand = Handler.ToConfigToolCommand(TCS, eff, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
                     var matchingExport = TCSDict.Keys.FirstOrDefault(T => T.DofCommand.Equals(dofCommand, StringComparison.InvariantCultureIgnoreCase));
                     if (matchingExport == null) {
                         matchingExport = new ExportTCS() { Effect = eff, TCS = TCS, DofCommand = dofCommand };
@@ -63,7 +63,7 @@ namespace DirectOutputToolkit
                         var effToy = eff.GetAssignedToy();
                         if (Toys.Contains(effToy)) {
                             var TCS = Handler.TCSFromEffect(eff);
-                            var dofCommand = Handler.ToConfigToolCommand(TCS, effToy, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
+                            var dofCommand = Handler.ToConfigToolCommand(TCS, eff, exportTE: false, fullRangeIntensity: checkBoxFullRangeIntensity.Checked);
                             var matchingExport = TCSDict.Keys.FirstOrDefault(T => T.DofCommand.Equals(dofCommand, StringComparison.InvariantCultureIgnoreCase));
                             if (matchingExport == null) {
                                 matchingExport = new ExportTCS() { Effect = eff, TCS = TCS, DofCommand = dofCommand };
