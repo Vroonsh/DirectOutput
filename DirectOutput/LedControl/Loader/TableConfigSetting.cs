@@ -675,272 +675,200 @@ namespace DirectOutput.LedControl.Loader
 
             }
 
+            ParseCommands(S);
+        }
 
-            string[] Parts = S.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
+        /// <summary>
+        /// Parse the commands parts of a settings data (without thre trigger)
+        /// </summary>
+        /// <param name="commands">The commands from a settings data</param>
+        public void ParseCommands(string commands)
+        {
+            string[] Parts = commands.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             int IntegerCnt = 0;
             int PartNr = 0;
 
-            while (Parts.Length > PartNr)
-            {
+            while (Parts.Length > PartNr) {
 
-                if (Parts[PartNr].ToUpper() == "BLINK")
-                {
+                if (Parts[PartNr].ToUpper() == "BLINK") {
                     Blink = -1;
                     BlinkIntervalMs = 1000;
-                }
-                else if (Parts[PartNr].ToUpper() == "INVERT")
-                {
+                } else if (Parts[PartNr].ToUpper() == "INVERT") {
                     Invert = true;
-                }
-                else if (Parts[PartNr].ToUpper() == "NOBOOL")
-                {
+                } else if (Parts[PartNr].ToUpper() == "NOBOOL") {
                     NoBool = true;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APS" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APS" && Parts[PartNr].Substring(3).IsInteger()) {
                     PlasmaSpeed = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Plasma;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APD" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APD" && Parts[PartNr].Substring(3).IsInteger()) {
                     PlasmaDensity = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Plasma;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC")
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC") {
                     ColorName2 = Parts[PartNr].Substring(3).ToUpper();
                     AreaEffectType = EffectTypeMX.Plasma;
                 }
-                //else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC" && Parts[PartNr].Substring(3).IsInteger())
-                //{
-                //    PlasmaScale = Parts[PartNr].Substring(3).ToInteger();
-                //    IsPlasma = true;
-                //    IsArea = true;
-                //}
+                  //else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "APC" && Parts[PartNr].Substring(3).IsInteger())
+                  //{
+                  //    PlasmaScale = Parts[PartNr].Substring(3).ToInteger();
+                  //    IsPlasma = true;
+                  //    IsArea = true;
+                  //}
 
 
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "SHP" )
-                {
+                  else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "SHP") {
                     ShapeName = Parts[PartNr].Substring(3).Trim().ToUpper();
                     AreaEffectType = EffectTypeMX.Shape;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABT" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABT" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapTop = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABL" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABL" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapLeft = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABW" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABW" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapWidth = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABH" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABH" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapHeight = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABF" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ABF" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapFrame = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAS" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAS" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapAnimationStepSize = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAC" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAC" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapAnimationStepCount = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAF" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAF" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaBitmapAnimationFrameDuration = 1000 / Parts[PartNr].Substring(3).ToInteger().Limit(10, int.MaxValue);
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAD" && Enum.IsDefined(typeof(MatrixAnimationStepDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
-                {
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAD" && Enum.IsDefined(typeof(MatrixAnimationStepDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0])) {
 
                     AreaBitmapAnimationDirection = (MatrixAnimationStepDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAB" && Enum.IsDefined(typeof(AnimationBehaviourEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
-                {
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "AAB" && Enum.IsDefined(typeof(AnimationBehaviourEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0])) {
 
                     AreaBitmapAnimationBehaviour = (AnimationBehaviourEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
                     AreaEffectType = EffectTypeMX.Bitmap;
-                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFDEN" && Parts[PartNr].Substring(5).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFDEN" && Parts[PartNr].Substring(5).IsInteger()) {
                     AreaFlickerDensity = Parts[PartNr].Substring(5).ToInteger();
                     AreaEffectType = EffectTypeMX.Flicker;
-                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMIN" && Parts[PartNr].Substring(5).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMIN" && Parts[PartNr].Substring(5).IsInteger()) {
                     AreaFlickerMinDurationMs = Parts[PartNr].Substring(5).ToInteger();
                     AreaEffectType = EffectTypeMX.Flicker;
-                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMAX" && Parts[PartNr].Substring(5).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 5).ToUpper() == "AFMAX" && Parts[PartNr].Substring(5).IsInteger()) {
                     AreaFlickerMaxDurationMs = Parts[PartNr].Substring(5).ToInteger();
                     AreaEffectType = EffectTypeMX.Flicker;
-                } else if (Parts[PartNr].Length > 6 && Parts[PartNr].Substring(0, 6).ToUpper() == "AFFADE" && Parts[PartNr].Substring(6).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 6 && Parts[PartNr].Substring(0, 6).ToUpper() == "AFFADE" && Parts[PartNr].Substring(6).IsInteger()) {
                     AreaFlickerFadeDurationMs = Parts[PartNr].Substring(6).ToInteger();
                     AreaEffectType = EffectTypeMX.Flicker;
-                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AT" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AT" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaTop = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AL" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AL" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaLeft = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
-                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AW" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AW" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaWidth = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
-                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AH" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AH" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaHeight = Parts[PartNr].Substring(2).ToInteger().Limit(0, 100);
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 }
                 //TODO: Remove parameter AA
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AA" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AA" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaAcceleration = Parts[PartNr].Substring(2).ToInteger();
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASA" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASA" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaAcceleration = Parts[PartNr].Substring(3).ToInteger();
                     AreaEffectType = IsArea ? AreaEffectType : EffectTypeMX.None;
                 }
 
                 //TODO:Remove AS para
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AS" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                else if (Parts[PartNr].Length > 2 && Parts[PartNr].Substring(0, 2).ToUpper() == "AS" && Parts[PartNr].Substring(2).IsInteger()) {
                     AreaSpeed = Parts[PartNr].Substring(2).ToInteger().Limit(1, 10000);
                     AreaEffectType = EffectTypeMX.Shift;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].Substring(3).IsInteger()) {
                     AreaSpeed = Parts[PartNr].Substring(3).ToInteger().Limit(1, 10000);
                     AreaEffectType = EffectTypeMX.Shift;
-                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].ToUpper().Right(2) == "MS" && Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 5 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASS" && Parts[PartNr].ToUpper().Right(2) == "MS" && Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).IsInteger()) {
                     AreaSpeed = (int)((double)100000 / Parts[PartNr].Substring(3, Parts[PartNr].Length - 5).ToInteger()).Limit(10, 100000);
                     AreaEffectType = EffectTypeMX.Shift;
                 }
 
                 //TODO:Remove AD para
-                else if (Parts[PartNr].Length == 3 && Parts[PartNr].Substring(0, 2).ToUpper() == "AD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(2, 1).ToUpper()[0]))
-                {
+                else if (Parts[PartNr].Length == 3 && Parts[PartNr].Substring(0, 2).ToUpper() == "AD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(2, 1).ToUpper()[0])) {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(2, 1).ToUpper()[0];
                     AreaEffectType = EffectTypeMX.Shift;
-                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0]))
-                {
+                } else if (Parts[PartNr].Length == 4 && Parts[PartNr].Substring(0, 3).ToUpper() == "ASD" && Enum.IsDefined(typeof(MatrixShiftDirectionEnum), (int)Parts[PartNr].Substring(3, 1).ToUpper()[0])) {
 
                     AreaDirection = (MatrixShiftDirectionEnum)Parts[PartNr].Substring(3, 1).ToUpper()[0];
                     AreaEffectType = EffectTypeMX.Shift;
-                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "MAX" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "MAX" && Parts[PartNr].Substring(3).IsInteger()) {
                     MaxDurationMs = Parts[PartNr].Substring(3).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BNP" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BNP" && Parts[PartNr].Substring(3).IsInteger()) {
                     BlinkIntervalMsNested = Parts[PartNr].Substring(3).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].Length > 4 && Parts[PartNr].ToUpper().Substring(0, 4) == "BNPW" && Parts[PartNr].Substring(4).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 4 && Parts[PartNr].ToUpper().Substring(0, 4) == "BNPW" && Parts[PartNr].Substring(4).IsInteger()) {
                     BlinkPulseWidthNested = Parts[PartNr].Substring(4).ToInteger().Limit(1, 99);
-                }
-
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BPW" && Parts[PartNr].Substring(3).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BPW" && Parts[PartNr].Substring(3).IsInteger()) {
                     BlinkPulseWidth = Parts[PartNr].Substring(3).ToInteger().Limit(1, 99);
-                }
-                else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BL#" && Parts[PartNr].Substring(3).IsHexString())
-                {
+                } else if (Parts[PartNr].Length > 3 && Parts[PartNr].ToUpper().Substring(0, 3) == "BL#" && Parts[PartNr].Substring(3).IsHexString()) {
 
                     BlinkLow = Parts[PartNr].Substring(3).HexToInt().Limit(0, 255);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "BL" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "BL" && Parts[PartNr].Substring(1).IsInteger()) {
 
                     BlinkLow = (int)(((double)Parts[PartNr].Substring(2).ToInteger().Limit(0, 48)) * 5.3125);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "E" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "E" && Parts[PartNr].Substring(1).IsInteger()) {
 
                     ExtDurationMs = Parts[PartNr].Substring(1).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "I#" && Parts[PartNr].Substring(2).IsHexString())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "I#" && Parts[PartNr].Substring(2).IsHexString()) {
                     //Intensity setting
                     Intensity = Parts[PartNr].Substring(2).HexToInt().Limit(0, 255);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "I" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "I" && Parts[PartNr].Substring(1).IsInteger()) {
                     //Intensity setting
                     Intensity = (int)(((double)Parts[PartNr].Substring(1).ToInteger().Limit(0, 48)) * 5.3125);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "L" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "L" && Parts[PartNr].Substring(1).IsInteger()) {
                     //Layer setting
                     Layer = Parts[PartNr].Substring(1).ToInteger();
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "W" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "W" && Parts[PartNr].Substring(1).IsInteger()) {
                     //WaitDuration setting
                     WaitDurationMs = Parts[PartNr].Substring(1).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "M" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "M" && Parts[PartNr].Substring(1).IsInteger()) {
                     //MinimumDuration setting
                     MinDurationMs = Parts[PartNr].Substring(1).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "F" && Parts[PartNr].Substring(1).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 1 && Parts[PartNr].ToUpper().Substring(0, 1) == "F" && Parts[PartNr].Substring(1).IsInteger()) {
 
                     //Dimming duration for up and down
                     FadingUpDurationMs = Parts[PartNr].Substring(1).ToInteger().Limit(0, int.MaxValue);
                     FadingDownDurationMs = FadingUpDurationMs;
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "FU" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "FU" && Parts[PartNr].Substring(2).IsInteger()) {
 
                     //Dimming up duration
                     FadingUpDurationMs = Parts[PartNr].Substring(2).ToInteger().Limit(0, int.MaxValue);
 
-                }
-                else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "FD" && Parts[PartNr].Substring(2).IsInteger())
-                {
+                } else if (Parts[PartNr].Length > 2 && Parts[PartNr].ToUpper().Substring(0, 2) == "FD" && Parts[PartNr].Substring(2).IsInteger()) {
 
                     //Dimming down duration
                     FadingDownDurationMs = Parts[PartNr].Substring(2).ToInteger().Limit(0, int.MaxValue);
-                }
-                else if (Parts[PartNr].IsInteger())
-                {
-                    switch (IntegerCnt)
-                    {
+                } else if (Parts[PartNr].IsInteger()) {
+                    switch (IntegerCnt) {
                         case 0:
-                            if (Blink == -1)
-                            {
+                            if (Blink == -1) {
                                 //Its a blink interval
                                 BlinkIntervalMs = (Parts[PartNr].ToInteger()).Limit(1, int.MaxValue);
                                 DurationMs = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 //Its a duration
 
                                 DurationMs = Parts[PartNr].ToInteger().Limit(1, int.MaxValue);
                             }
                             break;
                         case 1:
-                            if (Blink != -1)
-                            {
+                            if (Blink != -1) {
                                 Blink = Parts[PartNr].ToInteger().Limit(1, int.MaxValue);
-                                if (DurationMs > 0 & Blink >= 1)
-                                {
+                                if (DurationMs > 0 & Blink >= 1) {
                                     BlinkIntervalMs = (DurationMs / Blink).Limit(1, int.MaxValue);
                                     DurationMs = 0;
 
@@ -948,8 +876,8 @@ namespace DirectOutput.LedControl.Loader
                             }
                             break;
                         default:
-                            Log.Warning("The ledcontrol table config setting {0} contains more than 2 numeric values without a type definition.".Build(SettingData));
-                            throw new Exception("The ledcontrol table config setting {0} contains more than 2 numeric values without a type definition.".Build(SettingData));
+                            Log.Warning("The ledcontrol table config setting commands {0} contains more than 2 numeric values without a type definition.".Build(commands));
+                            throw new Exception("The ledcontrol table config setting commands {0} contains more than 2 numeric values without a type definition.".Build(commands));
 
                     }
                     IntegerCnt++;
@@ -974,16 +902,16 @@ namespace DirectOutput.LedControl.Loader
                 {
                     Log.Warning("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], SettingData));
 
-                    throw new Exception("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], SettingData));
+                    throw new Exception("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], commands));
                 }
                 PartNr++;
             }
-
-
-
-
         }
 
+        /// <summary>
+        /// Create a TableConfigSetting from an Effect (recursively)
+        /// </summary>
+        /// <param name="Effect">The root effect</param>
         public void FromEffect(IEffect Effect)
         {
             IEffect currentFX = Effect;
@@ -1119,6 +1047,10 @@ namespace DirectOutput.LedControl.Loader
             }
         }
 
+        /// <summary>
+        /// Resolve the named color to fill the ColorConfig
+        /// </summary>
+        /// <param name="CCL">The provided ColorConfigList used to resolve ColorConfigs</param>
         public void ResolveColorConfigs(ColorConfigList CCL)
         {
             if (ColorName != null) {
@@ -1135,6 +1067,7 @@ namespace DirectOutput.LedControl.Loader
             }
         }
 
+        #region ToConfigToolCommand Helpers
         private string GetConfigToolCommand<T>(T value, T defaultValue, string command)
         {
             if (value == null || (value?.Equals(defaultValue) ?? false)) {
@@ -1163,11 +1096,12 @@ namespace DirectOutput.LedControl.Loader
 
             return $"{command}{value} ";
         }
+        #endregion
 
         /// <summary>
-        /// 
+        /// Outputs the correctly formatted DofConfigTool command line from a TableConfigSetting
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A DofConfigTool compatible command line</returns>
         public string ToConfigToolCommand(ColorList colorList = null, bool exportTE = true, bool fullRangeIntensity = true)
         {
             string configToolStr = string.Empty;
