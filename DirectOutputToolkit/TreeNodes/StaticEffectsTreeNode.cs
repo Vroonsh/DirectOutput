@@ -34,15 +34,17 @@ namespace DirectOutputToolkit
 
         internal void Rebuild(DirectOutputToolkitHandler Handler, IToy[] ToysFilter = null)
         {
-            Nodes.Clear();
+            List<TreeNode> newNodes = new List<TreeNode>();
             foreach (var eff in Table.AssignedStaticEffects) {
                 Handler.InitEffect(eff, _TableType);
                 if (ToysFilter == null || ToysFilter.Contains(eff.Effect.GetAssignedToy())) {
                     var effNode = new EffectTreeNode(null, _TableType, eff.Effect, Handler);
-                    Nodes.Add(effNode);
+                    newNodes.Add(effNode);
                 }
             }
 
+            Nodes.Clear();
+            Nodes.AddRange(newNodes.ToArray());
             Refresh();
         }
 

@@ -22,6 +22,7 @@ namespace DirectOutputToolkit
         {
             public DofConfigToolOutputEnum ToyOutput { get; set; }
             public string TCS { get; set; }
+            public List<string> Variables = new List<string>();
         }
 
         public class TableElementDescriptor
@@ -53,6 +54,7 @@ namespace DirectOutputToolkit
                     var TCS = Handler.TCSFromEffect(se.Effect);
                     TCS.OutputControl = TCS.Invert ? OutputControlEnum.FixedOff : OutputControlEnum.FixedOn;
                     neweffDesc.TCS = TCS.ToConfigToolCommand();
+                    neweffDesc.Variables.AddRange(Handler.GetEffectVariableOverrides(se.Effect));
                     StaticEffects.Add(neweffDesc);
                 }
             }
@@ -73,6 +75,7 @@ namespace DirectOutputToolkit
                         TCS.OutputControl = OutputControlEnum.Controlled;
                         TCS.TableElement = $"{(char)TE.TableElementType}{((TE.TableElementType == DirectOutput.TableElementTypeEnum.NamedElement) ? TE.Name : TE.Number.ToString())}";
                         neweffDesc.TCS = TCS.ToConfigToolCommand();
+                        neweffDesc.Variables.AddRange(Handler.GetEffectVariableOverrides(se.Effect));
                         newTE.Effects.Add(neweffDesc);
                     }
                 }
@@ -142,6 +145,9 @@ namespace DirectOutputToolkit
 
                     TableConfigSetting TCS = new TableConfigSetting();
                     TCS.ParseSettingData(eff.TCS);
+                    foreach (var variable in eff.Variables) {
+                        TCS.ParseCommands(string.Join(" ", Handler.GlobalVariables[variable]));
+                    }
                     TCS.ResolveColorConfigs(Handler.ColorConfigurations);
 
                     var Toys = Handler.GetToysFromOutput(eff.ToyOutput);
@@ -156,6 +162,7 @@ namespace DirectOutputToolkit
                             TableNode.EditionTable.Effects[num].Init(TableNode.EditionTable);
                         }
                         var newEffectNode = new EffectTreeNode(null, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
+                        Handler.SetEffectVariableOverrides(newEffect, eff.Variables);
                         TableNode.StaticEffectsNode.Nodes.Add(newEffectNode);
                         SettingNumber++;
                     }
@@ -180,6 +187,9 @@ namespace DirectOutputToolkit
                     foreach (var eff in te.Effects) {
                         TableConfigSetting TCS = new TableConfigSetting();
                         TCS.ParseSettingData(eff.TCS);
+                        foreach(var variable in eff.Variables) {
+                            TCS.ParseCommands(string.Join(" ", Handler.GlobalVariables[variable]));
+                        }
                         TCS.ResolveColorConfigs(Handler.ColorConfigurations);
 
                         var Toys = Handler.GetToysFromOutput(eff.ToyOutput);
@@ -193,6 +203,8 @@ namespace DirectOutputToolkit
                                 TableNode.EditionTable.Effects[num].Init(TableNode.EditionTable);
                             }
                             var newEffectNode = new EffectTreeNode(newTENode.TE, DirectOutputToolkitHandler.ETableType.EditionTable, newEffect, Handler);
+                            Handler.SetEffectVariableOverrides(newEffect, eff.Variables);
+                            newTENode.Nodes.Add(newEffectNode);
                             SettingNumber++;
                         }
                     }
