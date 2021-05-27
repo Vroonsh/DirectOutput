@@ -82,18 +82,21 @@ namespace DirectOutputToolkit
             //Retrieve Toy & TCCNumber from Chosen Output
             var Toy = RefEffect.GetAssignedToy();
 
+            //Inject variables into TCS
+            Handler.OverrideVariables(TCS, RefEffect);
+
+            //Keep override variables to transfer to the new effect
+            var overrideVariables = Handler.GetEffectVariableOverrides(RefEffect).ToList();
+
             //Remove all effects from Table & AssignedEffects before rebuilding if we're using our own effect as reference
             if (SrcEffect == null) {
                 Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
             }
 
-            //Inject variables into TCS
-            Handler.OverrideVariables(TCS, RefEffect);
-
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
             var newEffect = Handler.CreateEffect(TCS, TCCNumber, SettingNumber, _TableType, Toy, LedWizNumber);
 
-            Handler.SetEffectVariableOverrides(newEffect, Handler.GetEffectVariableOverrides(RefEffect).ToList());
+            Handler.SetEffectVariableOverrides(newEffect, overrideVariables);
 
             //Reassign new effect to the TreeNode
             TestTE.Name = $"{TableElementTestName} [{newEffect.Name}]";
