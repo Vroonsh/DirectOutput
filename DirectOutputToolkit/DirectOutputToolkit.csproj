@@ -151,6 +151,7 @@
     <Compile Include="TreeNodes\ITableElementTreeNode.cs" />
     <Compile Include="TreeNodes\StaticEffectsTreeNode.cs" />
     <Compile Include="TreeNodes\TableElementTreeNode.cs" />
+    <Compile Include="TreeNodes\TreeNodeExtensions.cs" />
     <EmbeddedResource Include="Forms\DirectOutputToolkitForm.resx">
       <DependentUpon>DirectOutputToolkitForm.cs</DependentUpon>
     </EmbeddedResource>
