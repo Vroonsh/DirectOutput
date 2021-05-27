@@ -2,6 +2,9 @@
 using DirectOutput.Cab.Out;
 using DirectOutput.Cab.Toys;
 using DirectOutput.FX;
+using DirectOutput.FX.AnalogToyFX;
+using DirectOutput.FX.MatrixFX;
+using DirectOutput.FX.RGBAFX;
 using DirectOutput.General;
 using DirectOutput.General.Analog;
 using DirectOutput.General.Color;
@@ -87,14 +90,31 @@ namespace DirectOutputToolkit
             return TCS;
         }
 
-        internal string ToConfigToolCommand(TableConfigSetting TCS, IToy toy, bool exportTE, bool fullRangeIntensity)
+        internal string ToConfigToolCommand(TableConfigSetting TCS, IEffect eff, bool exportTE, bool fullRangeIntensity)
         {
             var dofCommand = TCS.ToConfigToolCommand(ColorConfigurations.GetCabinetColorList(), exportTE, fullRangeIntensity);
-            dofCommand = dofCommand.Replace(toy is IAnalogAlphaToy ?
-                                                    $"M{Settings.EffectMinDurationMs}" :
-                                                    $"M{Settings.EffectRGBMinDurationMs}"
-                                                    , "").TrimEnd(' ');
-            return dofCommand;
+
+            var splitCommands = dofCommand.ToUpper().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            splitCommands.Distinct();
+
+            var variables = GetEffectVariableOverrides(eff).ToArray();
+            if (variables.Length > 0) {
+                foreach (var variable in variables) {
+                    if (GlobalVariables.Keys.Contains(variable)) {
+                        var varCommands = GlobalVariables[variable].ToUpper().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        splitCommands = splitCommands.Except(varCommands).ToList();
+                        splitCommands.Add($"@{variable}@");
+                    }
+                }
+            }
+
+            if (eff?.GetAssignedToy() is IAnalogAlphaToy) {
+                splitCommands.Remove($"M{Settings.EffectMinDurationMs}");
+            } else {
+                splitCommands.Remove($"M{Settings.EffectRGBMinDurationMs}");
+            }
+
+            return string.Join(" ", splitCommands);
         }
 
         internal DofConfigToolOutputEnum GetToyOutput(string ToyName)
@@ -135,6 +155,8 @@ namespace DirectOutputToolkit
 
         public ColorConfigList ColorConfigurations => LedControlConfigList.Count == 0 ? null : LedControlConfigList[0].ColorConfigurations;
 
+        public VariablesDictionary GlobalVariables => LedControlConfigList.Count == 0 ? null : LedControlConfigList[0].GlobalVariables;
+
         public string[] ShapeNames => TableDescriptors[ETableType.ReferenceTable].Table.ShapeDefinitions.Shapes.Select(S => S.Name).ToArray();
 
         public ToyList Toys => Pinball?.Cabinet.Toys;
@@ -164,6 +186,8 @@ namespace DirectOutputToolkit
                 MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
+            PopulateCategorizedVariables();
 
             Pinball = new Pinball();
             var GlobalConfig = new GlobalConfig(){
@@ -235,6 +259,7 @@ namespace DirectOutputToolkit
                 TableDescriptors[ETableType.EditionTable].Table.TableElements.RemoveAll(TE => TE.Name.StartsWith(EffectTreeNode.TableElementTestName, StringComparison.InvariantCultureIgnoreCase));
                 TableDescriptors[ETableType.EditionTable].Table.Init(Pinball);
             }
+            EffectVariableOverrides.Clear();
             GC.Collect(6, GCCollectionMode.Forced);
         }
 
@@ -412,6 +437,7 @@ namespace DirectOutputToolkit
             ResetRunnigTableElement(parentTE);
             var Table = TableDescriptors[tableType].Table;
             foreach (var eff in effects) {
+                ClearEffectVariableOverrides(eff);
                 Table.Effects.RemoveAll(E=> E == eff);
                 Table.AssignedStaticEffects.RemoveAll(AE => AE.Effect == eff);
                 foreach (var TE in Table.TableElements) {
@@ -444,5 +470,123 @@ namespace DirectOutputToolkit
         #region Edition Table
         #endregion
 
+        #region Variables
+        private Dictionary<string, List<string>> CategorizedVariables = new Dictionary<string, List<string>>();
+
+        static string[] MXCommands = {
+            "AT","AL", "AW", "AH",
+            "SHP",
+            "APS", "APD", "APC",
+            "ABT", "ABL", "ABW", "ABH", "ABF",
+            "AAS", "AAC", "AAF", "AAD", "AAB",
+            "AFDEN", "AFMIN", "AFMAX", "AFFADE",
+            "ASA", "ASS", "ASD"
+        };
+
+        private void PopulateCategorizedVariables()
+        {
+            CategorizedVariables.Clear();
+            CategorizedVariables["MX"] = new List<string>();
+            CategorizedVariables["RGB"] = new List<string>();
+            CategorizedVariables["ANALOG"] = new List<string>();
+            CategorizedVariables["ANY"] = new List<string>();
+
+            foreach (var variable in GlobalVariables) {
+                var splitCommands = variable.Value.ToUpper().Split(' ').ToList();
+                if (splitCommands.Any(C => MXCommands.Any(MXC => C.StartsWith(MXC)))) {
+                    CategorizedVariables["MX"].Add(variable.Key);
+                } else if (splitCommands.Any(C => C.StartsWith("#") || ColorConfigurations.Any(CC => CC.Name.Equals(C, StringComparison.InvariantCultureIgnoreCase)))) {
+                    CategorizedVariables["RGB"].Add(variable.Key);
+                } else if (splitCommands.Any(C => C.StartsWith("I"))) {
+                    CategorizedVariables["ANALOG"].Add(variable.Key);
+                } else {
+                    CategorizedVariables["ANY"].Add(variable.Key);
+                }
+            }
+
+        }
+
+        internal List<string> GetCategorizedVariables(IEffect effect)
+        {
+            var effects = effect.GetAllEffects();
+            if (effects.Any(E => E is IMatrixEffect)) {
+                return CategorizedVariables["MX"];
+            } else if (effects.Any(E => E is RGBAEffectBase)) {
+                return CategorizedVariables["RGB"];
+            } else if (effects.Any(E => E is AnalogToyEffectBase)){
+                return CategorizedVariables["ANALOG"];
+            }
+            return CategorizedVariables["ANY"];
+        }
+
+        internal void OverrideVariables(TableConfigSetting tCS, IEffect eff)
+        {
+            List<string> variables = null;
+            if (EffectVariableOverrides.TryGetValue(eff, out variables)) {
+                foreach (var variable in variables) {
+                    tCS.ParseCommands(GlobalVariables[variable].ToUpper());
+                }
+            }
+        }
+
+        private Dictionary<IEffect, List<string>> EffectVariableOverrides = new Dictionary<IEffect, List<string>>();
+
+        public IEnumerable<string> GetEffectVariableOverrides(IEffect eff)
+        {
+            List<string> variables = null;
+            if (EffectVariableOverrides.TryGetValue(eff, out variables)) {
+                return variables;
+            } else {
+                return new string[0];
+            }
+        }
+
+        public void AddEffectVariableOverride(IEffect eff, string variable)
+        {
+            if (!EffectVariableOverrides.Keys.Contains(eff)) {
+                EffectVariableOverrides[eff] = new List<string>();
+            }
+            if (!EffectVariableOverrides[eff].Contains(variable)) {
+                EffectVariableOverrides[eff].Add(variable);
+            }
+        }
+
+        public void SetEffectVariableOverrides(IEffect eff, List<string> variables)
+        {
+            if (!EffectVariableOverrides.Keys.Contains(eff)) {
+                EffectVariableOverrides[eff] = new List<string>();
+            }
+            EffectVariableOverrides[eff].Clear();
+            EffectVariableOverrides[eff].AddRange(variables);
+        }
+
+        public void RemoveEffectVariableOverride(IEffect eff, string variable)
+        {
+            List<string> variables = null;
+            if (EffectVariableOverrides.TryGetValue(eff, out variables)) {
+                variables.RemoveAll(V => V.Equals(variable));
+            }
+        }
+
+        internal void SwitchEffectVariableOverride(IEffect effect, string variable)
+        {
+            List<string> variables = null;
+            if (EffectVariableOverrides.TryGetValue(effect, out variables)) {
+                if (variables.Contains(variable)) {
+                    variables.Remove(variable);
+                } else {
+                    variables.Add(variable);
+                }
+            } else {
+                EffectVariableOverrides[effect] = new List<string>();
+                EffectVariableOverrides[effect].Add(variable);
+            }
+        }
+
+        internal void ClearEffectVariableOverrides(IEffect effect)
+        {
+            EffectVariableOverrides.Remove(effect);
+        }
+        #endregion
     }
 }

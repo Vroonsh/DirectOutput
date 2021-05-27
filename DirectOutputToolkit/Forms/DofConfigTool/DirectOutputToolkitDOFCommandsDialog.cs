@@ -42,10 +42,17 @@ namespace DirectOutputToolkit
             //Parse Lines from entered DOF Commands
             listBoxCommandLines.Items.Clear();
 
+            if (textBoxDofCommands.Text.Contains(",")) {
+                MessageBox.Show("Paste only single output lines directly from DofConfigTool site.\nThis line contains commas, maybe you got a full table DofConfig line", "Invalid DofConfigTool command line", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var lines = textBoxDofCommands.Text.Split('/');
 
             foreach (var line in lines) {
-                listBoxCommandLines.Items.Add(line);
+                if (!line.Equals("0")) {
+                    listBoxCommandLines.Items.Add(line);
+                }
             }
             listBoxCommandLines.Refresh();
         }
