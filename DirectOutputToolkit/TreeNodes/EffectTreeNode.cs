@@ -31,6 +31,7 @@ namespace DirectOutputToolkit
             SelectedImageIndex = ImageIndex;
             Handler = handler;
             TCS = Handler.TCSFromEffect(Effect);
+            Handler.OverrideVariables(TCS, Effect);
             TCS.ResolveColorConfigs(Handler.ColorConfigurations);
             UpdateFromTableElement(TableTE);
         }
@@ -62,7 +63,7 @@ namespace DirectOutputToolkit
             }
 
             var ToyName = Effect?.GetAssignedToy()?.Name ?? string.Empty;
-            DofConfigCommand = Handler.ToConfigToolCommand(TCS, Effect?.GetAssignedToy(), exportTE: true, fullRangeIntensity: true);
+            DofConfigCommand = Handler.ToConfigToolCommand(TCS, Effect, exportTE: true, fullRangeIntensity: true);
             Text = $"[{ToyName}] {DofConfigCommand}";
         }
 
@@ -86,8 +87,13 @@ namespace DirectOutputToolkit
                 Handler.RemoveEffects(allEffects, (Parent as TableElementTreeNode)?.TE, _TableType);
             }
 
+            //Inject variables into TCS
+            Handler.OverrideVariables(TCS, RefEffect);
+
             // The create effect will add the effects to the provided Table & TebleElements' assigned effects
             var newEffect = Handler.CreateEffect(TCS, TCCNumber, SettingNumber, _TableType, Toy, LedWizNumber);
+
+            Handler.SetEffectVariableOverrides(newEffect, Handler.GetEffectVariableOverrides(RefEffect).ToList());
 
             //Reassign new effect to the TreeNode
             TestTE.Name = $"{TableElementTestName} [{newEffect.Name}]";
@@ -96,7 +102,7 @@ namespace DirectOutputToolkit
             Effect = newEffect;
 
             //Update Name
-            DofConfigCommand = TCS.ToConfigToolCommand(Handler.ColorConfigurations.GetCabinetColorList());
+            DofConfigCommand = Handler.ToConfigToolCommand(TCS, Effect, exportTE: true, fullRangeIntensity: true);
 
             Refresh();
         }

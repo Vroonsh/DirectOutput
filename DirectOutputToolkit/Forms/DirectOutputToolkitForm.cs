@@ -1,6 +1,7 @@
 ﻿using DirectOutput;
 using DirectOutput.FX;
 using DirectOutput.FX.MatrixFX;
+using DirectOutput.FX.RGBAFX;
 using DirectOutput.FX.TimmedFX;
 using DirectOutput.General;
 using DirectOutput.LedControl.Loader;
@@ -195,6 +196,21 @@ namespace DirectOutputToolkit
             this.Close();
         }
 
+        private string[] ExtractVariables(string cmdLine)
+        {
+            var splitCommands = cmdLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var extractedVariables = new List<string>();
+            foreach(var command in splitCommands) {
+                if (command.StartsWith("@") && command.EndsWith("@")) {
+                    var variable = command.Substring(1, command.Length - 2);
+                    if (!extractedVariables.Contains(variable)) {
+                        extractedVariables.Add(variable);
+                    }
+                }
+            }
+            return extractedVariables.ToArray();
+        }
+
         private void importFromDofConfigToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DirectOutputToolkitDOFCommandsDialog dlg = new DirectOutputToolkitDOFCommandsDialog() { Handler = Handler };
@@ -207,13 +223,22 @@ namespace DirectOutputToolkit
                 int TCCNumber = EditionTableNode.EditionTable.TableElements.Count;
 
                 var cmdLines = dlg.CommandLines.ToList();
+
+                //Extract variables from lines
+                var extractedVariables = cmdLines.Select(L => ExtractVariables(L)).ToList();
+
                 Handler.LedControlConfigList[0].ResolveTableVariables(cmdLines);
                 Handler.LedControlConfigList[0].ResolveVariables(cmdLines);
 
-                foreach (var line in cmdLines) {
+                for (int i = 0; i < cmdLines.Count; ++i) {
+                    var line = cmdLines[i];
+                    var variables = extractedVariables[i].ToList();
                     var Toys = Handler.GetToysFromOutput(DofConfigToolOutputs.GetOutput(dlg.OutputName));
-                    foreach(var toy in Toys) {
-                        CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, toy.Name, Handler);
+                    foreach (var toy in Toys) {
+                        var effNode = CreateEffectsFromDofCommand(EditionTableNode, TCCNumber, line, toy.Name, Handler);
+                        if (variables.Count > 0 && effNode != null && effNode.Effect != null) {
+                            Handler.SetEffectVariableOverrides(effNode.Effect, variables);
+                        }
                         TCCNumber++;
                     }
                 }
@@ -962,6 +987,28 @@ namespace DirectOutputToolkit
             CopyEffectToEditor(command.Source, command.Target);
         }
 
+        private void OnEffectVariableSwitch(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var SrcEffectNode = (command.Source as EffectTreeNode);
+
+            Handler.SwitchEffectVariableOverride(SrcEffectNode.Effect, item.Text);
+            SrcEffectNode.Rebuild(Handler, null);
+            propertyGridMain.Refresh();
+        }
+
+        private void OnEffectVariableClear(object sender, EventArgs e)
+        {
+            var item = (sender as MenuItem);
+            var command = (item.Tag as TreeNodeCommand);
+            var SrcEffectNode = (command.Source as EffectTreeNode);
+            Handler.ClearEffectVariableOverrides(SrcEffectNode.Effect);
+            SrcEffectNode.Rebuild(Handler, null);
+            propertyGridMain.Refresh();
+        }
+
+
         private void CopyTableElementToEditor(TreeNode srcNode, TreeNode dstNode)
         {
             var SrcTENode = (srcNode as TableElementTreeNode);
@@ -1111,6 +1158,22 @@ namespace DirectOutputToolkit
                     }
                 } else {
                     addMenu.MenuItems.Add(new MenuItem("Edition table", new EventHandler(this.OnCopyEffectToEditor)) { Tag = new TreeNodeCommand() { Source = treeNode, Target = null } });
+                }
+
+                if (treeview == treeViewEditionTable) {
+                    effectMenu.MenuItems.Add("-");
+
+                    var variableMenu = new MenuItem("Variables");
+                    effectMenu.MenuItems.Add(variableMenu);
+
+                    variableMenu.MenuItems.Add(new MenuItem($"Clear Variables", new EventHandler(this.OnEffectVariableClear)) { Tag = new TreeNodeCommand() { Source = treeNode } });
+                    variableMenu.MenuItems.Add("-");
+
+                    var variables = Handler.GetCategorizedVariables(effectNode.Effect);
+                    foreach (var variable in variables) {
+                        variableMenu.MenuItems.Add(new MenuItem($"{variable}", new EventHandler(this.OnEffectVariableSwitch)) { Checked = Handler.GetEffectVariableOverrides(effectNode.Effect).Contains(variable), Tag = new TreeNodeCommand() { Source = treeNode } });
+                    }
+
                 }
 
                 effectMenu.Show(effectNode.GetTableType() == DirectOutputToolkitHandler.ETableType.EditionTable ? treeViewEditionTable : treeViewReferenceTable, location);
