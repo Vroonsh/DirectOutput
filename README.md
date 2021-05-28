@@ -1,21 +1,24 @@
-This branch is a try to create a toolkit to ease Matrix effects creation.
+This branch is dedicated to DirectOutput Toolkit.
 
-The new tool is called LedControl Toolkit.
-Its purpose is to edit effects without needing to have addressable ledstrip hardware connected.
+![image](https://user-images.githubusercontent.com/13945459/120012283-98606b00-bfdf-11eb-8289-f3cb95a37f44.png)
 
-For doing so, it uses the current DirectOutput.dll (slighly modified but nothing should change in its behavior).
-It then redirect outputs to a new Winforms based Led Controller to preview the effects.
-It's using your usual config files (globalconfig, cabinet.xml & led control inifiles) to setup your toolkit workspace.
 
-For now, you can only browse through all available table configs from provided inifile, test the effects and modify them.
-Effect edition is done through a property grid which expose a Table Config Setting line for each effect.
-The properties are automatically converted to dofconfigtool compatible commands you can then inject in the online tool.
+DirectOutput Toolkit (DOTK) is a tool made for dof creators/modders.
+It's a standalone tool, you don't need to have Directoutput installed.
 
-Next step will be to create brand new effects which could be save/load using xml files.
+It's also based on DirectOutput code to manage all the effects, so you'll have a WYSIWYG experience while using it.
+It has its own preview window showing how any virtual pinball toys will react to your effects.
 
-Standalone releases are available in the releases section, they're provided with their own DirectOutput.dll so you can extract them in a separate directory than your DirectOutput installation. 
-If you want to test this tool at its early stage, it'll be really appreciate.
-Nothing is saved in any of your congif files, only tool settings are in a config subdirectory.
-And also feel free to create issues on this branch for any feedback, bug or improvement.
+It supports all current toys includign analog, rgb & matrix toys.
+It supports also all effects types, including Matrix Bitmap effects with a dedicated tool.
 
-Cheers
+It will automatically gather the DofConfigTool configuration straight from the site using the user information you provided.
+It won't work directly with your config files (globalconfig, directoutput ini files, cabinet file...) but will create local ones, so no worry about your directoutput configuration if you use it on your cab.
+
+You can have a glimpse of the DOTK features on my Youtube channel : 
+
+https://www.youtube.com/watch?v=l51IaM8PYgQ&list=PLjHwWo3oP7bjyNVtPrCItQ-fieKkx6iYk
+
+Feel free to give any feedbacks, they're always really appreciated
+
+Cheers!
