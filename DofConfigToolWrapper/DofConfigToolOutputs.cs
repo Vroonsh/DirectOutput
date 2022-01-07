@@ -193,6 +193,12 @@ namespace DofConfigToolWrapper
         MagnasaveLeftMX,
         [Description("Magnasave Right MX")]
         MagnasaveRightMX,
+        [Description("Launch Ball MX")]
+        LaunchBallMX,
+        [Description("Fire MX")]
+        FireMX,
+        [Description("Extraball MX")]
+        ExtraballMX,
         [Browsable(false)]
         RGBMXOutputs_End,
     }
