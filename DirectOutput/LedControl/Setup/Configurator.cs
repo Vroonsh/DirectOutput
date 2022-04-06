@@ -143,8 +143,9 @@ namespace DirectOutput.LedControl.Setup
                         }
                     }
 
+                    //Default Bitmap Fx to White because they're colorized now
                     if (ActiveColor == null) {
-                        ActiveColor = new RGBAColor(0xff, 0, 0, 0xff);
+                        ActiveColor = new RGBAColor(0xff, 0xff, 0xff, 0xff);
                     }
 
                     if (TCS.AreaBitmapAnimationStepCount > 1) {
