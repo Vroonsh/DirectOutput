@@ -212,12 +212,12 @@ namespace DofConfigToolWrapper
         public static DofConfigToolOutputEnum[] GetPublicDofOutput(bool includeInvalid) => Enum.GetValues(typeof(DofConfigToolOutputEnum))
                                                                                                     .Cast<DofConfigToolOutputEnum>()
                                                                                                     .Where(x => {
-                                                                                                        return !(typeof(DofConfigToolOutputEnum)
-                                                                                                            .GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x))
-                                                                                                            .GetCustomAttributes(typeof(BrowsableAttribute), false)
-                                                                                                            .FirstOrDefault() is BrowsableAttribute attribute) || 
-                                                                                                            (attribute.Browsable == true && 
-                                                                                                            (includeInvalid || !includeInvalid && x != DofConfigToolOutputEnum.Invalid));
+                                                                                                        var field = typeof(DofConfigToolOutputEnum).GetField(Enum.GetName(typeof(DofConfigToolOutputEnum), x));
+                                                                                                        var browseattr = field.GetCustomAttributes(typeof(BrowsableAttribute), false)
+                                                                                                                            .FirstOrDefault() as BrowsableAttribute;
+                                                                                                        if (browseattr != null && !browseattr.Browsable)
+                                                                                                            return false;
+                                                                                                        return includeInvalid || x != DofConfigToolOutputEnum.Invalid;
                                                                                                     }
                                                                                                     ).ToArray();
 
