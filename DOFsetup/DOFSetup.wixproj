@@ -92,9 +92,33 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\DirectOutputControls\DirectOutputControls.csproj">
+      <Name>DirectOutputControls</Name>
+      <Project>{4a068f60-ec8f-41a1-951a-2afd448e4ba6}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectOutputToolkit\DirectOutputToolkit.csproj">
+      <Name>DirectOutputToolkit</Name>
+      <Project>{423f9e70-10ed-4fde-b468-68d27efaaf8d}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\DirectOutput\DirectOutput.csproj">
       <Name>DirectOutput</Name>
       <Project>{da43acdd-8241-4a28-8eb2-dae80d91faa8}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\DofConfigToolWrapper\DofConfigToolWrapper.csproj">
+      <Name>DofConfigToolWrapper</Name>
+      <Project>{108d1a08-4828-455c-bbf0-3c4bc2f79fec}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
