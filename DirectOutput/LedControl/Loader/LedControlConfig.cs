@@ -276,13 +276,15 @@ namespace DirectOutput.LedControl.Loader
             //Resolve tables variables first in case they override global variables (like custom flasher mx shapes)
             if (TableVariableData != null) {
                 Log.Write("Resolving Tables Variables ({0})".Build(LedControlIniFile));
-                ResolveTableVariables(OutData, TableVariableData);
+                TableVariables = new TableVariablesDictionary();
+                ResolveTableVariables(TableVariableData);
             }
 
             if (VariableData != null)
             {
                 Log.Write("Resolving Global Variables ({0})".Build(LedControlIniFile));
-                ResolveVariables(OutData, VariableData);
+                GlobalVariables = new VariablesDictionary();
+                ResolveVariables(VariableData);
             }
 
             ColorConfigurations.ParseLedControlData(ColorData, ThrowExceptions);
