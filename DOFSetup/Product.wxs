@@ -296,9 +296,12 @@
         <RemoveFile Id="RemoveCfgTest" Name="$(var.DirectOutputConfigTester.TargetFileName)" On="install" />
         <RemoveFile Id="RemoveCfgEd" Name="$(var.GlobalConfigEditor.TargetFileName)" On="install" />
         <RemoveFile Id="RemoveLedTst" Name="$(var.LedControlFileTester.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofWrappers" Name="$(var.DofConfigToolWrapper.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofControls" Name="$(var.DirectOutputControls.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofToolkit" Name="$(var.DirectOutputToolkit.TargetFileName)" On="install" />
         <RemoveFile Id="RemoveProSlv" Name="$(var.ProPinballSlave.TargetFileName)" On="install" />
 
-				<!--
+        <!--
 				  while we're at it, remove any ancient loose DLLs that were installed
 					by really old builds (from before we eliminated all loose component
 					DLL files via Costura.Fody bundling)
@@ -336,7 +339,10 @@
 				<RemoveFile Id="RemoveCfgTest2" Name="$(var.DirectOutputConfigTester.TargetFileName)" On="install" />
 				<RemoveFile Id="RemoveCfgEd2" Name="$(var.GlobalConfigEditor.TargetFileName)" On="install" />
 				<RemoveFile Id="RemoveLedTst2" Name="$(var.LedControlFileTester.TargetFileName)" On="install" />
-				<RemoveFile Id="RemoveProSlv2" Name="$(var.ProPinballSlave.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofWrappers2" Name="$(var.DofConfigToolWrapper.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofControls2" Name="$(var.DirectOutputControls.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveDofToolkit2" Name="$(var.DirectOutputToolkit.TargetFileName)" On="install" />
+        <RemoveFile Id="RemoveProSlv2" Name="$(var.ProPinballSlave.TargetFileName)" On="install" />
 
 				<!-- remove any old loose DLLs found here as well -->
 				<RemoveFile Id="RemoveNJ2" Name="Newtonsoft.Json.dll" On="install" />
@@ -354,8 +360,11 @@
 				<File Source="$(var.DirectOutputComObjectRegister.TargetPath)" />
 				<File Source="$(var.DirectOutputConfigTester.TargetPath)" />
 				<File Source="$(var.GlobalConfigEditor.TargetPath)" />
-				<File Source="$(var.LedControlFileTester.TargetPath)" />
-				<File Source="$(var.ProPinballSlave.TargetPath)" />
+        <File Source="$(var.LedControlFileTester.TargetPath)" />
+        <File Source="$(var.DofConfigToolWrapper.TargetPath)" />
+        <File Source="$(var.DirectOutputControls.TargetPath)" />
+        <File Source="$(var.DirectOutputToolkit.TargetPath)" />
+        <File Source="$(var.ProPinballSlave.TargetPath)" />
 
 				<!-- NOTE: DirectOutputComObject is included separately via Generated/RegisterDirectOutputComObjectDll.wxs -->
 				
