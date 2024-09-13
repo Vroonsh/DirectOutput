@@ -58,6 +58,8 @@ set ZipPath=Builds
 rem ###   MSI setup output
 set MSIPath=DOFSetup\bin\%1\%2
 
+set ZIPCMD=7z a -tzip
+
 rem ===========================================================
 rem ###   Date/time to embed in zip file name
 set TempDate=
@@ -84,15 +86,18 @@ rem ###   Delete any old copy of the ZIP file
 if exist "%ZipFile%" del "%ZipFile%"
 
 rem ###   Add the LICENSE file
-zip -j "%ZipFile%" LICENSE
+%ZIPCMD% "%ZipFile%" LICENSE
 
 rem ###   Add DOF DLL files
 for /F "eol=# delims=" %%i in (manifest.%1.txt) do (
-    zip -j "%ZipFile%" "%DofDllPath%\%%i"
+    %ZIPCMD% "%ZipFile%" .\"%DofDllPath%\%%i"
 )
 
 rem ###   Add DOF config example files
-zip "%ZipFile%" config\examples\*.xml
+%ZIPCMD% "%ZipFile%" config\examples\*.xml
+
+rem ###   Add DOTK config files
+%ZIPCMD% "%ZipFile%" .\DirectOutputToolkit\DOTK\
 
 
 rem ###   Copy MSI setup to build folder
