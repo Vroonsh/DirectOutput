@@ -5,8 +5,11 @@ DirectOutputComObject.dll
 DirectOutputComObject.tlb
 DirectOutput PinballX Plugin.dll
 DirectOutput.dll
+DofConfigToolWrapper.dll
+DirectOutputControls.dll
 
 DirectOutputConfigTester.exe
+DirectOutputToolkit.exe
 GlobalConfigEditor.exe
 LedControlFileTester.exe
 RegisterDirectOutputComObject.exe
