@@ -57,7 +57,7 @@ namespace DirectOutputToolkit
             treeViewEditionTable.HideSelection = false;
         }
 
-        public bool LoadConfig()
+        public async Task<bool> LoadConfig()
         {
             OpenConfigDialog OCD = new OpenConfigDialog(Settings);
             if (OCD.ShowDialog() == DialogResult.OK) {
@@ -70,7 +70,7 @@ namespace DirectOutputToolkit
                 Handler.DofConfigToolSetup = DofConfigToolSetup;
                 Handler.DofViewSetup = DofViewSetup;
                 Handler.PreviewControl = PreviewForm.PreviewControl;
-                if (!Handler.SetupPinball()) {
+                if (!await Handler.SetupPinballAsync()) {
                     return false;
                 }
 
@@ -118,9 +118,9 @@ namespace DirectOutputToolkit
             Settings.SaveSettings();
         }
 
-        private void DirectOutputToolkitForm_Load(object sender, EventArgs e)
+        private async void DirectOutputToolkitForm_Load(object sender, EventArgs e)
         {
-            if (!LoadConfig()) {
+            if (!await LoadConfig()) {
                 this.Close();
             }
         }
