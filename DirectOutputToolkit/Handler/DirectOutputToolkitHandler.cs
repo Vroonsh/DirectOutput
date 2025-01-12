@@ -174,14 +174,14 @@ namespace DirectOutputToolkit
         }
 
         #region Pinball
-        internal bool SetupPinball()
+        internal async Task<bool> SetupPinballAsync()
         {
             FinishPinball();
 
             var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
             DofFilesHandler.RootDirectory = dir;
             DofFilesHandler.DofSetup = DofConfigToolSetup;
-            DofFilesHandler.UpdateConfigFiles(ForceDofConfigToolUpdate);
+            await DofFilesHandler.UpdateConfigFilesAsync(ForceDofConfigToolUpdate);
             if (DofFilesHandler.ConfigFiles.Count == 0) {
                 MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;

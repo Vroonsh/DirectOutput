@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -70,49 +71,46 @@ namespace DofConfigToolWrapper
             }
         }
 
-        private void RetrieveDofConfigToolVersion()
+        private HttpClient _httpClient = new HttpClient() {
+            Timeout = TimeSpan.FromSeconds(10)
+        };
+
+        private async Task RetrieveDofConfigToolVersionAsync()
         {
-            WebRequest request = WebRequest.Create("http://configtool.vpuniverse.com/api.php?query=version");
-            request.Credentials = CredentialCache.DefaultCredentials;
-
-            WebResponse response = request.GetResponse();
-
-            using (Stream dataStream = response.GetResponseStream()) {
-                StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                DofConfigToolVersion = Int32.Parse(responseFromServer);
-            }
-            response.Close();
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://configtool.vpuniverse.com/api.php?query=version");
+            request.Headers.Add("user-agent", "Other");
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            DofConfigToolVersion = Int32.Parse(responseBody);
         }
 
-        private void GatherAndExtractConfigFiles(WaitForm waitForm)
+        private async Task GatherAndExtractConfigFilesAsync(WaitForm waitForm)
         {
-            var url = "http://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
-            WebRequest request = WebRequest.Create(url);
-            request.Credentials = CredentialCache.DefaultCredentials;
+            var url = "https://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
+            waitForm.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
 
-            waitForm.Invoke((Action)(()=>waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
-
-            WebResponse response = request.GetResponse();
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("user-agent", "Other");
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
             waitForm.Invoke((Action)(() => waitForm.UpdateMessage("Extracting config files...")));
 
             ClearUserLocalPath();
             var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
 
-            using (Stream dataStream = response.GetResponseStream()) {
+            using (Stream dataStream = await response.Content.ReadAsStreamAsync()) {
                 using (FileStream decompressedFileStream = File.Create(outputZipFileName)) {
                     dataStream.CopyTo(decompressedFileStream);
                 }
             }
 
-            response.Close();
-
             ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
             ParseConfigFiles();
         }
 
-        private void RetrieveDofConfigToolFiles()
+        private async Task RetrieveDofConfigToolFilesAsync()
         {
             var task = Task.Factory.StartNew(() => { var f = new WaitForm(); f.ShowDialog(); f.Update(); });
 
@@ -120,12 +118,12 @@ namespace DofConfigToolWrapper
                 Application.DoEvents();
             }
             var waitForm = (WaitForm)Application.OpenForms["WaitForm"];
-            GatherAndExtractConfigFiles(waitForm);
+            await GatherAndExtractConfigFilesAsync(waitForm);
 
             waitForm.Invoke((Action)(() => waitForm.Close()));
         }
 
-        public void UpdateConfigFiles(bool forceUpdate = false)
+        public async Task UpdateConfigFilesAsync(bool forceUpdate = false)
         {
             if (DofSetup.APIKey.IsNullOrEmpty()) {
                 MessageBox.Show("Cannot update local config files. APIKey was not set in the current DofConfigToolSetup.", "Update config files", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -137,10 +135,10 @@ namespace DofConfigToolWrapper
                 return;
             }
 
-            RetrieveDofConfigToolVersion();
+            await RetrieveDofConfigToolVersionAsync();
 
             if (forceUpdate) {
-                RetrieveDofConfigToolFiles();
+                await RetrieveDofConfigToolFilesAsync();
             } else {
                 if (ConfigFiles.Count == 0) {
                     ParseConfigFiles();
@@ -155,12 +153,12 @@ namespace DofConfigToolWrapper
                     if (MessageBox.Show($"There are missing local config files:\n" +
                                         $"{string.Join("\n", MissingIniFiles)}" +
                                         $"\nDo you want to update from DofConfigTool ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                        RetrieveDofConfigToolFiles();
+                        await RetrieveDofConfigToolFilesAsync();
                     }
                 } else if (newerLocalVersion < DofConfigToolVersion) {
                     if (MessageBox.Show($"Local config files are older than the DofConfigTool online version [{newerLocalVersion} => {DofConfigToolVersion}].\n" +
                                         $"Do you want to update them ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                        RetrieveDofConfigToolFiles();
+                        await RetrieveDofConfigToolFilesAsync();
                     }
                 }
             }
