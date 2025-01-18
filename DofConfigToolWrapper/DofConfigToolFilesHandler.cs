@@ -72,41 +72,53 @@ namespace DofConfigToolWrapper
         }
 
         private HttpClient _httpClient = new HttpClient() {
-            Timeout = TimeSpan.FromSeconds(10)
+            Timeout = TimeSpan.FromMinutes(2)
         };
 
         private async Task RetrieveDofConfigToolVersionAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://configtool.vpuniverse.com/api.php?query=version");
-            request.Headers.Add("user-agent", "Other");
-            HttpResponseMessage response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            DofConfigToolVersion = Int32.Parse(responseBody);
+            try {
+                var request = new HttpRequestMessage(HttpMethod.Get, "https://configtool.vpuniverse.com/api.php?query=version");
+                request.Headers.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64)");
+                HttpResponseMessage response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                DofConfigToolVersion = Int32.Parse(responseBody);
+            }catch (Exception e) {
+                MessageBox.Show($"DofConfigTool site returned an error while fetching te last Dof version.\nCould be caused by too much requests from your IP.\nPlease wait a few minutes before retrying.\n\nException Message :\n{e.Message}"
+                    , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async Task GatherAndExtractConfigFilesAsync(WaitForm waitForm)
         {
-            var url = "https://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
-            waitForm.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
+            try {
+                var url = "https://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
+                waitForm.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
 
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("user-agent", "Other");
-            HttpResponseMessage response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64)");
+                HttpResponseMessage response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
 
-            waitForm.Invoke((Action)(() => waitForm.UpdateMessage("Extracting config files...")));
+                waitForm.Invoke((Action)(() => waitForm.UpdateMessage("Extracting config files...")));
 
-            ClearUserLocalPath();
-            var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
+                ClearUserLocalPath();
+                var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
 
-            using (Stream dataStream = await response.Content.ReadAsStreamAsync()) {
-                using (FileStream decompressedFileStream = File.Create(outputZipFileName)) {
-                    dataStream.CopyTo(decompressedFileStream);
+                using (Stream dataStream = await response.Content.ReadAsStreamAsync()) {
+                    using (FileStream decompressedFileStream = File.Create(outputZipFileName)) {
+                        dataStream.CopyTo(decompressedFileStream);
+                    }
                 }
+
+                ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
+
+            } catch (Exception e) {
+                MessageBox.Show($"DofConfigTool site returned an error while retrieving your last Dof config files.\nCould be caused by too much requests from your IP.\nPlease wait a few minutes before retrying.\n\nException Message :\n{e.Message}"
+                    , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
             ParseConfigFiles();
         }
 
