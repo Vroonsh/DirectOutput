@@ -39,6 +39,7 @@ namespace DofConfigToolWrapper
         private DataGridViewTextBoxColumn portNumberDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn portRangeDataGridViewTextBoxColumn;
         private DataGridViewComboBoxColumn outputDataGridViewTextBoxColumn;
+        private DataGridViewComboBoxColumn dataGridViewComboBoxColumn7;
         private TextBox textBoxAPIKey;
 
         private void InitializeComponent()
@@ -59,7 +60,6 @@ namespace DofConfigToolWrapper
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.portNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.portRangeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.outputDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.outputMappingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonAddOutputMapping = new System.Windows.Forms.Button();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,6 +73,8 @@ namespace DofConfigToolWrapper
             this.dataGridViewComboBoxColumn4 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dataGridViewComboBoxColumn7 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.outputDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewControllers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.controllerSetupBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutputMappings)).BeginInit();
@@ -209,6 +211,7 @@ namespace DofConfigToolWrapper
             this.dataGridViewOutputMappings.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewOutputMappings_CellMouseClick);
             this.dataGridViewOutputMappings.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOutputMappings_CellValueChanged);
             this.dataGridViewOutputMappings.CurrentCellDirtyStateChanged += new System.EventHandler(this.DataGridViewOutputMappings_CurrentCellDirtyStateChanged);
+            this.dataGridViewOutputMappings.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewOutputMappings_DataError);
             this.dataGridViewOutputMappings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DataGridViewOutputMappings_KeyDown);
             // 
             // nameDataGridViewTextBoxColumn1
@@ -235,15 +238,6 @@ namespace DofConfigToolWrapper
             this.portRangeDataGridViewTextBoxColumn.Name = "portRangeDataGridViewTextBoxColumn";
             this.portRangeDataGridViewTextBoxColumn.ReadOnly = true;
             this.portRangeDataGridViewTextBoxColumn.Width = 83;
-            // 
-            // outputDataGridViewTextBoxColumn
-            // 
-            this.outputDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.outputDataGridViewTextBoxColumn.DataPropertyName = "Output";
-            this.outputDataGridViewTextBoxColumn.HeaderText = "Output";
-            this.outputDataGridViewTextBoxColumn.Name = "outputDataGridViewTextBoxColumn";
-            this.outputDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.outputDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // outputMappingsBindingSource
             // 
@@ -356,6 +350,24 @@ namespace DofConfigToolWrapper
             this.dataGridViewComboBoxColumn6.Name = "dataGridViewComboBoxColumn6";
             this.dataGridViewComboBoxColumn6.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewComboBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // dataGridViewComboBoxColumn7
+            // 
+            this.dataGridViewComboBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewComboBoxColumn7.DataPropertyName = "Output";
+            this.dataGridViewComboBoxColumn7.HeaderText = "Output";
+            this.dataGridViewComboBoxColumn7.Name = "dataGridViewComboBoxColumn7";
+            this.dataGridViewComboBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewComboBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // outputDataGridViewTextBoxColumn
+            // 
+            this.outputDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.outputDataGridViewTextBoxColumn.DataPropertyName = "Output";
+            this.outputDataGridViewTextBoxColumn.HeaderText = "Output";
+            this.outputDataGridViewTextBoxColumn.Name = "outputDataGridViewTextBoxColumn";
+            this.outputDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.outputDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // DofConfigToolSetupControl
             // 
@@ -616,5 +628,9 @@ namespace DofConfigToolWrapper
         }
         #endregion
 
+        private void dataGridViewOutputMappings_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
+        }
     }
 }
