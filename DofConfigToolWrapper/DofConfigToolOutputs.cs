@@ -199,6 +199,22 @@ namespace DofConfigToolWrapper
         FireMX,
         [Description("Extraball MX")]
         ExtraballMX,
+        [Description("PF Logo Effects MX SD")]
+        PFLogoEffectsMXSD,
+        [Description("PF Left Effects MX HD")]
+        PFLeftEffectsMXHD,
+        [Description("PF Back Effects MX HD")]
+        PFBackEffectsMXHD,
+        [Description("PF Right Effects MX HD")]
+        PFRightEffectsMXHD,
+        [Description("PF Logo Effects MX HD")]
+        PFLogoEffectsMXHD,
+        [Description("PF Left Flashers MX HD")]
+        PFLeftFlashersMXHD,
+        [Description("PF Back Flashers MX HD")]
+        PFBackFlashersMXHD,
+        [Description("PF Right Flashers MX HD")]
+        PFRightFlashersMXHD,
         [Browsable(false)]
         RGBMXOutputs_End,
     }

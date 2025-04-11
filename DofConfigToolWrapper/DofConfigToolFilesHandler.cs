@@ -79,7 +79,7 @@ namespace DofConfigToolWrapper
         {
             try {
                 var request = new HttpRequestMessage(HttpMethod.Get, "https://configtool.vpuniverse.com/api.php?query=version");
-                request.Headers.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64)");
+                request.Headers.Add("user-agent", "Other");
                 HttpResponseMessage response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -97,7 +97,7 @@ namespace DofConfigToolWrapper
                 waitForm.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
 
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64)");
+                request.Headers.Add("user-agent", "Other");
                 HttpResponseMessage response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
 
