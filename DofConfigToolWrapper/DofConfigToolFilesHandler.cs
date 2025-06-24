@@ -1,6 +1,9 @@
 ﻿using DirectOutput.LedControl.Loader;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -23,9 +26,26 @@ namespace DofConfigToolWrapper
         {   get { return _DofSetup; }
             set {
                 _DofSetup = value;
-                ParseConfigFiles();
+                var userDir = string.Join("-", new string[] { DofSetup?.UserName, DofSetup?.APIKey });
+                if (!userDir.IsNullOrEmpty()) {
+                    var setupsPath = Path.Combine(RootDirectory, "setups");
+                    new DirectoryInfo(RootDirectory).CreateDirectoryPath();
+                    UserLocalPath = Path.Combine(setupsPath, userDir);
+                    new DirectoryInfo(UserLocalPath).CreateDirectoryPath();
+                }
             }
         }
+        public enum EDofConfigToolConnectMethod
+        {
+            [Description("Internal Http requests")]
+            InternalHttpRequest,
+            [Description("Dofconfigtool Pull VBS")]
+            PullVBScript,
+            [Description("No Connection")]
+            Offline
+        };
+        public EDofConfigToolConnectMethod DofConfigToolConnectMethod { get; set; } = EDofConfigToolConnectMethod.PullVBScript;
+        public bool ForceDofConfigToolUpdate { get; set; } = false;
 
         public LedControlConfigList ConfigFiles { get; private set; } = new LedControlConfigList();
         public string UserLocalPath { get; private set; } = string.Empty;
@@ -43,9 +63,7 @@ namespace DofConfigToolWrapper
                 var setupsPath = Path.Combine(RootDirectory, "setups");
                 new DirectoryInfo(RootDirectory).CreateDirectoryPath();
 
-                var userDir = string.Join("-", new string[] { DofSetup?.UserName, DofSetup?.APIKey });
-                if (!userDir.IsNullOrEmpty()) {
-                    UserLocalPath = Path.Combine(setupsPath, userDir);
+                if (!UserLocalPath.IsNullOrEmpty()) {
                     new DirectoryInfo(UserLocalPath).CreateDirectoryPath();
 
                     foreach(var controller in DofSetup.ControllerSetups) {
@@ -90,52 +108,124 @@ namespace DofConfigToolWrapper
             }
         }
 
-        private async Task GatherAndExtractConfigFilesAsync(WaitForm waitForm)
+        private async Task<Stream> GatherConfigFilesAsync()
         {
+            Stream dataStream = null;
             try {
-                var url = "https://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
-                waitForm.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
+                    var url = "https://configtool.vpuniverse.com/api.php?query=getconfig&apikey=" + DofSetup.APIKey;
+                    var request = new HttpRequestMessage(HttpMethod.Get, url);
+                    request.Headers.Add("user-agent", "Other");
+                    HttpResponseMessage response = await _httpClient.SendAsync(request);
+                    response.EnsureSuccessStatusCode();
+                    dataStream = await response.Content.ReadAsStreamAsync();
 
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Add("user-agent", "Other");
-                HttpResponseMessage response = await _httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+                    if (dataStream != null) {
+                        ClearUserLocalPath();
+                        var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
 
-                waitForm.Invoke((Action)(() => waitForm.UpdateMessage("Extracting config files...")));
+                        using (FileStream decompressedFileStream = File.Create(outputZipFileName)) {
+                            dataStream.CopyTo(decompressedFileStream);
+                        }
 
-                ClearUserLocalPath();
-                var outputZipFileName = Path.Combine(UserLocalPath, "directoutputconfig.zip");
-
-                using (Stream dataStream = await response.Content.ReadAsStreamAsync()) {
-                    using (FileStream decompressedFileStream = File.Create(outputZipFileName)) {
-                        dataStream.CopyTo(decompressedFileStream);
+                        ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
                     }
-                }
-
-                ZipFile.ExtractToDirectory(outputZipFileName, UserLocalPath);
-
             } catch (Exception e) {
                 MessageBox.Show($"DofConfigTool site returned an error while retrieving your last Dof config files.\nCould be caused by too much requests from your IP.\nPlease wait a few minutes before retrying.\n\nException Message :\n{e.Message}"
                     , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            ParseConfigFiles();
+            return dataStream;
+        }
+
+        private void GatherConfigFilesVBAsync()
+        {
+            try {
+                ClearUserLocalPath();
+                Process scriptProc = new Process();
+                scriptProc.StartInfo.FileName = $"{RootDirectory}\\VB\\ledcontrol_pull.vbs";
+                scriptProc.StartInfo.WorkingDirectory = UserLocalPath;
+                scriptProc.StartInfo.Arguments = $"/A={DofSetup.APIKey} /F=directoutputconfig.zip /T=\"{UserLocalPath}\" /-V /Y /L /F";
+                scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                scriptProc.Start();
+                scriptProc.WaitForExit();
+                scriptProc.Close();
+            } catch (Exception ex) {
+                MessageBox.Show($"DofConfigTool site returned an error while retrieving your last Dof config files usinf pull vbs.\nCheck logs in {UserLocalPath} for info.\n\nException Message :\n{ex.Message}"
+                    , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async Task RetrieveDofConfigToolFilesAsync()
         {
-            var task = Task.Factory.StartNew(() => { var f = new WaitForm(); f.ShowDialog(); f.Update(); });
+            try {
+                WaitForm waitForm = null;
 
-            while (Application.OpenForms["WaitForm"] == null) {
-                Application.DoEvents();
+                var task = Task.Factory.StartNew(() => { var f = new WaitForm(); f.ShowDialog(); f.Update(); });
+
+                while (Application.OpenForms["WaitForm"] == null) {
+                    Application.DoEvents();
+                }
+                waitForm = (WaitForm)Application.OpenForms["WaitForm"];
+
+                Stream configFilesStream = null;
+
+
+                switch (DofConfigToolConnectMethod) {
+                    case EDofConfigToolConnectMethod.InternalHttpRequest: {
+                        waitForm?.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
+                        if (ForceDofConfigToolUpdate) {
+                            configFilesStream = await GatherConfigFilesAsync();
+                        } else {
+                            await RetrieveDofConfigToolVersionAsync();
+
+                            int newerLocalVersion = 0;
+                            if (ConfigFiles.Count == 0) {
+                                ParseConfigFiles();
+                            }
+
+                            foreach (var configfile in ConfigFiles) {
+                                newerLocalVersion = Math.Max(newerLocalVersion, configfile.Version);
+                            }
+
+                            if (MissingIniFiles.Count > 0) {
+                                if (MessageBox.Show($"There are missing local config files:\n" +
+                                                    $"{string.Join("\n", MissingIniFiles)}" +
+                                                    $"\nDo you want to update from DofConfigTool ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                                    configFilesStream = await GatherConfigFilesAsync();
+                                }
+                            } else if (newerLocalVersion < DofConfigToolVersion) {
+                                if (MessageBox.Show($"Local config files are older than the DofConfigTool online version [{newerLocalVersion} => {DofConfigToolVersion}].\n" +
+                                                    $"Do you want to update them ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                                    configFilesStream = await GatherConfigFilesAsync();
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case EDofConfigToolConnectMethod.PullVBScript: {
+                        waitForm?.Invoke((Action)(() => waitForm.UpdateMessage($"Retrieving config files for user {DofSetup.UserName}...")));
+                        GatherConfigFilesVBAsync();
+                        break;
+                    }
+
+                    case EDofConfigToolConnectMethod.Offline:
+                    default: {
+                        break;
+                    }
+                }
+
+                waitForm?.Invoke((Action)(() => waitForm.UpdateMessage($"Parse config files for user {DofSetup.UserName}...")));
+                ParseConfigFiles();
+                waitForm?.Invoke((Action)(() => waitForm.Close()));
+
+            } catch (Exception ex) {
+                MessageBox.Show($"DofConfigTool site returned an error while updating Dof config files.\n\nException Message :\n{ex.Message}"
+                    , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            var waitForm = (WaitForm)Application.OpenForms["WaitForm"];
-            await GatherAndExtractConfigFilesAsync(waitForm);
-
-            waitForm.Invoke((Action)(() => waitForm.Close()));
         }
 
-        public async Task UpdateConfigFilesAsync(bool forceUpdate = false)
+        public async Task UpdateConfigFilesAsync()
         {
             if (DofSetup.APIKey.IsNullOrEmpty()) {
                 MessageBox.Show("Cannot update local config files. APIKey was not set in the current DofConfigToolSetup.", "Update config files", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -147,33 +237,7 @@ namespace DofConfigToolWrapper
                 return;
             }
 
-            await RetrieveDofConfigToolVersionAsync();
-
-            if (forceUpdate) {
-                await RetrieveDofConfigToolFilesAsync();
-            } else {
-                if (ConfigFiles.Count == 0) {
-                    ParseConfigFiles();
-                }
-
-                int newerLocalVersion = 0;
-                foreach (var configfile in ConfigFiles) {
-                    newerLocalVersion = Math.Max(newerLocalVersion, configfile.Version);
-                }
-
-                if (MissingIniFiles.Count > 0) {
-                    if (MessageBox.Show($"There are missing local config files:\n" +
-                                        $"{string.Join("\n", MissingIniFiles)}" +
-                                        $"\nDo you want to update from DofConfigTool ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                        await RetrieveDofConfigToolFilesAsync();
-                    }
-                } else if (newerLocalVersion < DofConfigToolVersion) {
-                    if (MessageBox.Show($"Local config files are older than the DofConfigTool online version [{newerLocalVersion} => {DofConfigToolVersion}].\n" +
-                                        $"Do you want to update them ?", "DofConfigTool files update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                        await RetrieveDofConfigToolFilesAsync();
-                    }
-                }
-            }
+            await RetrieveDofConfigToolFilesAsync();
         }
     }
 }
