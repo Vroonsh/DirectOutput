@@ -44,13 +44,15 @@ namespace DirectOutputToolkit
             this.buttonDofConfigSetupEdit = new System.Windows.Forms.Button();
             this.buttonDofViewSetupEdit = new System.Windows.Forms.Button();
             this.checkBoxForceDownload = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ConnectionMethodComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(580, 99);
+            this.OKButton.Location = new System.Drawing.Point(580, 96);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(159, 23);
             this.OKButton.TabIndex = 0;
@@ -62,7 +64,7 @@ namespace DirectOutputToolkit
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(744, 99);
+            this.CancelButton.Location = new System.Drawing.Point(744, 96);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(150, 23);
             this.CancelButton.TabIndex = 1;
@@ -167,13 +169,36 @@ namespace DirectOutputToolkit
             // checkBoxForceDownload
             // 
             this.checkBoxForceDownload.AutoSize = true;
-            this.checkBoxForceDownload.Location = new System.Drawing.Point(15, 39);
+            this.checkBoxForceDownload.Location = new System.Drawing.Point(335, 36);
             this.checkBoxForceDownload.Name = "checkBoxForceDownload";
-            this.checkBoxForceDownload.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxForceDownload.Size = new System.Drawing.Size(155, 17);
             this.checkBoxForceDownload.TabIndex = 16;
-            this.checkBoxForceDownload.Text = "Force Dofconfigtool download";
+            this.checkBoxForceDownload.Text = "Force Dofconfigtool update";
             this.checkBoxForceDownload.UseVisualStyleBackColor = true;
             this.checkBoxForceDownload.CheckedChanged += new System.EventHandler(this.checkBoxForceDownload_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(99, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Connection method";
+            // 
+            // ConnectionMethodComboBox
+            // 
+            this.ConnectionMethodComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConnectionMethodComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ConnectionMethodComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.ConnectionMethodComboBox.FormattingEnabled = true;
+            this.ConnectionMethodComboBox.Location = new System.Drawing.Point(120, 34);
+            this.ConnectionMethodComboBox.MaxDropDownItems = 16;
+            this.ConnectionMethodComboBox.Name = "ConnectionMethodComboBox";
+            this.ConnectionMethodComboBox.Size = new System.Drawing.Size(200, 21);
+            this.ConnectionMethodComboBox.TabIndex = 18;
+            this.ConnectionMethodComboBox.SelectedIndexChanged += new System.EventHandler(this.ConnectionMethodComboBox_SelectedIndexChanged);
             // 
             // OpenConfigDialog
             // 
@@ -181,7 +206,9 @@ namespace DirectOutputToolkit
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(906, 136);
+            this.ClientSize = new System.Drawing.Size(906, 133);
+            this.Controls.Add(this.ConnectionMethodComboBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.checkBoxForceDownload);
             this.Controls.Add(this.buttonDofViewSetupEdit);
             this.Controls.Add(this.buttonDofConfigSetupEdit);
@@ -194,7 +221,7 @@ namespace DirectOutputToolkit
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(0, 140);
+            this.MinimumSize = new System.Drawing.Size(16, 140);
             this.Name = "OpenConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -219,5 +246,7 @@ namespace DirectOutputToolkit
         private System.Windows.Forms.Button buttonDofConfigSetupEdit;
         private System.Windows.Forms.Button buttonDofViewSetupEdit;
         private System.Windows.Forms.CheckBox checkBoxForceDownload;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox ConnectionMethodComboBox;
     }
 }

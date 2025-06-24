@@ -15,6 +15,9 @@ namespace DirectOutputToolkit
         public List<string> DirectOutputViewSetups { get; set; } = new List<string>();
         public string LastRomName { get; set; } = "";
 
+        public DofConfigToolFilesHandler.EDofConfigToolConnectMethod DofConfigToolConnectMethod { get; set; } = DofConfigToolFilesHandler.EDofConfigToolConnectMethod.PullVBScript;
+        public bool ForceDofConfigToolUpdate { get; set; } = false;
+
         public int EffectMinDurationMs { get; set; } = 60;
         public int EffectRGBMinDurationMs { get; set; } = 120;
 

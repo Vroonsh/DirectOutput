@@ -63,7 +63,8 @@ namespace DirectOutputToolkit
             if (OCD.ShowDialog() == DialogResult.OK) {
 
                 Handler = new DirectOutputToolkitHandler(Settings);
-                Handler.ForceDofConfigToolUpdate = OCD.ForceDofConfigToolUpdate;
+                Handler.DofConfigToolConnectMethod = Settings.DofConfigToolConnectMethod;
+                Handler.ForceDofConfigToolUpdate = Settings.ForceDofConfigToolUpdate;
                 DofConfigToolSetup = DofConfigToolSetup.ReadFromXml(Settings.LastDofConfigSetup);
                 DofViewSetup = DirectOutputViewSetupSerializer.ReadFromXml(Settings.LastDirectOutputViewSetup);
 

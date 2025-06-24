@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -19,6 +20,7 @@ namespace DirectOutputToolkit
         private DofConfigToolSetup DofSetup = new DofConfigToolSetup();
         private DirectOutputViewSetup ViewSetup = new DirectOutputViewSetup();
 
+        public DofConfigToolFilesHandler.EDofConfigToolConnectMethod DofConfigToolConnectMethod { get; set; } = DofConfigToolFilesHandler.EDofConfigToolConnectMethod.PullVBScript;
         public bool ForceDofConfigToolUpdate { get; private set; } = false;
 
         public OpenConfigDialog(Settings Settings = null)
@@ -41,8 +43,18 @@ namespace DirectOutputToolkit
 
         private void LoadData()
         {
+            DofConfigToolConnectMethod = Settings.DofConfigToolConnectMethod;
+            ForceDofConfigToolUpdate = Settings.ForceDofConfigToolUpdate;
+
             DofConfigSetupFilename = Settings.LastDofConfigSetup;
             DofViewSetupFilename = Settings.LastDirectOutputViewSetup;
+
+            checkBoxForceDownload.Checked = ForceDofConfigToolUpdate;
+
+            ConnectionMethodComboBox.Items.Clear();
+            foreach(var enumVal in Enum.GetValues(typeof(DofConfigToolFilesHandler.EDofConfigToolConnectMethod)))
+                ConnectionMethodComboBox.Items.Add(enumVal);
+            ConnectionMethodComboBox.SelectedIndex = (int)DofConfigToolConnectMethod;
 
             DofConfigSetupFilenameComboBox.Items.Clear();
             DofConfigSetupFilenameComboBox.Items.AddRange(Settings.DofConfigSetups.ToArray());
@@ -54,6 +66,9 @@ namespace DirectOutputToolkit
 
         private void SaveData()
         {
+            Settings.ForceDofConfigToolUpdate = ForceDofConfigToolUpdate;
+            Settings.DofConfigToolConnectMethod = DofConfigToolConnectMethod;
+
             Settings.LastDofConfigSetup = DofConfigSetupFilename;
             Settings.LastDirectOutputViewSetup = DofViewSetupFilename;
 
@@ -71,8 +86,6 @@ namespace DirectOutputToolkit
                 DofConfigSetupFilename = OpenDofConfigSetupFileDialog.FileName;
             }
         }
-
-
 
         private void DofViewSetupFileSelectButton_Click(object sender, EventArgs e)
         {
@@ -115,6 +128,14 @@ namespace DirectOutputToolkit
         private void checkBoxForceDownload_CheckedChanged(object sender, EventArgs e)
         {
             ForceDofConfigToolUpdate = checkBoxForceDownload.Checked;
+        }
+
+        private void ConnectionMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender is ComboBox combo) {
+                DofConfigToolConnectMethod = (DofConfigToolFilesHandler.EDofConfigToolConnectMethod)combo.SelectedIndex;
+                checkBoxForceDownload.Visible = (DofConfigToolConnectMethod == DofConfigToolFilesHandler.EDofConfigToolConnectMethod.InternalHttpRequest);
+            }
         }
     }
 }

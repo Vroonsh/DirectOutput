@@ -149,6 +149,9 @@ namespace DirectOutputToolkit
         internal Table GetTableByName(string text) => TableDescriptors.Select(TD => TD.Value.Table).FirstOrDefault(T => T.TableName.Equals(text, StringComparison.InvariantCultureIgnoreCase));
 
         public DofConfigToolFilesHandler DofFilesHandler { get; private set; } = new DofConfigToolFilesHandler() { };
+
+        public DofConfigToolFilesHandler.EDofConfigToolConnectMethod DofConfigToolConnectMethod { get; set; } = DofConfigToolFilesHandler.EDofConfigToolConnectMethod.PullVBScript;
+
         public bool ForceDofConfigToolUpdate { get; set; } = false;
 
         public LedControlConfigList LedControlConfigList => DofFilesHandler?.ConfigFiles;
@@ -181,7 +184,9 @@ namespace DirectOutputToolkit
             var dir = Path.GetDirectoryName(Settings.LastDofConfigSetup);
             DofFilesHandler.RootDirectory = dir;
             DofFilesHandler.DofSetup = DofConfigToolSetup;
-            await DofFilesHandler.UpdateConfigFilesAsync(ForceDofConfigToolUpdate);
+            DofFilesHandler.ForceDofConfigToolUpdate = ForceDofConfigToolUpdate;
+            DofFilesHandler.DofConfigToolConnectMethod = DofConfigToolConnectMethod;
+            await DofFilesHandler.UpdateConfigFilesAsync();
             if (DofFilesHandler.ConfigFiles.Count == 0) {
                 MessageBox.Show("DofSetup was not initialized correctly, DirectOutout Toolkit cannot start.\nExiting...", "DofSetup init failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
