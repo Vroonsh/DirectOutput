@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DirectOutput.FX;
 using DirectOutput.FX.AnalogToyFX;
 using DirectOutput.FX.ConditionFX;
@@ -567,13 +568,7 @@ namespace DirectOutput.LedControl.Loader
                 else
                 {
                     Log.Warning("No closing bracket found for condition in setting {0}.".Build(S));
-
-                    throw new Exception("No closing bracket found for condition in setting {0}.".Build(S));
                 }
-
-
-
-
             }
             else
             {
@@ -582,8 +577,6 @@ namespace DirectOutput.LedControl.Loader
                 if (S.Length == 0)
                 {
                     Log.Warning("No data to parse.");
-
-                    throw new Exception("No data to parse.");
                 }
 
                 int TriggerEndPos = -1;
@@ -666,8 +659,6 @@ namespace DirectOutput.LedControl.Loader
                 if (!ParseOK)
                 {
                     Log.Warning("Cant parse the trigger part {0} of the ledcontrol table config setting {1}.".Build(Trigger, SettingData));
-
-                    throw new Exception("Cant parse the part {0} of the ledcontrol table config setting {1}.".Build(Trigger, SettingData));
                 }
 
                 //Remove first part
@@ -877,8 +868,7 @@ namespace DirectOutput.LedControl.Loader
                             break;
                         default:
                             Log.Warning("The ledcontrol table config setting commands {0} contains more than 2 numeric values without a type definition.".Build(commands));
-                            throw new Exception("The ledcontrol table config setting commands {0} contains more than 2 numeric values without a type definition.".Build(commands));
-
+                            break;
                     }
                     IntegerCnt++;
                 }
@@ -888,7 +878,6 @@ namespace DirectOutput.LedControl.Loader
                     if (!Regex.IsMatch(Parts[PartNr], @"^#[0-9A-Fa-f]{6,8}$"))
                     {
                         Log.Warning("Invalid '#' HTML-style color code \"{0}\", #rrggbb or #rrggbbaa required".Build(Parts[PartNr]));
-                        throw new Exception("Invalid '#' HTML-style color code \"{0}\", #rrggbb or #rrggbbaa required".Build(Parts[PartNr]));
                     }
                     // This should be a HTML-style hex color string
                     ColorName = Parts[PartNr].ToUpper();
@@ -900,9 +889,7 @@ namespace DirectOutput.LedControl.Loader
                 }
                 else
                 {
-                    Log.Warning("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], SettingData));
-
-                    throw new Exception("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], commands));
+                    Log.Warning("Cant parse the part {0} of the ledcontrol table config setting {1}".Build(Parts[PartNr], commands));
                 }
                 PartNr++;
             }
